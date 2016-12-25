@@ -1,0 +1,29 @@
+{
+  "name": "inxys",
+  "version": "3.1.0",
+  "description": "The Information Exchange",
+  "main": "js/index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VarynInc/inxys.git"
+  },
+  "keywords": [
+    "inxys",
+    "information",
+    "exhange",
+    "conferencing",
+    "eies"
+  ],
+  "author": "John Foster",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/VarynInc/inxys/issues"
+  },
+  "homepage": "https://github.com/VarynInc/inxys#readme",
+  "dependencies": {
+    "bootstrap": "^3.3.7"
+  }
+}
