@@ -1,6 +1,6 @@
 <?php
 include_once('../sitedev/services/common.php');
-$pageId = 'Missing';
+$pageId = '404';
 $pageTitle = '';
 ?>
 <!DOCTYPE html>
@@ -9,7 +9,7 @@ $pageTitle = '';
 <?php include(VIEWS_ROOT . 'top-nav.php');?>
 <div class="container main-container">
     <h1>Unknown Resource</h1>
-    <p>You requested a page that is not available on this site. Please check your entry.</p>
+    <p>You requested a page that is not available here. Please check your entry.</p>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>
 </body>

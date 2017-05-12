@@ -7,14 +7,24 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">inXys</a>
+            <a class="navbar-brand" href="/"><img src="/assets/img/inxys-logo-96.png" alt="inxys"></a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/">Home</a></li>
-                <li><a href="/conferences.php">Conferences</a></li>
-                <li><a href="/users.php">Users</a></li>
-                <li><a href="/groups.php">Groups</a></li>
+                <?php
+                foreach($allMenuPages as $menuItem) {
+                    $pageKey = $menuItem['id'];
+                    $pageName = $menuItem['name'];
+                    $path = $menuItem['path'];
+                    if ($pageKey == 'profile' && ! $isLoggedIn) {
+                        $pageKey = 'signup';
+                        $pageName = 'Sign up';
+                        $path = '/' . $pageKey . '.php';
+                    }
+                    $activeClass = $pageId == $pageKey ? 'active' : '';
+                    echo('<li class="' . $activeClass . '"><a href="' . $path . '">' . $pageName . '</a></li>');
+                }
+                ?>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li style="margin-top: 0.5em;">

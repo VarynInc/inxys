@@ -1,6 +1,6 @@
 <?php
 include_once('../sitedev/services/common.php');
-$pageId = 'Search';
+$pageId = 'search';
 $pageTitle = '';
 $search = $_REQUEST['search'];
 ?>

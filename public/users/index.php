@@ -1,6 +1,6 @@
 <?php
-include_once('../sitedev/services/common.php');
-$pageId = '500';
+include_once('../../sitedev/services/common.php');
+$pageId = 'users';
 $pageTitle = '';
 ?>
 <!DOCTYPE html>
@@ -8,8 +8,8 @@ $pageTitle = '';
 <body>
 <?php include(VIEWS_ROOT . 'top-nav.php');?>
 <div class="container main-container">
-    <h1>Service error</h1>
-    <p>Something unexpected happened with our service. The support team has been notified.</p>
+    <h1>Users</h1>
+    <p>Create an account for free. You get one public conference with your free account.</p>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>
 </body>

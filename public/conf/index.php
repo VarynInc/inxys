@@ -1,6 +1,6 @@
 <?php
-include_once('../sitedev/services/common.php');
-$pageId = 'Groups';
+include_once('../../sitedev/services/common.php');
+$pageId = 'conferences';
 $pageTitle = '';
 ?>
 <!DOCTYPE html>
@@ -8,7 +8,8 @@ $pageTitle = '';
 <body>
 <?php include(VIEWS_ROOT . 'top-nav.php');?>
 <div class="container main-container">
-    <h1>Groups</h1>
+    <h1>Conferences</h1>
+    <p>You can read public conferences. To participate, you must log in.</p>
     <p>Create an account for free. You get one public conference with your free account.</p>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>

@@ -29,8 +29,19 @@ define('SESSION_USERNAME_CACHE', 'inxys_username');
 define('SESSION_PARAM_CACHE', 'inxys_params');
 define('SESSION_USERINFO', 'inxys_user');
 
+// Global variables that should be defined on every page
+$pageId = '';         // Every page has na id so we can do per-page logic inside common functions
+$pageTitle = '';      // Every page has a title, many times this is dynamically generated
+$allMenuPages = array(array('id' => 'home', 'name' => 'Home', 'path' => '/'),
+                      array('id' => 'conferences', 'name' => 'Conferences', 'path' => '/conf/'),
+                      array('id' => 'users', 'name' => 'Users', 'path' => '/users/'),
+                      array('id' => 'groups', 'name' => 'Groups', 'path' => '/groups/'),
+                      array('id' => 'profile', 'name' => 'Profile', 'path' => 'profile.php'));
+$isLoggedIn = false;  // true when we have a user logged in
+$userId = 0;          // when logged in, this is the id of the logged in user
 $serverName = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'inxys-l.com';
-$serverStage = '';
+$serverStage = '';    // One of our server stages: -l, -d, -q, -x. Empty for the production server.
+
 preg_match('/-[d|l|q|x]./i', $serverName, $matched);
 if (count($matched) > 0) {
     $serverStage = str_replace('.', '', $matched[0]);
@@ -39,6 +50,11 @@ $serverStage = strtolower($serverStage);
 
 function currentPageName() {
     return basename($_SERVER['PHP_SELF'], '.php');
+}
+
+function isActivePage($pageId) {
+    global $allMenuPages;
+    return in_array($pageId, $allMenuPages) ? 'active' : '';
 }
 
 require_once('version.php');
