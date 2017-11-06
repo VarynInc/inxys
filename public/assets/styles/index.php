@@ -1,7 +1,8 @@
 <?php
 include_once('../../../sitedev/services/common.php');
 $pageId = 'about';
-$pageTitle = '';
+$pageTitle = 'About The Information Exchange';
+$pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.';
 ?>
 <!DOCTYPE html>
 <?php include(VIEWS_ROOT . 'page-header.php');?>

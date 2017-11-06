@@ -13,7 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?php echo($pageTitle);?></title>
-    <meta name="description" content="<?php echo($pageDecription);?> ">
+    <meta name="description" content="<?php echo($pageDescription);?> ">
     <meta name="author" content="">
     <link rel="icon" href="/favicon.ico">
     <meta name="keywords" content="inxys, The Information Exchange" />
