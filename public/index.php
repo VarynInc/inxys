@@ -3,7 +3,7 @@ include_once('../sitedev/services/common.php');
 $pageId = 'home';
 $pageTitle = '';
 $hackerVerification = '';
-$isLoggedIn = true;
+$isLoggedIn = false;
 ?>
 <!DOCTYPE html>
 <?php include(VIEWS_ROOT . 'page-header.php');?>
@@ -37,7 +37,7 @@ $isLoggedIn = true;
             <div class="col col-md-4"></div>
         </div>
         <p>
-        Not a member? <a class="btn btn-lg btn-primary" href="signup.php" role="button">Join us &raquo;</a>
+        Not a member? <a class="btn btn-lg btn-primary" href="/signup/" role="button">Join us &raquo;</a>
         </p>
         <p>
             Create an account for free. You get one public conference with your free account.

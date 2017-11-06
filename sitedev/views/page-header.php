@@ -1,13 +1,19 @@
 <?php
     $pageId = isset($pageId) ? $pageId : 'inXys';
+    if ( ! isset($pageTitle)) {
+        $pageTitle = $pageId . ' | The Information Exchange';
+    }
+    if ( ! isset($pageDescription)) {
+        $pageDescription = 'The Information Exchange is a discussion forum to exchange ideas';
+    }
 ?>
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo($pageId);?> | The Information Exchange</title>
-    <meta name="description" content="The Information Exchange is a discussion forum to exchange ideas">
+    <title><?php echo($pageTitle);?></title>
+    <meta name="description" content="<?php echo($pageDecription);?> ">
     <meta name="author" content="">
     <link rel="icon" href="/favicon.ico">
     <meta name="keywords" content="inxys, The Information Exchange" />

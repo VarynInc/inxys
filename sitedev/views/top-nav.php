@@ -19,7 +19,7 @@
                     if ($pageKey == 'profile' && ! $isLoggedIn) {
                         $pageKey = 'signup';
                         $pageName = 'Sign up';
-                        $path = '/' . $pageKey . '.php';
+                        $path = '/' . $pageKey . '/';
                     }
                     $activeClass = $pageId == $pageKey ? 'active' : '';
                     echo('<li class="' . $activeClass . '"><a href="' . $path . '">' . $pageName . '</a></li>');
@@ -28,7 +28,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li style="margin-top: 0.5em;">
-                    <form class="form-inline" method="get" action="/search.php">
+                    <form class="form-inline" method="get" action="/search/">
                         <div class="form-group">
                             <div class="input-group">
                                 <input type="search" class="form-control" id="search" name="search" placeholder="search">
@@ -37,7 +37,7 @@
                         </div>
                     </form>
                 </li>
-                <li><a href="/about.php">About</a></li>
+                <li><a href="/about/">About</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>

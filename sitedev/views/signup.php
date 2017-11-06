@@ -1,4 +1,4 @@
-<form id="signup-form" method="POST" action="/signup.php">
+<form id="signup-form" method="POST" action="/signup/">
     <div class="login-form">
         <h3 class="text-center">Join us:</h3>
         <div class="form-group has-warning has-feedback">
@@ -21,8 +21,8 @@
             <input type="hidden" name="action" value="signup" />
         </div>
         <div class="text-center">
-            <a href="/terms.php" target="_new" class="right">Terms of service</a> |
-            <a href="/privacy.php" target="_new" class="right">Privacy policy</a>
+            <a href="/terms/" target="_new" class="right">Terms of service</a> |
+            <a href="/privacy/" target="_new" class="right">Privacy policy</a>
         </div>
     </div>
 </form>

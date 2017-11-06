@@ -1,0 +1,188 @@
+<?php
+include_once('../../sitedev/services/common.php');
+$pageId = 'about';
+$pageTitle = '';
+$loggedIn = false;
+
+if ( ! $loggedIn) {
+    $allToActionButton = ' <a class="btn btn-lg btn-primary" href="/signup/" role="button">Join us &raquo;</a>';
+} else {
+    $allToActionButton = '';
+}
+?>
+<!DOCTYPE html>
+<?php include(VIEWS_ROOT . 'page-header.php');?>
+<body>
+<?php include(VIEWS_ROOT . 'top-nav.php');?>
+<div class="container main-container">
+    <h1>About The Information Exchange</h1>
+    <h2>Mission Statement</h2>
+    <blockquote><i>
+        Our goal is to facilitate the free exchange of ideas build and a strong sense of community. We encourage diversity, inclusion, and respect for all.
+    </i></blockquote>
+    <p>
+        We will filter out deliberate acts of harm and deceit, no matter who authors it.
+    </p>
+    <p>Create an account for free. You get one public conference with your free account.<?php echo($allToActionButton);?></p>
+    <p>
+        See our <a href="/privacy/">privacy policy</a> and <a href="/terms/">terms of use</a>.
+    </p>
+    <div class="panel">
+        <h2>Conference system information architecture</h2>
+        <p>
+            The inxys information design is based on work done by Murray Turoff at NJIT related to <a href="http://ieeexplore.ieee.org/document/49267/">TEIES</a>.
+            A <i>conference</i> is a container of members and topics, <i>topics</i> are main tracts of discussion with comments. <i>Comments</i> are discussion around topics and members can <i>reply</i> to individual comments.
+                <ul>
+                    <li>Conference</li>
+                    <ul>
+                        <li>Members</li>
+                        <li>Topics</li>
+                        <ul>
+                            <li>Replies (replies directly to topics)</li>
+                            <li>Comments</li>
+                            <ul>
+                                <li>Replies</li>
+                            </ul>
+                        </ul>
+                    </ul>
+                </ul>
+        </p>
+        <p>
+            In a typical conference organization, a <i>moderator</i> will determine the topics of discussion and post those to the group. Members can comment on the topics and carry discussion in a series of comments or with replies to comments.
+        </p>
+    </div>
+    <div class="panel">
+        <h1>Markdown content formatting</h1>
+        <p>We only support markdown for content formatting. HTML tags will be stripped out. Use in content, abstract, description input fields. This is a brief help guide to the markdown syntax. Note that our markdown flavor is mostly similar to standard markdown but we support a few extensions.</p>
+        <div class="panel-indent">
+            <h2>Titles and headers</h2>
+            <p>Define header elements or titles with a leading # at the beginning of a line followed by a space. All text to the end of the line is used for the title.</p>
+            <p>
+<pre>
+# Header 1 title sample
+## Header 2 title sample
+### Header 3 title sample
+#### Header 4 title sample
+##### Header 5 title sample
+###### Header 6 title sample
+</pre>
+            </p>
+            <div class="md-example">
+                <h1>Header 1 title sample</h1>
+                <h2>Header 2 title sample</h2>
+                <h3>Header 3 title sample</h3>
+                <h4>Header 4 title sample</h4>
+                <h5>Header 5 title sample</h5>
+                <h6>Header 6 title sample</h6>
+            </div>
+            <p>
+                Any header may include attributes `id`, `class`, `attribute` by following the header text with the same level and enclosing the attributes in braces, as follows:
+                ## Header 2 ## {#id .class attribute=value}
+            </p>
+            <h2>Inline text</h2>
+            <p>
+<pre>
+*normal emphasis*
+**strong emphasis**
+_underline_
+~strikeout~
++inserted+
+^larger^
+$smaller$
+> block-quote
+`code or fixed-size font`
+```language
+   /* multi-line code section */
+   return $result;
+```
+</pre>
+            </p>
+            <div class="md-example">
+                <p>This is <em>emphasized text</em> marked by <code>*</code></p>
+                <p>This is <strong>emphasized text</strong> marked by <code>**</code></p>
+                <p>This is <u>underlined text</u> marked by <code>_</code></p>
+                <p>This is <del>deleted text</del> marked by <code>~</code></p>
+                <p>This is <ins>inserted text</ins> marked by <code>+</code></p>
+                <p>This is <span class="font-size-2">larger text</span> marked by <code>^</code></p>
+                <p>This is <span class="small">smaller text</span> marked by <code>$</code></p>
+                <p>This is <code>code or fix-font text</code> marked by <code>`</code></p>
+                <blockquote>
+                    This is a blockquote section marked with <code>&gt;</code> at the beginning of a line.
+                </blockquote>
+<pre><code class="php">
+   /* multi-line code section */
+   return $result;
+</code></pre>
+            </div>
+            <h2 id="hyper-links">Hyper-links</h2>
+            <p>
+<pre>
+    [link text](link-url-href "link title")
+    [link text](link-url-href "link title"){#id .class attribute=value}
+    [link text][link-id]
+    [link-id]: https://inxys.net/about/ "Link title"
+</pre>
+            </p>
+            <div class="md-example">
+                <p>This is an example <a href="#hyper-links" title="link title">link text</a> hyper-link to another page.</p>
+            </div>
+            <p>
+                Link must be properly enclosed and must be all on a single line.
+            </p>
+            <h4>Linking to other objects</h4>
+            <p>Link to internal objects using the <code>#</code> and dot-syntax. For example:</p>
+            <p><code>#C-varyn-1</code> creates a link to conference <code>varyn-1</code>.</p>
+            <p><code>#C-varyn-1.14</code> creates a link to topic 14 in conference <code>varyn-1</code>.</p>
+            <p><code>#C-varyn-1.14.22</code> creates a link to comment number 22 of topic number 14 in conference <code>varyn-1</code>.</p>
+            <h2>Images</h2>
+            <p>
+                Images are similar to links and indicated with <code>![</code> and the necessary closing tag. Markdown also allows the reference link concept for images.
+            </p>
+<pre>
+    ![img alt text](img-link-url-src "img title")
+    ![img alt text](img-link-url-src "img title"){#id .class attribute=value}
+    ![img alt text][img-id]
+    [img-id]: https://inxys.net/assets/img/inxys-logo-32.png "Img title"
+</pre>
+            <div class="md-example">
+                <p>This is an example image <img src="http://inxys.net/assets/img/inxys-logo-32.png" title="Img title" alt="img alt text"> link.</p>
+            </div>
+            <h2>Lists</h2>
+            <p>
+                - simple
+                + simple
+                * simple
+                * simple with indented nested list
+                   * indented nested list
+                   * indented nested list
+                * [ ] simple with checkbox
+                * [X] simple with checked checkbox
+                1. Numbered
+                2. [ ] Numbered with checkbox
+                Definition list term
+                :   definition description. Note the colon must start at the same indent as the term.
+            </p>
+            <h2>Tables</h2>
+            <p>
+                | Header | Col-2 | Col-3 |
+                |--------|------:|:------|
+                | **item** | $0.00 | product-id |
+                | **item** | $99 | product-id |
+                | **item** | $22.44 | product-id |
+            </p>
+            <h2>Footnotes</h2>
+            <p>
+                That's some text with a footnote.[^1]
+
+                [^1]: And that's the footnote.
+            </p>
+        </div>
+    </div>
+    <p>
+        <a href="/terms/" target="_new" class="right">Terms of service</a> |
+        <a href="/privacy/" target="_new" class="right">Privacy policy</a>
+    </p>
+</div>
+<?php include(VIEWS_ROOT . 'footer.php');?>
+</body>
+</html>

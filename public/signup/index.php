@@ -1,5 +1,5 @@
 <?php
-include_once('../sitedev/services/common.php');
+include_once('../../sitedev/services/common.php');
 $pageId = 'signup';
 $pageTitle = '';
 ?>
@@ -17,7 +17,7 @@ $pageTitle = '';
         <div class="col col-md-4"></div>
     </div>
     <p>
-        Already a member? <a class="btn btn-primary" href="/index.php" role="button">Log in &raquo;</a>
+        Already a member? <a class="btn btn-primary" href="/" role="button">Log in &raquo;</a>
     </p>
     <p>
         Create an account for free. You get one public conference with your free account.

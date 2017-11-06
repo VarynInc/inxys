@@ -14,7 +14,7 @@
             <input type="hidden" name="all-clear" value="<?php echo($hackerVerification);?>" />
             <span id="rememberme-container"><input type="checkbox" tabindex="20" checked="checked" name="rememberme" id="rememberme"><label for="rememberme">Remember Me</label></span>
             <div class="text-right">
-                <a id="loginPopup_forgot_password" href="/forgotpassword.php" tabindex="21">Forgot password?</a>
+                <a id="loginPopup_forgot_password" href="/forgotpassword/" tabindex="21">Forgot password?</a>
             </div>
             <input type="hidden" name="action" value="login" />
         </div>
