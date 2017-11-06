@@ -17,10 +17,15 @@ $pageTitle = '';
         <div class="col col-md-4"></div>
     </div>
     <p>
+        Create an account for free. You get one public conference with your free account.
+    </p>
+    <p>
         Already a member? <a class="btn btn-primary" href="/" role="button">Log in &raquo;</a>
     </p>
     <p>
-        Create an account for free. You get one public conference with your free account.
+        By registering you agree to the <a href="/terms/">Terms of Service</a>. We require a valid email address. Once you register
+        you will receive an email be asking you to confirm your email address. You accouint is not active until you complete
+        the email confirmation.
     </p>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>

@@ -34,18 +34,18 @@ if ( ! $loggedIn) {
             The inxys information design is based on work done by Murray Turoff at NJIT related to <a href="http://ieeexplore.ieee.org/document/49267/">TEIES</a>.
             A <i>conference</i> is a container of members and topics, <i>topics</i> are main tracts of discussion with comments. <i>Comments</i> are discussion around topics and members can <i>reply</i> to individual comments.
                 <ul>
-                    <li>Conference</li>
+                    <li>Conference
                     <ul>
                         <li>Members</li>
-                        <li>Topics</li>
+                        <li>Topics
                         <ul>
                             <li>Replies (replies directly to topics)</li>
-                            <li>Comments</li>
+                            <li>Comments
                             <ul>
                                 <li>Replies</li>
-                            </ul>
-                        </ul>
-                    </ul>
+                            </ul></li>
+                        </ul></li>
+                    </ul></li>
                 </ul>
         </p>
         <p>
@@ -150,26 +150,37 @@ $smaller$
             </div>
             <h2>Lists</h2>
             <p>
-                - simple
-                + simple
-                * simple
-                * simple with indented nested list
-                   * indented nested list
-                   * indented nested list
-                * [ ] simple with checkbox
-                * [X] simple with checked checkbox
-                1. Numbered
-                2. [ ] Numbered with checkbox
-                Definition list term
-                :   definition description. Note the colon must start at the same indent as the term.
+            <pre>
+- simple
++ simple
+* simple
+* simple with indented nested list
+   * indented nested list
+   * indented nested list
+* [ ] simple with checkbox
+* [X] simple with checked checkbox
+1. Numbered
+2. [ ] Numbered with checkbox
+Definition list term
+:   definition description. Note the colon must start at the same indent as the term.
+            </pre>
             </p>
             <h2>Tables</h2>
-            <p>
-                | Header | Col-2 | Col-3 |
-                |--------|------:|:------|
-                | **item** | $0.00 | product-id |
-                | **item** | $99 | product-id |
-                | **item** | $22.44 | product-id |
+            <p>Tables are setup using the "pipe" <code>|</code> character to delineate the table cells. A table row must begin with <code>|</code>
+                and each table row should have the same number of divisions. In the header designation a <code>:</code> character
+                indicates the cell justification:
+            <ul>
+                <li><code>----:</code> right justification</li>
+                <li><code>:----</code> left justification</li>
+                <li><code>:----:</code> center justification</li>
+            </ul>
+            <pre>
+| Header | Col-2 | Col-3 |
+|--------|------:|:------|
+| **item-1** | $0.00 | product-id |
+| **item-2** | $99 | product-id |
+| **item-3** | $22.44 | product-id |
+            </pre>
             </p>
             <h2>Footnotes</h2>
             <p>

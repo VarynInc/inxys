@@ -13,7 +13,7 @@
         </div>
         <div class="form-group">
             <label for="signup_email">Email:</label><br>
-            <span id="agree_terms_group"><input type="checkbox" tabindex="20" name="agree_terms" id="agree_terms"><label for="agree_terms"> I agree with the terms of service</label></span>
+            <span id="agree_terms_group"><input type="checkbox" tabindex="20" name="agree_terms" id="agree_terms"><label for="agree_terms"> &nbsp;I agree with the terms of service</label></span>
         </div>
         <div class="form-group">
             <button type="submit" class="btn btn-lg btn-success" value="signupButton" name="signupButton" id="loginButton">Join</button>

@@ -1,5 +1,5 @@
 <?php
-include_once('../sitedev/services/common.php');
+include_once('../../sitedev/services/common.php');
 $pageId = 'scratchpad';
 $pageTitle = 'Scratchpad';
 $hackerVerification = '';
@@ -15,7 +15,7 @@ $hackerVerification = '';
             <p id="subject-form-help" class="help-block">Enter a title or subject that summarizes your comment.</p>
         </div>
         <div class="form-group">
-            <textarea name="content" class="form-control" data-provide="markdown" rows="10" data-autofocus="true"></textarea>
+            <textarea name="content" class="form-control" data-provide="markdown" rows="20" data-autofocus="true"></textarea>
         </div>
         <div class="form-group">
             <input name="tags" type="text" placeholder="Tags" class="form-control" aria-describedby="tags-form-help">
@@ -31,8 +31,8 @@ $hackerVerification = '';
     </form>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>
-<script src="js/markdown.js"></script>
-<script src="js/to-markdown.js"></script>
-<script src="js/bootstrap-markdown.js"></script>
+<script src="/js/markdown.js"></script>
+<script src="/js/to-markdown.js"></script>
+<script src="/js/bootstrap-markdown.js"></script>
 </body>
 </html>
