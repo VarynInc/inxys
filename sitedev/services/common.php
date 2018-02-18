@@ -15,9 +15,6 @@ define('SERVER_DATA_PATH', $serverRootPath . '..' . DIRECTORY_SEPARATOR . 'data'
 define('SERVICE_ROOT', $serverRootPath . '..' . DIRECTORY_SEPARATOR . 'sitedev' . DIRECTORY_SEPARATOR . 'services' . DIRECTORY_SEPARATOR);
 define('VIEWS_ROOT', $serverRootPath . '..' . DIRECTORY_SEPARATOR . 'sitedev' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR);
 
-// determines where the root of the avatar data is held, must be in a public folder
-define('SITE_AVATAR_PATH', DIRECTORY_SEPARATOR . 'avatar' . DIRECTORY_SEPARATOR);
-
 // access to our session data
 define('SESSION_DAYSTAMP_HOURS', 48);
 define('SESSION_COOKIE', 'inxys-session');
@@ -30,7 +27,7 @@ define('SESSION_PARAM_CACHE', 'inxys_params');
 define('SESSION_USERINFO', 'inxys_user');
 
 // Global variables that should be defined on every page
-$pageId = '';         // Every page has na id so we can do per-page logic inside common functions
+$pageId = '';         // Every page has an id so we can do per-page logic inside common functions
 $pageTitle = '';      // Every page has a title, many times this is dynamically generated
 $allMenuPages = array(array('id' => 'home', 'name' => 'Home', 'path' => '/'),
                       array('id' => 'conferences', 'name' => 'Conferences', 'path' => '/conf/'),
@@ -55,6 +52,39 @@ function currentPageName() {
 function isActivePage($pageId) {
     global $allMenuPages;
     return in_array($pageId, $allMenuPages) ? 'active' : '';
+}
+
+/**
+ * Return a variable that was posted from a form, or in the REQUEST object (GET or COOKIES), or a default if not found.
+ * This way POST is the primary concern but if not found will fallback to the other methods.
+ * @param $varName {string|Array} variable to read from request. If array, iterates array of strings until the first entry returns a result.
+ * @param null $defaultValue
+ * @return null
+ */
+function getPostOrRequestVar ($varName, $defaultValue = NULL) {
+    $value = null;
+    if (is_array($varName)) {
+        for ($i = 0; $i < count($varName); $i ++) {
+            $value = getPostOrRequestVar($varName[$i], null);
+            if ($value != null) {
+                break;
+            }
+        }
+        if ($value == null) {
+            $value = $defaultValue;
+        }
+    } else {
+        if (isset($_POST[$varName])) {
+            $value = $_POST[$varName];
+        } elseif (isset($_GET[$varName])) {
+            $value = $_GET[$varName];
+        } elseif (isset($_REQUEST[$varName])) {
+            $value = $_REQUEST[$varName];
+        } else {
+            $value = $defaultValue;
+        }
+    }
+    return $value;
 }
 
 require_once('version.php');

@@ -103,3 +103,27 @@ pre {
 .font-size-2 {
     font-size: 1.33em;
 }
+
+.leader-half {
+    margin-top: 0.5em;
+}
+
+.leader-1 {
+    margin-top: 1em;
+}
+
+.leader-2 {
+    margin-top: 2em;
+}
+
+.leader-3 {
+    margin-top: 3em;
+}
+
+.page-footer {
+    color: #5e5e5e;
+    font-size: 0.9em;
+}
+.popup-form-address-input {
+    display: none;
+}
