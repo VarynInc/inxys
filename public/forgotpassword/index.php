@@ -1,5 +1,5 @@
 <?php
-include_once('../../sitedev/services/common.php');
+include_once('../../services/common.php');
 $pageId = 'forgotpassword';
 $pageTitle = 'Forgot password | inXys';
 $pageDescription = 'Use this form to reset your password.';

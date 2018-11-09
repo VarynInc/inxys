@@ -1,5 +1,5 @@
 <?php
-include_once('../../../sitedev/services/common.php');
+include_once('../../../services/common.php');
 $pageId = 'about';
 $pageTitle = 'About The Information Exchange';
 $pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.';

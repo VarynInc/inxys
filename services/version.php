@@ -1,2 +1,4 @@
 <?php
-define('INXYS_VERSION', '1.0.1');
+if ( ! defined('INXYS_VERSION')) {
+    define('INXYS_VERSION', '3.1.0');
+}
