@@ -1,6 +1,6 @@
 
 <?php
-include_once('../services/common.php');
+include_once('../../services/common.php');
 $pageId = 'offline';
 $pageTitle = '';
 ?>

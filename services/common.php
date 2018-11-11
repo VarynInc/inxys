@@ -153,5 +153,4 @@ function verifyStage($includePassedTests = false) {
 }
 
 require_once('version.php');
-require_once('status.php');
 require_once('config.php');
