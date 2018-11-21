@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Base object
  * User: jf

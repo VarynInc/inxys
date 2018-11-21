@@ -3,11 +3,30 @@
 // the web server is running and all systems are performing as expected.
 require_once('../services/common.php');
 
-// $pageok is true until a check fails and set it to false
+// Show additional verification information
+$showInfo = isset($_GET['info']) && $_GET['info'] == 990;
+
+// Verify PHP is properly loaded and we have common.php properly loaded
 $pageok = true;
-$showInfo = isset($_GET['info']) && $_GET['info'] == 1;
+if ( ! isset($enginesisLogger) || $enginesisLogger == null) {
+    $pageok = false;
+    $enginesisLogger->log("Server verification fails with no logging system", LogMessageLevel::Error, 'SYSMON');
+}
+$version = defined('INXYS_VERSION') ? INXYS_VERSION : null;
+$pageok = strlen($version) > 0;
+
+// Verify we're on a known server stage
+if ($pageok) {
+    $serverStage = serverStage();
+    $pageok = strlen($serverStage) == 0 || preg_match('/^-[dlqx]$/', $serverStage) === 1;
+}
+if ( ! $pageok) {
+    $enginesisLogger->log("Server verification fails at stage/version check", LogMessageLevel::Error, 'SYSMON');
+}
 
 if ($showInfo) {
+    echo("<h1>" . ENGINESIS_SITE_NAME . ' ' . $serverStage . ' (' . ENGINESIS_SITE_ID . ') version ' . INXYS_VERSION . "</h1>");
+
     phpinfo();
     echo("<p><pre>");
     if (function_exists('gd_info')) {
@@ -55,11 +74,21 @@ if ($showInfo) {
         'PATH_INFO', 
         'ORIG_PATH_INFO'];
 
-    echo '<table cellpadding="10" style="margin: 0 auto;">' ; 
+    echo('<table cellpadding="10" style="margin: 0 auto;">');
     foreach ($indicesServer as $arg) { 
-        echo '<tr><td>' . $arg . '</td><td>' . (isset($_SERVER[$arg]) ? $_SERVER[$arg] : '-') . '</td></tr>' ; 
+        echo('<tr><td>' . $arg . '</td><td>' . (isset($_SERVER[$arg]) ? $_SERVER[$arg] : '-') . '</td></tr>');
     } 
-    echo '</table>' ; 
+    echo('</table>');
+    echo("<br/>\n");
+
+    // Show off a bunch of configuration data to help verify the server is in working order.
+    echo('<table cellpadding="10" style="margin: 0 auto;">');
+    echo('<tr><td>SERVER_ROOT</td><td>' . SERVER_ROOT . '</td></tr>');
+    echo('<tr><td>SERVER_DATA_PATH</td><td>' . SERVER_DATA_PATH . '</td></tr>');
+    echo('<tr><td>SERVER_PRIVATE_PATH</td><td>' . SERVER_PRIVATE_PATH . '</td></tr>');
+    echo('<tr><td>SERVICE_ROOT</td><td>' . SERVICE_ROOT . '</td></tr>');
+    echo('<tr><td>VIEWS_ROOT</td><td>' . VIEWS_ROOT . '</td></tr>');
+    echo('</table>');
     echo("<br/>\n");
 }
 
@@ -72,6 +101,27 @@ if (count($testStatus) > 0) {
         }
         if ( ! $value) {
             $pageok = false;
+            $enginesisLogger->log("Server verification fails for test $key", LogMessageLevel::Error, 'SYSMON');
+        }
+    }
+}
+
+// Verify we can contact Enginesis and run a public service
+if ($pageok) {
+    $response = $enginesis->siteGet($siteId);
+    if ($response != null) {
+        $pageok = $response->site_id == $siteId;
+        if ($showInfo) {
+            echo("<h4>siteGet $siteId</h4>");
+            echo("<pre><code>");
+            var_dump($response);
+            echo("</code></pre>");
+        }
+    } else {
+        $pageok = false;
+        $enginesisLogger->log("Server verification fails for siteGet $siteId", LogMessageLevel::Error, 'SYSMON');
+        if ($showInfo) {
+            echo("<h4>siteGet $siteId</h4><p>FAILED</p>");
         }
     }
 }

@@ -41,3 +41,4 @@ jspm_packages
 node_modules/
 data/
 services/config.php
+services/serverConfig.php

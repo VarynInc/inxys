@@ -1,5 +1,5 @@
 <?php
-include_once('../../services/common.php');
+include_once('../../services/inxys_common.php');
 $pageId = 'privacy';
 $pageTitle = 'Privacy policy | inXys.net';
 $pageDescription = 'Privacy policy for inXys.net';

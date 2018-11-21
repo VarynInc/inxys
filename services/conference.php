@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Conference object
  * User: jf

@@ -2,7 +2,7 @@
 /**
  * Create a new conference.
  */
-include_once('../../services/common.php');
+include_once('../../services/inxys_common.php');
 $pageId = 'conferences';
 $pageTitle = '';
 $hackerVerification = '';
