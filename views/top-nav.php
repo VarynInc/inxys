@@ -37,7 +37,10 @@
                         </div>
                     </form>
                 </li>
-                <li><a href="/about/">About</a></li>
+                <?php
+                $activeClass = $pageId == 'about' ? 'active' : '';
+                echo('<li class="' . $activeClass . '"><a href="/about/">About</a></li>');
+                ?>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
