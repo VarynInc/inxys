@@ -28,7 +28,7 @@
     "use strict";
 
     var enginesis = {
-        VERSION: "2.6.2",
+        VERSION: "2.6.6",
         debugging: true,
         disabled: false, // use this flag to turn off communicating with the server
         isOnline: true,  // flag to determine if we are currently able to reach Enginesis servers
@@ -513,7 +513,7 @@
                 saveUserSessionInfo(sessionInfo, true);
             } else {
                 enginesis.sessionId = sessionInfo.session_id;
-                enginesis.sessionExpires = Date.now() + (24 * 60 * 60 * 1000); // have it expire in 1 day.    
+                enginesis.sessionExpires = Date.now() + (24 * 60 * 60 * 1000); // have it expire in 1 day.
                 if (sessionInfo.site_mark && sessionInfo.site_mark != enginesis.anonymousUser.userId) {
                     enginesis.anonymousUser.userId = sessionInfo.site_mark;
                     anonymousUserSave();
@@ -2815,7 +2815,7 @@
         if ( ! enginesis.isUserLoggedIn()) {
             siteMark = enginesis.anonymousUser.userId;
         }
-        return sendRequest(serviceName, {token: refreshToken, game_id: game_id, gamekey: gameKey, site_mark: siteMark}, overRideCallBackFunction);
+        return sendRequest(serviceName, {refresh_token: refreshToken, game_id: game_id, gamekey: gameKey, site_mark: siteMark}, overRideCallBackFunction);
     };
 
     /**
@@ -3320,13 +3320,21 @@
     /**
      * this function generates the email that is sent to the email address matching user_id if the secondary password matches.
      * This is used when the secondary password is attempted but expired (such as user lost the reset email).
-     * @param user_id - the user in question.
-     * @param secondary_password - the original secondary password generated in forgot password flow.
-     * @param overRideCallBackFunction
+     *
+     * @param {integer} user_id - the user in question, required if using secondary password flow, optional if using user_name or email_address.
+     * @param {string} user_name - the user in question if you do not know the user_id
+     * @param {string} email_address - identify the user by email address
+     * @param {string} secondary_password - the original secondary password generated in forgot password flow.
+     * @param {function} overRideCallBackFunction
      * @returns {boolean}
      */
-    enginesis.registeredUserResetSecondaryPassword = function (user_id, secondary_password, overRideCallBackFunction) {
-        return sendRequest("RegisteredUserResetSecondaryPassword", {user_id: userid, secondary_password: secondary_password}, overRideCallBackFunction);
+    enginesis.registeredUserResetSecondaryPassword = function (user_id, user_name, email_address, secondary_password, overRideCallBackFunction) {
+        return sendRequest("RegisteredUserResetSecondaryPassword", {
+            user_id: user_id,
+            user_name: user_name,
+            email_address: email_address,
+            secondary_password: secondary_password
+        }, overRideCallBackFunction);
     };
 
     enginesis.registeredUserRequestPasswordChange = function (overRideCallBackFunction) {
@@ -3567,7 +3575,7 @@
      * return an answer right away by looking at the cached list of games. If a call back function is
      * provided, the server will be queried for a updated list of favorite games and the test
      * will be done asynchronously.
-     * 
+     *
      * @param {integer} game_id A game id to check, or null/0 to check the current game id.
      * @param {function} callBackFunction If provided, query the server then call this function with the result.
      * @returns {boolean} True if the requested game_id is a favorite game for this user.
