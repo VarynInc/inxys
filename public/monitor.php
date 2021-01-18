@@ -10,7 +10,7 @@ $showInfo = isset($_GET['info']) && $_GET['info'] == 990;
 $pageok = true;
 if ( ! isset($enginesisLogger) || $enginesisLogger == null) {
     $pageok = false;
-    $enginesisLogger->log("Server verification fails with no logging system", LogMessageLevel::Error, 'SYSMON');
+    $enginesisLogger->log("Server verification fails with no logging system", LogMessageLevel::Error, 'SYSMON', __FILE__, __LINE__);
 }
 $version = defined('INXYS_VERSION') ? INXYS_VERSION : null;
 $pageok = strlen($version) > 0;
@@ -21,7 +21,7 @@ if ($pageok) {
     $pageok = strlen($serverStage) == 0 || preg_match('/^-[dlqx]$/', $serverStage) === 1;
 }
 if ( ! $pageok) {
-    $enginesisLogger->log("Server verification fails at stage/version check", LogMessageLevel::Error, 'SYSMON');
+    $enginesisLogger->log("Server verification fails at stage/version check", LogMessageLevel::Error, 'SYSMON', __FILE__, __LINE__);
 }
 
 if ($showInfo) {
@@ -101,7 +101,7 @@ if (count($testStatus) > 0) {
         }
         if ( ! $value) {
             $pageok = false;
-            $enginesisLogger->log("Server verification fails for test $key", LogMessageLevel::Error, 'SYSMON');
+            $enginesisLogger->log("Server verification fails for test $key", LogMessageLevel::Error, 'SYSMON', __FILE__, __LINE__);
         }
     }
 }
@@ -119,7 +119,7 @@ if ($pageok) {
         }
     } else {
         $pageok = false;
-        $enginesisLogger->log("Server verification fails for siteGet $siteId", LogMessageLevel::Error, 'SYSMON');
+        $enginesisLogger->log("Server verification fails for siteGet $siteId", LogMessageLevel::Error, 'SYSMON', __FILE__, __LINE__);
         if ($showInfo) {
             echo("<h4>siteGet $siteId</h4><p>FAILED</p>");
         }
