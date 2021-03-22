@@ -1,3 +1,22 @@
+# .gitignore for Enginesis web development project
+*.log
+*.zip
+*.flv
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+cookie.txt
+
+# Other temp files and folders
+.idea/
+.vscode/
+node_modules/
+coverage/
+
 # Logs
 logs
 *.log
