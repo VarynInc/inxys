@@ -24,12 +24,13 @@ define('SESSION_AUTHTOKEN', 'authtok');
 define('SESSION_PARAM_CACHE', 'engsession_params');
 
 // memcache access global table
-$_MEMCACHE_HOSTS = ['-l'  => array('port'=>11215, 'host'=>'www.puttputtplanet-l.com'),
-                    '-d'  => array('port'=>11215, 'host'=>'www.puttputtplanet-d.com'),
-                    '-q'  => array('port'=>11215, 'host'=>'www.puttputtplanet-q.com'),
-                    '-x'  => array('port'=>11215, 'host'=>'www.puttputtplanet-x.com'),
-                    ''    => array('port'=>11215, 'host'=>'www.puttputtplanet.com')
-                   ];
+$_MEMCACHE_HOSTS = [
+    '-l'  => array('port'=>11215, 'host'=>'www.puttputtplanet-l.com'),
+    '-d'  => array('port'=>11215, 'host'=>'www.puttputtplanet-d.com'),
+    '-q'  => array('port'=>11215, 'host'=>'www.puttputtplanet-q.com'),
+    '-x'  => array('port'=>11215, 'host'=>'www.puttputtplanet-x.com'),
+    ''    => array('port'=>11215, 'host'=>'www.puttputtplanet.com')
+];
 
 // Define a list of email addresses who will get notifications of internal bug reports
 $admin_notification_list = ['support@puttputtplanet.com'];
