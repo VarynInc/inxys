@@ -1,3 +1,6 @@
+<?php
+$hackerVerification = generateHackerVerificationCode();
+?>
 <form id="signup-form" method="POST" action="/signup/">
     <div class="login-form">
         <h3 class="text-center">Join us:</h3>
