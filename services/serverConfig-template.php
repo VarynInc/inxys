@@ -6,7 +6,7 @@
  * Date: Feb-13-2016
  */
 date_default_timezone_set('America/New_York');
-define('LOGFILE_PREFIX', 'enginesis_php_');
+define('LOGFILE_PREFIX', 'enginesis');
 define('SITE_SESSION_COOKIE', 'enguser');
 define('ENGINESIS_SITE_NAME', 'Enginesis');
 define('ENGINESIS_SITE_ID', 100);
@@ -25,11 +25,11 @@ define('SESSION_PARAM_CACHE', 'engsession_params');
 
 // memcache access global table
 $_MEMCACHE_HOSTS = [
-    '-l'  => array('port'=>11215, 'host'=>'www.puttputtplanet-l.com'),
-    '-d'  => array('port'=>11215, 'host'=>'www.puttputtplanet-d.com'),
-    '-q'  => array('port'=>11215, 'host'=>'www.puttputtplanet-q.com'),
-    '-x'  => array('port'=>11215, 'host'=>'www.puttputtplanet-x.com'),
-    ''    => array('port'=>11215, 'host'=>'www.puttputtplanet.com')
+    '-l'  => ['port'=>11215, 'host'=>'www.puttputtplanet-l.com'],
+    '-d'  => ['port'=>11215, 'host'=>'www.puttputtplanet-d.com'],
+    '-q'  => ['port'=>11215, 'host'=>'www.puttputtplanet-q.com'],
+    '-x'  => ['port'=>11215, 'host'=>'www.puttputtplanet-x.com'],
+    ''    => ['port'=>11215, 'host'=>'www.puttputtplanet.com']
 ];
 
 // Define a list of email addresses who will get notifications of internal bug reports
@@ -41,6 +41,6 @@ $socialServiceKeys = [
     7  => ['service' => 'Google', 'app_id' => '', 'app_secret' => '', 'admins' =>''],
     11 => ['service' => 'Twitter', 'app_id' => '', 'app_secret' => '', 'admins' =>'']
 ];
-$developerKey = '';
+$developerKey = ENGINESIS_DEVELOPER_API_KEY;
 $siteId = ENGINESIS_SITE_ID;
 $languageCode = 'en';
