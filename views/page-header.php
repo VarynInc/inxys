@@ -38,11 +38,11 @@
     <?php if ($pageId == 'Scratchpad') { ?>
         <link href="/css/bootstrap-markdown.min.css" rel="stylesheet">
     <?php } ?>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZJHQMQZV7"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ENBPFCKMEZ"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-KZJHQMQZV7');
+    gtag('config', 'G-ENBPFCKMEZ');
     </script>
 </head>
