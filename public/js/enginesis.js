@@ -18,7 +18,7 @@
     "use strict";
 
     var enginesis = {
-        VERSION: "2.6.15",
+        VERSION: "2.6.16",
         debugging: true,
         disabled: false, // use this flag to turn off communicating with the server
         isOnline: true,  // flag to determine if we are currently able to reach Enginesis servers
@@ -3413,7 +3413,7 @@
                 debugLog("Analytics exception " + exception.toString());
             }
         }
-        return sendRequest("GameTrackingRecord", {hit_type: "game", hit_category: category, hit_action: action, hit_label: label, hit_data: hitData}, overRideCallBackFunction);
+        return sendRequest("GameTrackingRecord", {hit_type: "game_event", hit_category: category, hit_action: action, hit_label: label, hit_data: hitData}, overRideCallBackFunction);
     };
 
     /**
