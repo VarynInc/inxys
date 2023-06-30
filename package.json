@@ -26,6 +26,6 @@
   },
   "homepage": "https://github.com/VarynInc/inxys#readme",
   "dependencies": {
-    "bootstrap": "^3.3.7"
+    "bootstrap": "^3.4.1"
   }
 }
