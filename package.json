@@ -1,9 +1,11 @@
 {
   "name": "inxys",
   "version": "3.1.0",
-  "description": "The Information Exchange",
+  "description": "inXys: The Information Exchange",
   "main": "js/index.js",
   "scripts": {
+    "build": "node ./bin/build.js",
+    "deploy": "node ./bin/deploy.js",
     "test": "test"
   },
   "repository": {
