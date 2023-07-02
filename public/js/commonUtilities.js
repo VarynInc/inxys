@@ -17,10 +17,19 @@
     "use strict";
 
     var commonUtilities = {
-        version: "1.4.4"
+        version: "1.5.1"
     };
     var _base64KeyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     var _testNumber = 0;
+
+    /**
+     * Determine if the current context is a browser. This assures we have access to window and document.
+     * Otherwise it assumes it is a Node environment and we don't have access to the browser environment.
+     * @returns {boolean} True if running in a browser environment.
+     */
+    commonUtilities.isBrowserEnvironment = function() {
+        return typeof window === "object" && typeof document === "object";
+    }
 
     /**
      * Determine if HTML5 local or session storage is available.
@@ -29,17 +38,21 @@
      * @returns {boolean} True if the storage type is supported.
      */
     commonUtilities.browserStorageAvailable = function(storageType, robustCheck) {
-        var hasSupport = false,
-            storage,
-            testKey;
+        if ( ! commonUtilities.isBrowserEnvironment()) {
+            return false;
+        }
+        let hasSupport = false;
+        let storage;
+        let testKey;
 
         if (storageType === undefined || storageType == null || storageType == "") {
             storageType = "localStorage";
         }
         try {
-            hasSupport = storageType in global && global[storageType] !== null;
-            if (hasSupport && robustCheck) { // even if "supported" make sure we can write and read from it
-                storage = global[storageType];
+            hasSupport = storageType in window && window[storageType] !== null;
+            if (hasSupport && robustCheck) {
+                // even if "supported" make sure we can write and read from it
+                storage = window[storageType];
                 testKey = "commonUtilities";
                 storage.setItem(testKey, "1");
                 storage.removeItem(testKey);
@@ -159,30 +172,34 @@
      * Return the current document query string as an object with
      * key/value pairs converted to properties.
      *
-     * @param {string} urlParamterString An optional query string to parse as the query string. If not
+     * @param {string|null} urlParameterString An optional query string to parse as the query string. If not
      *   provided then use window.location.search.
      * @return {object} result The query string converted to an object of key/value pairs.
      */
     commonUtilities.queryStringToObject = function (urlParameterString) {
-        var match,
-            search = /([^&=]+)=?([^&]*)/g,
-            decode = function (s) {
-                return decodeURIComponent(s.replace(/\+/g, " "));
-                },
-            result = {};
-        if ( ! urlParameterString && window) {
+        const search = /([^&=]+)=?([^&]*)/g;
+        let match;
+        let result = {};
+
+        function unescapeURI (uri) {
+            return decodeURIComponent(uri.replace(/\+/g, " "));
+        };
+
+        if (urlParameterString) {
+            if (urlParameterString[0] == "?") {
+                urlParameterString = urlParameterString.substring(1);
+            }
+        } else if (window) {
             urlParameterString = window.location.search.substring(1);
-        } else {
-            urlParameterString = "";
         }
         while (match = search.exec(urlParameterString)) {
-            result[decode(match[1])] = decode(match[2]);
+            result[unescapeURI(match[1])] = unescapeURI(match[2]);
         }
         return result;
     };
 
     /**
-     * Append an existing URL with additional query paremters.
+     * Append an existing URL with additional query parameters.
      * @param {String} url A well-formed URL. It may or may not have "?" query parameter(s).
      * @param {Object} parameters Expected object of key/value properties. Does not work for nested objects.
      * @returns {String} The url with query string parameters appended.
@@ -294,7 +311,7 @@
             if (path[path.length - 1] !== "/" && file[0] !== "/") {
                 path += "/" + file;
             } else if (path[path.length - 1] == "/" && file[0] == "/") {
-                path += file.substr(1);
+                path += file.substring(1);
             } else {
                 path += file;
             }
@@ -629,6 +646,9 @@
             dataURL = canvas.toDataURL("image/png");
             callback(dataURL);
         }
+        img.onerror = function() {
+            callback(null);
+        }
     };
 
     /**
@@ -703,7 +723,7 @@
      * @returns {number} Rounded value.
      */
     commonUtilities.roundTo = function (value, decimalPlaces) {
-        var orderOfMagnitude = Math.pow(10, decimalPlaces);
+        const orderOfMagnitude = Math.pow(10, decimalPlaces);
         return Math.round(value * orderOfMagnitude) / orderOfMagnitude;
     };
 
@@ -718,7 +738,10 @@
      * @return {string|null} Contents of cookie stored with key.
      */
     commonUtilities.cookieGet = function (key) {
-        if (key && document && document.cookie) {
+        if ( ! commonUtilities.isBrowserEnvironment()) {
+            return null;
+        }
+        if (key && document.cookie) {
             return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
         } else {
             return null;
@@ -728,20 +751,24 @@
     /**
      * Set a cookie indexed by the specified key.
      *
-     * @param {string} key Indicate which cookie to set.
-     * @param {object} value Value to store under key. If null, expire the prior cookie.
+     * @param {String} key Indicate which cookie to set.
+     * @param {String|object|null} value Value to store under key. If null, expire the prior cookie.
      * @param {Number|String|Date} expiration When the cookie should expire. Number indicates
      *   max age, in seconds. String indicates GMT date. Date is converted to GMT date.
-     * @param {string} path Cookie URL path.
-     * @param {string} domain Cookie domain.
-     * @param {boolean} isSecure Set cookie secure flag. Default is true.
-     * @return {boolean|string} true if set, false if error. Returns string if not running in
+     * @param {String} path Cookie URL path.
+     * @param {String} domain Cookie domain.
+     * @param {Boolean} isSecure Set cookie secure flag. Default is true.
+     * @return {Boolean|String} true if set, false if error. Returns string if not running in
      *   a browser environment, such as Node.
      */
      commonUtilities.cookieSet = function (key, value, expiration, path, domain, isSecure) {
-        var expires;
-        var neverExpires;
-        var sameSite;
+        if ( ! commonUtilities.isBrowserEnvironment()) {
+            return null;
+        }
+
+        let expires;
+        let neverExpires;
+        let sameSite;
 
         if ( ! key || /^(?:expires|max\-age|path|domain|secure)$/i.test(key)) {
             // This is an invalid cookie key.
@@ -752,7 +779,7 @@
         }
         expires = "";
         neverExpires = "expires=Fri, 31 Dec 9999 23:59:59 GMT";
-        sameSite = "samesite=LAX";
+        sameSite = "samesite=lax";
         if (typeof isSecure === "undefined") {
             isSecure = true;
         }
@@ -777,17 +804,17 @@
         } else {
             expires = neverExpires;
         }
-        var cookieData = encodeURIComponent(value) + "; "
-            + expires + "; "
-            + (domain ? ("domain=" + domain + "; ") : "")
-            + (path ? ("path=" + path + "; ") : "")
-            + sameSite + "; "
-            + (isSecure ? "Secure;" : "");
-        if (typeof global.document === "undefined" || typeof global.document.cookie === "undefined") {
+        const cookieData = encodeURIComponent(value) + "; "
+            + expires
+            + (domain ? (";domain=" + domain) : "")
+            + (path ? (";path=" + path) : "")
+            + ";" + sameSite
+            + (isSecure ? ";Secure" : "");
+        if (typeof document === "undefined" || typeof document.cookie === "undefined") {
             // If the document object is undefined then we are running in Node.
             return cookieData;
         }
-        global.document.cookie = encodeURIComponent(key) + "=" + cookieData;
+        document.cookie = encodeURIComponent(key) + "=" + cookieData;
         return true;
     };
 
@@ -815,7 +842,10 @@
      * @return {boolean} true if exists, false if doesn't exist.
      */
     commonUtilities.cookieExists = function (key) {
-        if (key && global.document) {
+        if ( ! commonUtilities.isBrowserEnvironment()) {
+            return false;
+        }
+        if (key && document.cookie) {
             return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(key).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
         } else {
             return false;
@@ -828,7 +858,7 @@
      * @return {Array} Array of all stored cookie keys.
      */
     commonUtilities.cookieGetKeys = function () {
-        if (! global.document) {
+        if ( ! commonUtilities.isBrowserEnvironment()) {
             return [];
         }
         var allKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/),
@@ -871,11 +901,14 @@
      * @returns {string|*}
      */
     commonUtilities.storageGet = function (key, storageObject) {
-        var itemValueRaw,
-            itemValueParsed;
+        if ( ! this.isBrowserEnvironment()) {
+            return null;
+        }
+        let itemValueRaw;
+        let itemValueParsed;
 
         if (storageObject === undefined || storageObject == null) {
-            storageObject = global.localStorage;
+            storageObject = window.localStorage;
         }
         itemValueRaw = storageObject.getItem(key);
         if (itemValueRaw != null) {
@@ -883,6 +916,8 @@
             if (itemValueParsed == null) {
                 itemValueParsed = itemValueRaw;
             }
+        } else {
+            itemValueParsed = null;
         }
         return itemValueParsed;
     };
@@ -902,7 +937,7 @@
 
         if (this.browserStorageAvailable("localStorage", false) && key != null) {
             try {
-                storageObject = global.localStorage;
+                storageObject = window.localStorage;
                 if (object != null) {
                     if (typeof object === "object") {
                         itemValueRaw = JSON.stringify(object);
@@ -933,7 +968,7 @@
 
         if (this.browserStorageAvailable("localStorage", false) && key != null) {
             try {
-                storageObject = global.localStorage;
+                storageObject = window.localStorage;
                 maybeJsonData = storageObject[key];
                 if (maybeJsonData != null) {
                     if (maybeJsonData[0] == "{" || maybeJsonData[0] == "]") {
@@ -951,14 +986,14 @@
 
     /**
      * Remove the given key from local storage.
-     * @param key
+     * @param {string} key Storage key to remove.
      */
     commonUtilities.removeObjectWithKey = function (key) {
         var removed = false;
 
         if (this.browserStorageAvailable("localStorage", false) && key != null) {
             try {
-                global.localStorage.removeItem(key);
+                window.localStorage.removeItem(key);
                 removed = true;
             } catch (exception) {
                 removed = false;
@@ -970,45 +1005,62 @@
     /* ----------------------------------------------------------------------------------
      * Very basic social network sharing utilities
      * ----------------------------------------------------------------------------------*/
-    // 	<i tabindex="-1" class="shareIcon share_facebook socialIcon-facebook-squared-1"></i>
-    //	<i tabindex="-1" class="socialIcon-twitter-1 shareIcon share_twitter"></i>
-    // 	$(".share_facebook").click(shareFacebook);
-    //	$(".share_twitter").click(shareTwitter);
 
-    commonUtilities.shareOnFacebook = function (title, summary, url, image) {
-        var options = '&p[title]=' + encodeURIComponent(title)
-                        + '&p[summary]=' + encodeURIComponent(summary)
-                        + '&p[url]=' + encodeURIComponent(url)
-                        + '&p[images][0]=' + encodeURIComponent(image);
-
+    commonUtilities.shareOnFacebook = function (summary, url) {
+        let shareMessage = encodeURIComponent(url);
+        if (summary && summary != "") {
+            shareMessage += "&quote=" + encodeURIComponent(summary);
+        }
         window.open(
-            'http://www.facebook.com/sharer.php?s=100' + options,
-            'Share on Facebook',
-            'toolbar=no,status=0,width=626,height=436'
+            "https://www.facebook.com/sharer/sharer.php?u=" + shareMessage,
+            "_share",
+            "toolbar=no,status=0,width=626,height=436"
         );
     };
 
     commonUtilities.shareOnTwitter = function (message, url, related, hashTags) {
-        var options = 'text=' + encodeURIComponent(message)
-                        + '&url=' + encodeURIComponent(url)
-                        + '&related=' + related
-                        + '&hashtags=' + hashTags;
-
+        let shareMessage = "text=" + encodeURIComponent(message);
+        if (url && url != "") {
+            shareMessage += "&url=" + encodeURIComponent(url);
+        }
+        if (related && related != "") {
+            shareMessage += "&related=" + related;
+        }
+        if (hashTags && hashTags != "") {
+            shareMessage += "&hashtags=" + hashTags;
+        }
         window.open(
-            'https://twitter.com/intent/tweet?' + options,
-            'Tweet',
-            'toolbar=no,status=0,width=626,height=436'
+            "https://twitter.com/intent/tweet?" + shareMessage,
+            "_share",
+            "toolbar=no,status=0,width=626,height=436"
         );
     };
 
     commonUtilities.shareByEmail = function (title, message, url) {
-        if (url) {
-            message = message + '\n\n' + url;
+        let shareMessage;
+        if (url && url != "") {
+            shareMessage = message + "\n\n" + url;
+        } else {
+            shareMessage = message;
         }
         window.open(
-            'mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(message),
-            'Share by Email',
-            'toolbar=no,status=0,width=626,height=436'
+            "mailto:?subject=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(shareMessage),
+            "_share",
+            "popup=1,toolbar=no,status=0,noopener=1,noreferrer=1,width=626,height=436"
+        );
+    };
+
+    commonUtilities.shareBySMS = function (message, url) {
+        let shareMessage;
+        if (url && url != "") {
+            shareMessage = message + ": " + url;
+        } else {
+            shareMessage = message;
+        }
+        window.open(
+            "sms:?&body=" + encodeURIComponent(shareMessage),
+            "_share",
+            "popup=1,toolbar=no,status=0,noopener=1,noreferrer=1,width=626,height=436"
         );
     };
 
@@ -1024,24 +1076,31 @@
      *         duration units, and total iterations.
      */
     commonUtilities.performanceTest = function (testFunction, testId, totalIterations) {
-        var start,
-            duration,
-            i,
-            results;
-
-        _testNumber ++;
-        start = global.performance.now();
-        for (i = 0; i < totalIterations; i ++) {
-            testFunction();
+        if ( ! this.isBrowserEnvironment()) {
+            return null;
         }
-        duration = global.performance.now() - start;
-        results = {
-            testNumber: _testNumber,
-            testFunction: testId,
-            duration: duration,
-            durationUnits: "ms",
-            totalIterations: i
-        };
+        let start;
+        let duration;
+        let i;
+        let results;
+
+        if (window.performance) {
+            _testNumber ++;
+            start = window.performance.now();
+            for (i = 0; i < totalIterations; i ++) {
+                testFunction();
+            }
+            duration = window.performance.now() - start;
+            results = {
+                testNumber: _testNumber,
+                testFunction: testId,
+                duration: duration,
+                durationUnits: "ms",
+                totalIterations: i
+            };
+        } else {
+            results = null;
+        }
         return results;
     };
 
@@ -1078,57 +1137,60 @@
     /**
      * Inserts a new script element into the DOM on the indicated tag.
      *
-     * @param id {string} The id attribute, so that the script element can be referenced.
-     * @param src {string} The src attribute, usually a file reference or URL to a script to load.
-     * @param tagName {string} optional tag you want to insert this script to. Defaults to "script"
+     * @param {string} id The id attribute, so that the script element can be referenced.
+     * @param {string} src The src attribute, usually a file reference or URL to a script to load.
+     * @param {string} tagName optional tag you want to insert this script to. Defaults to "body"
+     * @param {string} scriptType optional script type. Defaults to "JavaScript"
+     * @returns {Boolean} true if inserted, false if error.
      */
-    commonUtilities.insertScriptElement = function (id, src, tagName) {
-        if (document.getElementById(id)) {
-            // script already exists.
-            return;
+    commonUtilities.insertScriptElement = function (id, src, tagName, scriptType) {
+        if ( ! document || document.getElementById(id)) {
+            // no DOM or script already exists.
+            return false;
         }
-        var scriptElement = document.createElement("script");
-        if (tagName === undefined || tagName == null || tagName == "") {
-            tagName = "script";
+        if (this.isEmpty(tagName)) {
+            tagName = "body";
         }
-        var fjs = document.getElementsByTagName(tagName)[0];
-        if (fjs == null) {
-            fjs = document.getElementsByTagName("div")[0];
+        if (this.isEmpty(scriptType)) {
+            scriptType = "text/javascript";
         }
+        let firstJSTag = document.getElementsByTagName(tagName)[0];
+        if (firstJSTag == null) {
+            firstJSTag = document.getElementsByTagName("div")[0];
+        }
+        const scriptElement = document.createElement("script");
         scriptElement.id = id;
         scriptElement.src = src;
-        script.type = "text/javascript";
-        script.async = true;
-        fjs.appendChild(script);
+        scriptElement.type = scriptType;
+        scriptElement.async = true;
+        firstJSTag.appendChild(scriptElement);
+        return true;
     };
 
     /**
      * Parse a string of tags into individual tags array, making sure each tag is properly formatted.
      * A tag must be at least 1 character and no more than 50, without any leading or trailing whitespace,
      * and without any HTML tags (entities should be OK.)
-     * @param tags {string} string of delimited tags.
-     * @param delimiter {string} how the tags are separated, default is ;.
-     * @returns {*} array of individual tag strings, or null if nothing to parse or an error occurred.
+     * @param {string} tags string of delimited tags.
+     * @param {string} delimiter how the tags are separated, default is ;.
+     * @returns {Array} array of individual tag strings, or empty array if nothing to parse or an error occurred.
      */
     commonUtilities.tagParse = function (tags, delimiter) {
-        var tagList,
-            i;
+        let tagList;
+        let i;
 
         if (typeof tags === "undefined" || tags === null || tags.length < 1) {
-            tagList = null;
+            tagList = [];
         } else {
             if (typeof delimiter === "undefined" || delimiter === null || delimiter == "") {
                 delimiter = ";";
             }
             tagList = tags.split(delimiter);
             for (i = tagList.length - 1; i >= 0; i --) {
-                tagList[i] = commonUtilities.stripTags(tagList[i].trim(), '').substr(0, 50).trim();
-                if (tagList[i].length < 2) {
+                tagList[i] = this.stripTags(tagList[i], "").substring(0, 50).trim();
+                if (tagList[i].length < 1) {
                     tagList.splice(i, 1);
                 }
-            }
-            if (tagList.length < 1) {
-                tagList = null;
             }
         }
         return tagList;
@@ -1136,14 +1198,22 @@
 
     /**
      * Strip HTML tags from a string. Credit to http://locutus.io/php/strings/strip_tags/
-     * @param input {string} input string to clean.
-     * @param allowed {string} list of tags to accept.
+     * @param {string} input input string to clean.
+     * @param {string} allowed list of tags to accept.
      * @returns {string} the stripped result.
      */
     commonUtilities.stripTags = function (input, allowed) {
+        if (this.isNull(input)) {
+            return "";
+        } else if (typeof input !== "string") {
+            input = input.toString();
+        }
+        if (this.isEmpty(input)) {
+            return "";
+        }
         allowed = (((allowed || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join("");
-        var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
-        var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+        const tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+        const commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
         return input.replace(commentsAndPhpTags, "").replace(tags, function ($0, $1) {
             return allowed.indexOf("<" + $1.toLowerCase() + ">") > -1 ? $0 : ""
         });
@@ -1151,8 +1221,8 @@
 
     /**
      * Determine if a string looks like a valid email address.
-     * @param email {string}
-     * @returns {boolean}
+     * @param {string} email String to expect an email address
+     * @returns {boolean} true if we think it is a valid email address.
      */
     commonUtilities.isValidEmail = function(email) {
         return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
@@ -1170,11 +1240,11 @@
      * When using the date range check, all dates (min, max, and the value) must be JavaScript
      * date objects.
      *
-     * @param keyValueArrayOfFields array A key-value array of fields to validate. The key
+     * @param {Array|Object} keyValueArrayOfFields A key-value array of fields to validate. The key
      *   is the name of the field. The value is the value assigned to that field that will be
      *   validated using the rules defined in keyValueArrayOfDefinitions.
      *
-     * @param keyValueArrayOfDefinitions array A key-value array of field rules where the
+     * @param {Array|Object} keyValueArrayOfDefinitions A key-value array of field rules where the
      *   key must match the field key in keyValueArrayOfFields. The value of that key is the
      *   set of rules. The rule set itself is defined as a key/value array of mandatory and
      *   optional keys, as follows:
@@ -1195,7 +1265,7 @@
      *   validator: A function you can pass to perform the validation. This function takes
      *         two arguments, the field name and the field value. It must return true if
      *         the value is valid and false if the value is invalid.
-     * @return Array A key/value array of fields that failed their test. when empty, all
+     * @return {Array} A key/value array of fields that failed their test. when empty, all
      *   tests passed. When not empty, each key in this array is the field name key.
      *   The value is an object constructed as follows:
      *   code: integer An error code, can be used to look up an error in a string table.
