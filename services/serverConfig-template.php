@@ -6,11 +6,11 @@
  * Date: Feb-13-2016
  */
 date_default_timezone_set('America/New_York');
-define('LOGFILE_PREFIX', 'enginesis');
-define('SITE_SESSION_COOKIE', 'enguser');
-define('ENGINESIS_SITE_NAME', 'Enginesis');
-define('ENGINESIS_SITE_ID', 100);
-define('ENGINESIS_SITE_DOMAIN', 'enginesis.com');
+define('LOGFILE_PREFIX', 'inxys');
+define('SITE_SESSION_COOKIE', 'inxysuser');
+define('ENGINESIS_SITE_NAME', 'inXys');
+define('ENGINESIS_SITE_ID', 109);
+define('ENGINESIS_SITE_DOMAIN', 'inxys.net');
 define('DEBUG_ACTIVE', false);
 define('DEBUG_SESSION', false);
 define('PUBLISHING_MASTER_PASSWORD', '');
@@ -26,22 +26,38 @@ define('SESSION_PARAM_CACHE', 'engsession_params');
 
 // memcache access global table
 $_MEMCACHE_HOSTS = [
-    '-l'  => ['port'=>11215, 'host'=>'www.puttputtplanet-l.com'],
-    '-d'  => ['port'=>11215, 'host'=>'www.puttputtplanet-d.com'],
-    '-q'  => ['port'=>11215, 'host'=>'www.puttputtplanet-q.com'],
-    '-x'  => ['port'=>11215, 'host'=>'www.puttputtplanet-x.com'],
-    ''    => ['port'=>11215, 'host'=>'www.puttputtplanet.com']
+    '-l'  => ['port'=>11215, 'host'=>'inxys-l.net'],
+    '-d'  => ['port'=>11215, 'host'=>'inxys-d.com'],
+    '-q'  => ['port'=>11215, 'host'=>'inxys-q.com'],
+    '-x'  => ['port'=>11215, 'host'=>'inxys-x.com'],
+    ''    => ['port'=>11215, 'host'=>'inxys.com']
 ];
 
 // Define a list of email addresses who will get notifications of internal bug reports
-$admin_notification_list = ['support@puttputtplanet.com'];
+$admin_notification_list = ['support@inxys.com'];
 
-// API Keys for the PuttPuttPlanet app
+// Define which CMS users will act as site admin for secured requests:
+$CMSUserLogins = [
+    ['user_name' => '', 'user_id' => 0, 'password' => '']
+];
+    
+// SSO network API keys for the inXys website app:
 $socialServiceKeys = [
     2  => ['service' => 'Facebook', 'app_id' => '', 'app_secret' => '', 'admins' =>''],
-    7  => ['service' => 'Google', 'app_id' => '', 'app_secret' => '', 'admins' =>''],
-    11 => ['service' => 'Twitter', 'app_id' => '', 'app_secret' => '', 'admins' =>'']
+    7  => ['service' => 'Google',   'app_id' => '', 'app_secret' => '', 'admins' =>''],
+    11 => ['service' => 'Twitter',  'app_id' => '', 'app_secret' => '', 'admins' =>''],
+    14 => ['service' => 'Apple',    'app_id' => '', 'app_secret' => '', 'admins' =>'']
 ];
-$developerKey = ENGINESIS_DEVELOPER_API_KEY;
+
+// Define the mail hosts to connect to for mail transfer and dispatch:
+$_MAIL_HOSTS = [
+    '-l' => ['domain' => '', 'host' => '', 'port' => 465, 'ssl' => true, 'tls' => true, 'user' => '', 'password' => '', 'apikey' => ''],
+    '-d' => ['domain' => '', 'host' => '', 'port' => 465, 'ssl' => true, 'tls' => true, 'user' => '', 'password' => '', 'apikey' => ''],
+    '-q' => ['domain' => '', 'host' => '', 'port' => 465, 'ssl' => true, 'tls' => true, 'user' => '', 'password' => '', 'apikey' => ''],
+    '-x' => ['domain' => '', 'host' => '', 'port' => 465, 'ssl' => true, 'tls' => true, 'user' => '', 'password' => '', 'apikey' => ''],
+    ''   => ['domain' => '', 'host' => '', 'port' => 465, 'ssl' => true, 'tls' => true, 'user' => '', 'password' => '', 'apikey' => '']
+];
+
+// Global variables:
 $siteId = ENGINESIS_SITE_ID;
 $languageCode = 'en';
