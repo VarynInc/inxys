@@ -10,6 +10,9 @@
 ehthumbs.db
 Thumbs.db
 cookie.txt
+data/
+services/serverConfig.php
+bin/deploy-config.json
 
 # Other temp files and folders
 .idea/
@@ -55,9 +58,3 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-
-.idea/
-node_modules/
-data/
-services/config.php
-services/serverConfig.php
