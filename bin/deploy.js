@@ -1,9 +1,8 @@
 /**
  * Deploy the local site to -d or -q
- * See https://www.npmjs.com/package/rsync for info on rsync
- *  rsync error codes: https://lxadm.com/Rsync_exit_codes
- * Run deploy with `npm run deploy` or `npm run deploy -- --no-dryrun`
- * Copy emails to Enginesis: `npm run deploy-email` or `npm run deploy-email -- --no-dryrun`
+ * Verify changed files first, run deploy with `npm run deploy`
+ * To really deploy, run `npm run deploy -- --no-dryrun`
+ * After deploy, test on the target stage e.g. https://inxys-q.net
  */
 let rsyncFlags = "zrptcv";
 let debug = false;
@@ -119,9 +118,6 @@ function mergeArgs(args, configuration) {
     if (args.exclude) {
         configuration.excludeFiles = args.exclude;
     }
-    if (args.hasOwnProperty('email') && args.email) {
-        configuration.email = args.email;
-    }
     if (args.hasOwnProperty('verbose') && args.verbose) {
         configuration.debug = args.verbose;
     }
@@ -175,13 +171,6 @@ function getArgs() {
             type: "string",
             describe: "path to log file",
             demandOption: false
-        },
-        "m": {
-            alias: "email",
-            boolean: true,
-            describe: "deploy email source files to local Enginesis instance",
-            demandOption: false,
-            default: false
         },
         "s": {
             alias: "source",
@@ -364,57 +353,5 @@ function deploy(configuration) {
     });
 }
 
-function deployEmail(configuration) {
-    const site = configuration.site;
-    const isDryRun = configuration.isDryRun;
-    const sourcePath = "./sitedev/email/";
-    const destinationPath = "../Enginesis/public/sites/" + configuration.siteId + "/email/";
-    const excludeFiles = configuration.excludeFiles;
-    const dryRunFlag = "n";
-    let logMessage = "Deploying emails to " + destinationPath + " on " + (new Date).toISOString();
-
-    if (configuration.logFile && fs.existsSync(configuration.logFile)) {
-        fs.unlinkSync(configuration.logFile);
-    }
-    if (isDryRun) {
-        rsyncFlags += dryRunFlag;
-        logMessage += " -- This is a DRY RUN - no files will be copied."
-    }
-    immediateLog(logMessage, false);
-    let rsync = new Rsync()
-        .shell("ssh")
-        .flags(rsyncFlags)
-        .set("exclude-from", excludeFiles)
-        .source(sourcePath)
-        .destination(destinationPath);
-
-    if (isDryRun) {
-        immediateLog("Review copy dry run " + site + " emails to " + destinationPath, false);
-    } else {
-        immediateLog("Copy " + site + " emails to " + destinationPath, false);
-    }
-
-    rsync.execute(function(error, exitCode, cmd) {
-        const timeNow = (new Date).toISOString();
-        if (error) {
-            immediateLog("Email deploy fails for " + site + " " + error.toString() + " at " + timeNow);
-        } else if (isDryRun) {
-            immediateLog("Email dry run for " + site + " complete at "  + timeNow);
-        } else {
-            immediateLog("Email deploy for " + site + " complete at "  + timeNow);
-        }
-    }, function (output) {
-        // stdout
-        debugLog(output);
-    }, function (output) {
-        // stderr
-        errorLog(output);
-    });
-}
-
 configuration = mergeConfigurationData(configurationDefault);
-if (configuration.email) {
-    deployEmail(configuration);
-} else {
-    deploy(configuration);
-}
+deploy(configuration);
