@@ -2,7 +2,7 @@
 include_once('../../services/inxys_common.php');
 $pageId = 'search';
 $pageTitle = '';
-$search = $_REQUEST['search'];
+$search = getPostOrRequestVar(['q', 'search'], '');
 ?>
 <!DOCTYPE html>
 <?php include(VIEWS_ROOT . 'page-header.php');?>
@@ -11,7 +11,7 @@ $search = $_REQUEST['search'];
 <div class="container main-container">
     <h1>The Information Exchange</h1>
     <h3>Search results for <?php echo($search);?>:</h3>
-    <p>Create an account for free. You get one public conference with your free account.</p>
+    <p class="text-danger">No results found for <em><?php echo($search);?></em>.</p>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>
 </body>
