@@ -47,6 +47,22 @@
 
 li.nav-item.navbar-item.active {
     background-color: #ededff;
+    border-radius: 0.25rem;
+}
+
+li.nav-item.navbar-item:hover {
+    background-color: #ffffff;
+    text-decoration: underline;
+}
+
+.banner-light {
+    color: #1d1d1d;
+    background-color: #dcdcdc;
+}
+
+.banner-dark {
+    color: #dcdcdc;
+    background-color: #8d8d8d;
 }
 
 .help-block {

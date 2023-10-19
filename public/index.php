@@ -17,7 +17,7 @@ $isLoggedIn = false;
     } else {
     ?>
     <div class="row justify-content-center">
-        <div class="col-8 p-3 text-bg-dark rounded-3">
+        <div class="col-8 p-3 banner-light rounded-3">
             <div class="row justify-content-center">
                 <div class="col-12">
                     <h1><img src="/assets/img/inxys-logo-96.png" width="80" height="80"> The Information Exchange</h1>
