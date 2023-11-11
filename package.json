@@ -27,7 +27,7 @@
   "homepage": "https://github.com/VarynInc/inxys#readme",
   "devDependencies": {
     "async": "^3.2.4",
-    "axios": "^0.27.2",
+    "axios": "^1.6.0",
     "chalk": "^4.1.2",
     "cheerio": "^1.0.0-rc.12",
     "fs-extra": "^10.1.0",
