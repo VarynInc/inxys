@@ -5,9 +5,8 @@ $pageTitle = 'About The Information Exchange';
 $pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.';
 $hackerVerification = '';
 $isLoggedIn = false;
+include(VIEWS_ROOT . 'page-header.php');
 ?>
-<!DOCTYPE html>
-<?php include(VIEWS_ROOT . 'page-header.php');?>
 <body>
 <?php include(VIEWS_ROOT . 'top-nav.php');?>
 <div class="container main-container">
