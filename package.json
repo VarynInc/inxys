@@ -5,8 +5,10 @@
   "main": "js/index.js",
   "scripts": {
     "build": "node ./bin/build.js",
-    "deploy": "node bin/deploy.js --config=bin/deploy-config.json",
-    "test": "test"
+    "deploy": "node ./bin/deploy.js --config=bin/deploy-config.json",
+    "start": "echo Load index.php in a web browser",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "versionup": "node ./bin/versionUp.js --debug --task build --path ./"
   },
   "repository": {
     "type": "git",
@@ -26,21 +28,26 @@
   },
   "homepage": "https://github.com/VarynInc/inxys#readme",
   "devDependencies": {
-    "async": "^3.2.4",
-    "axios": "^1.6.0",
-    "chalk": "^4.1.2",
+    "async": "^3.2.5",
+    "axios": "^1.6.8",
+    "chalk": "^5.3.0",
     "cheerio": "^1.0.0-rc.12",
-    "fs-extra": "^10.1.0",
-    "glob": "^7.2.0",
-    "gulp-rename": "^2.0.0",
-    "imagemin": "^7.0.1",
-    "jest": "^29.6.2",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.3.12",
+    "imagemin": "^8.0.1",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-jpegtran": "^7.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "imagemin-webp": "^8.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "node-fetch": "^3.3.2",
     "os": "^0.1.2",
     "path": "^0.12.7",
-    "pretty-bytes": "^5.6.0",
+    "pretty-bytes": "^6.1.1",
     "rsync": "^0.6.1",
     "shelljs": "^0.8.5",
-    "terser": "^5.19.2",
+    "terser": "^5.30.3",
     "yargs": "^17.7.2"
   }
 }

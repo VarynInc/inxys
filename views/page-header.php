@@ -7,6 +7,7 @@
         $pageDescription = 'The Information Exchange is a discussion forum to exchange ideas';
     }
 ?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">

@@ -26,14 +26,14 @@ define('SESSION_PARAM_CACHE', 'engsession_params');
 // memcache access global table
 $_MEMCACHE_HOSTS = [
     '-l'  => ['port'=>11215, 'host'=>'inxys-l.net'],
-    '-d'  => ['port'=>11215, 'host'=>'inxys-d.com'],
-    '-q'  => ['port'=>11215, 'host'=>'inxys-q.com'],
-    '-x'  => ['port'=>11215, 'host'=>'inxys-x.com'],
-    ''    => ['port'=>11215, 'host'=>'inxys.com']
+    '-d'  => ['port'=>11215, 'host'=>'inxys-d.net'],
+    '-q'  => ['port'=>11215, 'host'=>'inxys-q.net'],
+    '-x'  => ['port'=>11215, 'host'=>'inxys-x.net'],
+    ''    => ['port'=>11215, 'host'=>'inxys.net']
 ];
 
 // Define a list of email addresses who will get notifications of internal bug reports
-$admin_notification_list = ['support@inxys.com'];
+$admin_notification_list = ['support@inxys.net'];
 
 // Define which CMS users will act as site admin for secured requests:
 $CMSUserLogins = [

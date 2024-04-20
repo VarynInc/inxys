@@ -10,9 +10,9 @@ if ( ! $loggedIn) {
 } else {
     $allToActionButton = '';
 }
+
+include(VIEWS_ROOT . 'page-header.php');
 ?>
-<!DOCTYPE html>
-<?php include(VIEWS_ROOT . 'page-header.php');?>
 <body>
 <?php include(VIEWS_ROOT . 'top-nav.php');?>
 <div class="container main-container">
@@ -24,10 +24,6 @@ if ( ! $loggedIn) {
         <h2>Frequently asked questions</h2>
         <p>What do you want to know?.</p>
     </div>
-    <p>
-        <a href="/terms/" target="_new" class="right">Terms of service</a> |
-        <a href="/privacy/" target="_new" class="right">Privacy policy</a>
-    </p>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>
 </body>
