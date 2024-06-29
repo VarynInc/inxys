@@ -14,7 +14,7 @@
     "use strict";
 
     const enginesis = {
-        VERSION: "2.9.2",
+        VERSION: "2.11.2",
         debugging: true,
         disabled: false, // use this flag to turn off communicating with the server
         isOnline: true,  // flag to determine if we are currently able to reach Enginesis servers
@@ -304,10 +304,9 @@
             if (_getRefreshToken() !== null) {
                 enginesisContext.sessionRefresh(_getRefreshToken(), null)
                 .then(function(sessionRefreshResult) {
-                    debugLog("refreshTokenAndReissueRequest users authentication has been refreshed. " + sessionRefreshResult.toString());
                     // Reissue original request
-                    var serviceName = enginesisResult.results.passthru.fn;
-                    var parameters = enginesisResult.results.passthru;
+                    const serviceName = enginesisResult.results.passthru.fn;
+                    const parameters = enginesisResult.results.passthru;
                     sendRequest(serviceName, parameters, null)
                     .then(function(reissueResult) {
                         resolve(reissueResult);
@@ -572,20 +571,17 @@
      * @returns {boolean} True if successful.
      */
     function refreshSessionInfo(enginesisResult) {
-        var refreshSuccessful = false;
+        let refreshSuccessful = false;
         if (enginesisResult && enginesisResult.results && enginesisResult.results.result) {
-            var sessionInfo = enginesisResult.results.result[0];
-
-            debugLog(">>>>> enginesis.refreshSessionInfo new session id " + sessionInfo.session_id + " new CR " + sessionInfo.cr);
+            const sessionInfo = enginesisResult.results.result[0];
 
             // verify session hash so that we know the payload was not tampered with
             if ( ! sessionVerifyHash(sessionInfo.cr, sessionInfo)) {
                 debugLog("refreshSessionInfo hash does not match. From server: " + sessionInfo.cr + ". Computed here: " + sessionMakeHash());
-                refreshSuccessful = false;
             }
             refreshSuccessful = saveUserSessionInfo(sessionInfo, false);
         } else {
-            var errorCode = resultErrorCode(enginesisResult);
+            const errorCode = resultErrorCode(enginesisResult);
             if (errorCode == "INVALID_PARAMETER" || errorCode == "INVALID_TOKEN") {
                 // if the refresh token is invalid then log this user out or else
                 // we will keep trying this bad token on every request.
@@ -638,8 +634,7 @@
      * @param {object} enginesisResult Enginesis server response object
      */
     function updateGameSessionInfo(enginesisResult) {
-        // @todo: check if token expired then call sessionrefresh
-        var sessionInfo = enginesisResult.results.result[0];
+        const sessionInfo = enginesisResult.results.result[0];
         if (sessionVerifyHash(sessionInfo.cr, null)) {
             updateGameInfo(enginesisResult);
             if (sessionInfo.authToken || sessionInfo.authtok) {
@@ -692,9 +687,9 @@
      * @returns {boolean} True if save is successful, false if error.
      */
     function updateLoggedInUserInfo(enginesisResult) {
-        var updated = false;
+        let updated = false;
         if (enginesisResult && enginesisResult.results && enginesisResult.results.result) {
-            var userInfo = enginesisResult.results.result[0];
+            const userInfo = enginesisResult.results.result[0];
 
             // verify session hash so that we know the payload was not tampered with
             if ( ! sessionVerifyHash(userInfo.cr, userInfo)) {
@@ -705,7 +700,7 @@
 
             // Move server authorized user data into the local cache
             enginesis.loggedInUserInfo = userInfo;
-            enginesis.isUserLoggedIn = true;
+            enginesis.isUserLoggedIn = Math.floor(userInfo.user_id) > 0;
             enginesis.networkId = userInfo.network_id;
             updated = saveUserSessionInfo(userInfo, false);
         }
@@ -734,38 +729,51 @@
     }
 
     /**
+     * Collect the user session information to make sure we represent the correct
+     * user log in and session state.
+     * @param {Object} userInfo A userInfo object received from a log in, session begin, or restored from local storage.
+     * @returns {Object} A userInfo object.
+     */
+    function coerceUserInfoFromUserInfo(userUserInfo) {
+        const loggedInUserInfo = enginesis.loggedInUserInfo || {};
+        const userInfo = userUserInfo || {};
+        let coercedUserInfo = {
+            siteId: enginesis.siteId,
+            userId: coerceNotNull(userInfo.userId, userInfo.user_id, loggedInUserInfo.user_id, 0),
+            userName: coerceNotEmpty(userInfo.userName, userInfo.user_name, loggedInUserInfo.user_name, ""),
+            accessLevel: coerceNotNull(userInfo.accessLevel, userInfo.access_level, loggedInUserInfo.access_level, 10),
+            siteUserId: coerceNotEmpty(userInfo.siteUserId, userInfo.site_user_id, loggedInUserInfo.site_user_id, ""),
+            networkId: coerceNotNull(userInfo.networkId, userInfo.network_id, loggedInUserInfo.network_id, 1),
+            gameId: userInfo.gameId || enginesis.gameId,
+            dayStamp: userInfo.dayStamp || sessionDayStamp(),
+            siteMark: 0
+        };
+        if (coercedUserInfo.userId == 0) {
+            // Use the site mark only if we do not have a user id
+            if (isNull(userInfo.siteMark)) {
+                if (enginesis.anonymousUser) {
+                    coercedUserInfo.siteMark = enginesis.anonymousUser.userId;
+                }
+            } else {
+                coercedUserInfo.siteMark = userInfo.siteMark;
+            }
+        }
+        return coercedUserInfo;
+    }
+
+    /**
      * Compute the session hash for the provided session information. If something is missing we will get
      * a default value from the current session, regardless if it is valid or not. It's not really valid
      * calling this function this way if authTokenWasValidated == false. This function matches server-side
      * sessionMakeHash().
      *
-     * @param {object} userInfo an object containing the key/value pairs identifying a user session, all of which are optional:
+     * @param {object} sessionUserInfo an object containing the key/value pairs identifying a user session, all of which are optional:
      *    siteId, userId, userName, siteUserId, networkId, accessLevel, gameId, dayStamp.
      * @returns {string} The hash for the current user session.
      */
-    function sessionMakeHash(userInfo) {
-        userInfo = userInfo || {};
-        const loggedInUserInfo = enginesis.loggedInUserInfo || {};
-        const siteId = enginesis.siteId;
-        const userId = coerceNotNull(userInfo.userId, userInfo.user_id, loggedInUserInfo.user_id, 0);
-        const userName = coerceNotEmpty(userInfo.userName, userInfo.user_name, loggedInUserInfo.user_name, "");
-        const accessLevel = coerceNotNull(userInfo.accessLevel, userInfo.access_level, loggedInUserInfo.access_level, 10);
-        const siteUserId = coerceNotEmpty(userInfo.siteUserId, userInfo.site_user_id, loggedInUserInfo.site_user_id, "");
-        const networkId = coerceNotNull(userInfo.networkId, userInfo.network_id, loggedInUserInfo.network_id, 1);
-        const gameId = userInfo.gameId || enginesis.gameId;
-        const dayStamp = userInfo.dayStamp || sessionDayStamp();
-        let siteMark = 0;
-
-        if (userId == 0) {
-            // Use the site mark only if we do not have a user id
-            if (isNull(userInfo.siteMark)) {
-                if (enginesis.anonymousUser) {
-                    siteMark = enginesis.anonymousUser.userId;
-                }
-            }
-        }
-        const hashClear = `s=${siteId}&u=${userId}&d=${dayStamp}&n=${userName}&g=${gameId}&i=${siteUserId}&w=${networkId}&l=${accessLevel}&m=${siteMark}&k=${enginesis.developerKey}`;
-        return md5(hashClear);
+    function sessionMakeHash(sessionUserInfo) {
+        const userInfo = coerceUserInfoFromUserInfo(sessionUserInfo);
+        return md5(`s=${userInfo.siteId}&u=${userInfo.userId}&d=${userInfo.dayStamp}&n=${userInfo.userName}&g=${userInfo.gameId}&i=${userInfo.siteUserId}&w=${userInfo.networkId}&l=${userInfo.accessLevel}&m=${userInfo.siteMark}&k=${enginesis.developerKey}`);
     }
 
     /**
@@ -781,7 +789,7 @@
      * @return {boolean} True if we think the session from the server matches the data we have locally.
      */
     function sessionVerifyHash(hashFromServer, userInfo) {
-        const userInfoInternal = userInfo || enginesis.loggedInUserInfo;
+        const userInfoInternal = coerceUserInfoFromUserInfo(userInfo);
         let isVerified = hashFromServer == sessionMakeHash(userInfoInternal);
         if ( ! isVerified) {
             // if not valid, it could be because the users authentication expired, change the timestamp to today and try again.
@@ -802,7 +810,7 @@
             }
         }
         if ( ! isVerified) {
-            debugLog("sessionVerifyHash hash does not match. From server: " + hashFromServer + ". Computed here: " + sessionMakeHash(userInfoInternal));
+            debugLog("sessionVerifyHash hash does not match. From server: " + hashFromServer + ". Computed here: " + sessionMakeHash(userInfoInternal) + " from " + JSON.stringify(userInfoInternal));
         }
         return isVerified;
     }
@@ -1587,9 +1595,8 @@
      * @returns {boolean} true if a user is restored this way, false if not.
      */
     function restoreUserFromAuthToken (authToken) {
-        var queryParameters;
-        var wasRestored = false;
-        var loggedInUserInfo = null;
+        let wasRestored = false;
+        let loggedInUserInfo = null;
 
         if (isEmpty(authToken)) {
             // if a token was not provided, try to find it in a cache in the following order:
@@ -1598,42 +1605,35 @@
             // 3. in local storage from prior session
             authToken = cookieGet(enginesis.SESSION_COOKIE);
             if (isEmpty(authToken)) {
-                queryParameters = queryStringToObject();
+                const queryParameters = queryStringToObject();
                 if (queryParameters.authtok !== undefined) {
                     authToken = queryParameters.authtok;
-                    debugLog("restoreUserFromAuthToken from query: " + authToken);
                 }
                 if (isEmpty(authToken)) {
                     loggedInUserInfo = loadObjectWithKey(enginesis.SESSION_USERINFO);
                     if (loggedInUserInfo != null && loggedInUserInfo.authToken) {
                         authToken = loggedInUserInfo.authToken;
-                        debugLog("restoreUserFromAuthToken from prior session: " + authToken);
                     }
                 }
             }
-        } else {
-            debugLog("restoreUserFromAuthToken from parameter: " + authToken);
         }
         if ( ! isEmpty(authToken)) {
             // @todo: Validate the token (for now we are accepting that it is valid but we should check!) If the authToken is valid then we can trust the userInfo
             // @todo: we can use cr to validate the token was not changed
             if (loggedInUserInfo == null) {
                 loggedInUserInfo = JSON.parse(cookieGet(enginesis.SESSION_USERINFO));
-                debugLog("restoreUserFromAuthToken user info from session cookie: " + loggedInUserInfo);
                 if (loggedInUserInfo == null) {
                     loggedInUserInfo = loadObjectWithKey(enginesis.SESSION_USERINFO);
-                    debugLog("restoreUserFromAuthToken user info from local storage: " + JSON.stringify(loggedInUserInfo));
                 }
             }
             if (loggedInUserInfo != null) {
                 enginesis.authToken = authToken;
                 enginesis.authTokenExpires = null; // @todo: Need to get the expiry of this token.
                 enginesis.authTokenWasValidated = true; // @todo: we should verify this payload is valid.
-                enginesis.isUserLoggedIn = true;
+                enginesis.isUserLoggedIn = Math.floor(loggedInUserInfo.user_id) > 0;
                 enginesis.loggedInUserInfo = loggedInUserInfo;
                 enginesis.networkId = Math.floor(loggedInUserInfo.network_id);
                 wasRestored = true;
-                debugLog("restoreUserFromAuthToken valid user: " + enginesis.loggedInUserInfo.user_name + "(" + enginesis.loggedInUserInfo.user_id + ")");
             } else {
                 // if we have an auth token but we did not cache the user info, then
                 // if we trust that token, we need to log this user in
@@ -1684,7 +1684,6 @@
                 enginesis.refreshTokenExpires = sessionInfo.expires;
             }
             saveObjectWithKey(enginesis.SESSION_USERINFO, enginesis.loggedInUserInfo);
-            debugLog("enginesis.saveUserSessionInfo session id is " + enginesis.sessionId + " session.cr= " + sessionInfo.cr);
         } else {
             haveValidSession = false;
         }
@@ -1753,7 +1752,6 @@
             enginesis.refreshToken = userInfoSaved.refresh_token;
             enginesis.refreshTokenExpires = userInfoSaved.expires;
             enginesis.isUserLoggedIn = isUserLoggedIn();
-            debugLog("enginesis.restoreUserSessionInfo " + enginesis.sessionId + " from " + JSON.stringify(userInfoSaved));
         } else if (enginesis.isUserLoggedIn) {
             // if a user was not cached and we trust the authtok then we need to load this user
             enginesis.isUserLoggedIn = isUserLoggedIn();
@@ -1956,13 +1954,15 @@
      * @param {integer} siteId Site identifier.
      * @param {integer} userId User who is submitting the score.
      * @param {integer} gameId Game that was played.
+     * @param {integer} level The game level the score pertains to. Use 0 for final score.
      * @param {integer} gameScore Game final score.
      * @param {string|object} gameData Object or JSON string of game-specific play data.
      * @param {integer} timePlayed Game play time related to score and gameData, in milliseconds.
-     * @param {string} sessionId Session id that was given at SessionBegin.
+     * @param {string|null} sessionId Optional session id that was given at SessionBegin. If not provided
+     *   will attempt to use the last recorded session id from SessionBegin or SessionRefresh.
      * @returns {Promise} A Promise that resolves with the encrypted score payload or null if an error occurred.
      */
-    function encryptScoreSubmit(siteId, userId, gameId, gameScore, gameData, timePlayed, sessionId) {
+    function encryptScoreSubmit(siteId, userId, gameId, level, gameScore, gameData, timePlayed, sessionId) {
         return new Promise(function(resolve, reject) {
             let gameDataString;
             if (typeof gameData !== "string") {
@@ -1970,8 +1970,11 @@
             } else {
                 gameDataString = gameData;
             }
+            if (!sessionId) {
+                sessionId = enginesis.sessionId;
+            }
             encryptString(
-                `site_id=${siteId}&user_id=${userId}&game_id=${gameId}&score=${gameScore}&time_played=${timePlayed}&game_data=${gameDataString}`,
+                `site_id=${siteId}&user_id=${userId}&game_id=${gameId}&level_id=${level}&score=${gameScore}&time_played=${timePlayed}&game_data=${gameDataString}`,
                 sessionId
             ).then(function(encryptedData) {
                 if (encryptedData) {
@@ -2361,6 +2364,25 @@
      */
     userIdGet: function() {
         return enginesis.isUserLoggedIn ? Math.floor(enginesis.loggedInUserInfo.user_id) : 0;
+    },
+
+    /**
+     * Return the current session id that was assigned after a SessionBegin or a SessionRefresh.
+     * @returns {string} User's current session id.
+     */
+    sessionIdGet: function() {
+        return enginesis.sessionId;
+    },
+
+    /**
+     * Return the current session id and its expiration. Sessions are assigned after SessionBegin or SessionRefresh.
+     * @returns {object} User's current session information.
+     */
+    sessionGet: function() {
+        return {
+            sessionId: enginesis.sessionId,
+            sessionExpires: enginesis.sessionExpires
+        };
     },
 
     /**
@@ -2897,9 +2919,11 @@
             cookieSet(enginesis.anonymousUserKey, enginesis.anonymousUser, 60 * 60 * 24, "/", "", true);
             siteMark = enginesis.anonymousUser.userId;
         }
+        enginesis.gameId = isEmpty(gameId) ? enginesisContext.gameIdGet() : gameId;
+        enginesis.gameKey = isEmpty(gameKey) ? enginesis.gameKey : gameKey;
         const parameters = {
-            game_id: isEmpty(gameId) ? enginesisContext.gameIdGet() : gameId,
-            gamekey: isEmpty(gameKey) ? enginesis.gameKey : gameKey,
+            game_id: enginesis.gameId,
+            gamekey: enginesis.gameKey,
             site_mark: siteMark
         };
         return sendRequest(serviceName, parameters, overRideCallBackFunction);
@@ -2987,7 +3011,6 @@
 
     /**
      * Create a user generated content object on the server and send it to the requested individual.
-     * @param referrer
      * @param fromAddress
      * @param fromName
      * @param toAddress
@@ -3001,9 +3024,8 @@
      * @param {function} overRideCallBackFunction
      * @returns {Promise}
      */
-    gameDataCreate: function (referrer, fromAddress, fromName, toAddress, toName, userMessage, userFiles, gameData, nameTag, addToGallery, lastScore, overRideCallBackFunction) {
+    gameDataCreate: function (fromAddress, fromName, toAddress, toName, userMessage, userFiles, gameData, nameTag, addToGallery, lastScore, overRideCallBackFunction) {
         return sendRequest("GameDataCreate", {
-            referrer: referrer,
             from_address: fromAddress,
             from_name: fromName,
             to_address: toAddress,
@@ -3021,7 +3043,6 @@
      * Send to Friend is the classic share a game service. It uses the GameDataCreate service but
      * optimized to sharing a game or a user's completed game that she wants to share with a friend.
      * @param {object} sendAttributes Required and optional parameters to send.
-     *   * `referrer`: Optional, string to indicate the origin of the request. Usually provide the game_name here but it isn't necessary.
      *   * `from_address`: Email address of the sender. Optional is user is logged in, then will use registered user's email. Required if user is not logged in and unauthenticated send is allowed.
      *   * `from_name`: Optional, string indicating sender user's name, used only when from_address is used.
      *   * `to_address`: Required, email address to send to.
@@ -3046,7 +3067,6 @@
         }
         if (errorCode == "") {
             const requestParameters = {
-                referrer: sendAttributes.referrer || "enginesis",
                 from_address: sendAttributes.from_address || "",
                 from_name: sendAttributes.from_name || "",
                 to_address: sendAttributes.to_address || "",
@@ -3366,7 +3386,7 @@
                 }
             }
             if (errorCode == "") {
-                encryptScoreSubmit(enginesis.siteId, enginesis.loggedInUserInfo.user_id, gameId, score, gameData, timePlayed, sessionId)
+                encryptScoreSubmit(enginesis.siteId, enginesis.loggedInUserInfo.user_id, gameId, level, score, gameData, timePlayed, sessionId)
                 .then(function(submitString) {
                     if (submitString) {
                         sendRequest(
