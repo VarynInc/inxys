@@ -80,7 +80,7 @@ final class inxysTest extends TestCase {
         $this->assertNotNull($languageCode, "verify language code assigned");
         $this->assertNotEmpty($CMSUserLogins, "verify CMS user");
 
-        $this->assertTrue(defined('LOGFILE_PREFIX'));
+        $this->assertTrue(defined('ENGINESIS_SITE_KEY'));
         $this->assertTrue(defined('SITE_SESSION_COOKIE'));
         $this->assertTrue(defined('ENGINESIS_SITE_NAME'));
         $this->assertTrue(defined('ENGINESIS_SITE_DOMAIN'));

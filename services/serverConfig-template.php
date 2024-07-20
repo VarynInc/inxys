@@ -6,8 +6,8 @@
  * Date: Feb-13-2016
  */
 date_default_timezone_set('America/New_York');
-define('LOGFILE_PREFIX', 'inxys');
 define('SITE_SESSION_COOKIE', 'inxysuser');
+define('ENGINESIS_SITE_KEY', 'inxys');
 define('ENGINESIS_SITE_NAME', 'inXys');
 define('ENGINESIS_SITE_ID', 109);
 define('ENGINESIS_SITE_DOMAIN', 'inxys.net');
