@@ -1,6 +1,6 @@
 {
   "name": "inxys",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "inXys: The Information Exchange",
   "main": "js/index.js",
   "scripts": {
@@ -28,10 +28,10 @@
   },
   "homepage": "https://github.com/VarynInc/inxys#readme",
   "devDependencies": {
-    "async": "^3.2.5",
-    "axios": "^1.6.8",
+    "async": "^3.2.6",
+    "axios": "^1.7.4",
     "chalk": "^4.1.1",
-    "cheerio": "^1.0.0-rc.12",
+    "cheerio": "^1.0.0",
     "fs-extra": "^11.2.0",
     "glob": "^10.3.12",
     "imagemin": "^8.0.1",
@@ -47,7 +47,7 @@
     "pretty-bytes": "^6.1.1",
     "rsync": "^0.6.1",
     "shelljs": "^0.8.5",
-    "terser": "^5.30.4",
+    "terser": "^5.31.6",
     "yargs": "^17.7.2"
   }
 }
