@@ -46,7 +46,7 @@ $hackerVerification = '';
                 <div class="form-inline">
                     <input type="text" id="conference_icon" name="conference_icon" tabindex="18" maxlength="255" class="form-control login-form-input" />
                     <button type="button" id="conference_icon_select" name="conference_icon_select" class="btn btn-default">Choose file</button>
-                    <img src="/assets/img/inxys-logo-32.png" width="32" height="32">
+                    <img src="/assets/inxys-logo-32.png" width="32" height="32">
                 </div>
             </div>
             <div class="form-group">
@@ -54,7 +54,7 @@ $hackerVerification = '';
                 <div class="form-inline">
                     <input type="text" id="conference_image" name="conference_image" tabindex="18" maxlength="255" class="form-control login-form-input" />
                     <button type="button" id="conference_image_select" name="conference_image_select" class="btn btn-default">Choose file</button>
-                    <img src="/assets/img/inxys-logo-32.png" width="32" height="32">
+                    <img src="/assets/inxys-logo-32.png" width="32" height="32">
                 </div>
             </div>
             <div class="form-group">
@@ -62,7 +62,7 @@ $hackerVerification = '';
                 <div class="form-inline">
                     <input type="text" id="conference_cover_image" name="conference_cover_image" tabindex="18" maxlength="255" class="form-control login-form-input" />
                     <button type="button" id="conference_cover_select" name="conference_cover_select" class="btn btn-default">Choose file</button>
-                    <img src="/assets/img/inxys-logo-32.png" width="32" height="32">
+                    <img src="/assets/inxys-logo-32.png" width="32" height="32">
                 </div>
             </div>
             <div class="form-group">

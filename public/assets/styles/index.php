@@ -74,10 +74,10 @@ $pageDescription = 'The Information Exchange: To facilitate the free exchange of
     <div class="panel">
         <h3 id="images">Images</h3>
         <p>Images are similar to links only begin with !.</p>
-        <p>This is an example: ![The image caption](https://inxys.net/images/logo.png)</p>
+        <p>This is an example: ![The image caption](https://inxys.net/assets/logo.png)</p>
         <p>Use modifiers to indicate image justification and size.</p>
-        <p>This is an example image left justified 50x50: !l50x50[The image caption](https://inxys.net/images/logo.png)</p>
-        <p>This is an example image right justified 50x100: !r50x100[The image caption](https://inxys.net/images/logo.png)</p>
+        <p>This is an example image left justified 50x50: !l50x50[The image caption](https://inxys.net/assets/logo.png)</p>
+        <p>This is an example image right justified 50x100: !r50x100[The image caption](https://inxys.net/assets/logo.png)</p>
     </div>
     <div class="panel">
         <h3 id="misc">Other formatting options</h3>
