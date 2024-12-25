@@ -1,7 +1,7 @@
 <div class="navbar navbar-default navbar-static-top navbar-expand-sm navbar-light bg-light" role="navigation">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">
-            <img src="/assets/img/inxys-logo-96.png" alt="inxys"></a>
+            <img src="/assets/inxys-logo-96.png" alt="inxys"></a>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

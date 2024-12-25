@@ -19,7 +19,7 @@ include(VIEWS_ROOT . 'page-header.php');
         <div class="col-8 p-3 banner-light rounded-3">
             <div class="row justify-content-center">
                 <div class="col-12">
-                    <h1><img src="/assets/img/inxys-logo-96.png" width="80" height="80"> The Information Exchange</h1>
+                    <h1><img src="/assets/inxys-logo-96.png" width="80" height="80"> The Information Exchange</h1>
                 </div>
                 <div class="col-6">
                     <blockquote><i>
