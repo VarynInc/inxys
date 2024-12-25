@@ -9,9 +9,10 @@ include(VIEWS_ROOT . 'page-header.php');
     <?php include(VIEWS_ROOT . 'top-nav.php'); ?>
     <div class="container main-container">
         <h1>Privacy Policy</h1>
-        <p>This document sets forth the inXys.net Online Privacy Policy (the Privacy Policy) for this web site, www.inXys.net (the Site).
+        <p>inXys.net 24-December-2024</p>
+        <p>This document sets forth the <em>inXys.net Online Privacy Policy</em> (the Privacy Policy) for this web site, www.inXys.net (<em>the Site</em>, or <em>this Site</em>).
             If you have objections to the Privacy Policy, you should not access or use this Site.
-            The Privacy Policy is subject to change and was last updated on 7-May-2022.</p>
+            The Privacy Policy is subject to change, was last updated on 24-December-2024, and is in effect as of that date.</p>
         <h4>Collection of Personal Information</h4>
         <p>As a visitor to this Site, you can engage in many activities without providing any personal information. In connection with other activities, inXys.net may ask you to provide certain information about yourself by filling out and submitting an online form. It is completely optional for you to engage in these activities. If you elect to engage in these activities, however, inXys.net may ask that you provide personal information, such as your first and last name, e-mail address, and other personal information. When ordering products or services on the Site, you may be asked to provide a credit card number. Depending upon the activity, some of the information that inXys.net asks you to provide is identified as mandatory and some as voluntary. If you do not provide the mandatory data with respect to a particular activity, you will not be able to engage in that activity. </p>
         <p>When you use the Site, inXys.net, or third parties authorized by inXys.net, may also collect certain technical and routing information about your computer to facilitate your use of the Site and its services. For example, inXys.net may log environmental variables, such as browser type, operating system, CPU speed, and the Internet Protocol ("IP") address of your computer. inXys.net uses these environmental variables to facilitate and track your use of the Site and its services. inXys.net also uses such environmental variables to measure traffic patterns on the Site. Without expressly informing you in each particular circumstance, inXys.net does not match such information with any of your personal information. </p>
@@ -24,5 +25,4 @@ include(VIEWS_ROOT . 'page-header.php');
     </div>
     <?php include(VIEWS_ROOT . 'footer.php'); ?>
 </body>
-
 </html>
