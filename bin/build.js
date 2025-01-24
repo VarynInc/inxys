@@ -1,5 +1,10 @@
 /**
  * node.js script to build the website.
  */
-console.log("Build process has not been implemented.");
+import fs from "fs";
+import chalk from "chalk";
+import commandLineArgs from "yargs";
+import { hideBin } from "yargs/helpers";
+
+console.log(chalk.red("Build process has not been implemented."));
 process.exit(9);

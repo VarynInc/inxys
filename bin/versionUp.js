@@ -5,52 +5,53 @@
  In each file specified, we replace the first occurrence of #.#.# with the new version number.
  **/
 
- const fs = require("fs");
- const path = require("path");
- const commandLineArgs = require("yargs");
- 
- // The current version is based off the first file, incremented, and updated in all files:
- var filesContainingVersion = [
-     "services/version.php",
-     "package.json"
- ];
- var pathToRoot;
- var debug = true;
- var versionUpdateTask;
- 
- function debugLog(message) {
-     if (debug) {
-         console.log(message);
-     }
- }
- 
- function setParameters() {
-     const options = commandLineArgs.argv;
-     if (typeof options.debug !== "undefined") {
-         debug = options.debug;
-     } else {
-         debug = true;
-     }
-     if (typeof options.task !== "undefined") {
-         versionUpdateTask = options.task;
-     } else {
-         versionUpdateTask = "build";
-     }
-     if (typeof options.path !== "undefined") {
-         pathToRoot = options.path;
-     } else {
-         pathToRoot = "./";
-     }
-     if (typeof options.src !== "undefined") {
-         filesContainingVersion = options.src;
-     }
-     debugLog("Options are: " + JSON.stringify({
-             debug: debug,
-             path: pathToRoot,
-             task: versionUpdateTask,
-             files: filesContainingVersion
-         }));
- }
+import fs from "fs";
+import chalk from "chalk";
+import commandLineArgs from "yargs";
+import { hideBin } from "yargs/helpers";
+  
+// The current version is based off the first file, incremented, and updated in all files:
+const filesContainingVersion = [
+    "services/version.php",
+    "package.json"
+];
+let pathToRoot;
+let debug = true;
+let versionUpdateTask;
+
+function debugLog(message) {
+    if (debug) {
+        console.log(chalk.blue(message));
+    }
+}
+
+function setParameters() {
+    const options = commandLineArgs(hideBin(process.argv));
+    if (typeof options.debug !== "undefined") {
+        debug = options.debug;
+    } else {
+        debug = true;
+    }
+    if (typeof options.task !== "undefined") {
+        versionUpdateTask = options.task;
+    } else {
+        versionUpdateTask = "build";
+    }
+    if (typeof options.path !== "undefined") {
+        pathToRoot = options.path;
+    } else {
+        pathToRoot = "./";
+    }
+    if (typeof options.src !== "undefined") {
+        filesContainingVersion = options.src;
+    }
+    debugLog("Options are: " + JSON.stringify({
+            debug: debug,
+            path: pathToRoot,
+            task: versionUpdateTask,
+            files: filesContainingVersion
+        }));
+}
  
 function versionUp(task) {
     const versionMatch = "[\"'][0-9]+\.[0-9]+\.[0-9]+[\"']";
@@ -79,18 +80,18 @@ function versionUp(task) {
                 let buildNumber = parseInt(nextVersion[2], 10);
                 switch (task) {
                     case "major":
-                        major++;
+                        major += 1;
                         minor = 0;
                         buildNumber = 0;
                         break;
 
                     case "minor":
-                        minor++;
+                        minor += 1;
                         buildNumber = 0;
                         break;
 
                     case "build":
-                        buildNumber++;
+                        buildNumber += 1;
                         break;
 
                     default:
@@ -105,8 +106,8 @@ function versionUp(task) {
                         if (error) {
                             debugLog("Reading file " + sourceFile + " fails with " + error.toString());
                         } else {
-                            var regExp = new RegExp(versionMatch);
-                            var posOfVersion = fileContent.search(regExp);
+                            const regExp = new RegExp(versionMatch);
+                            const posOfVersion = fileContent.search(regExp);
                             if (posOfVersion >= 0) {
                                 fs.writeFile(
                                     sourceFile,
@@ -133,8 +134,8 @@ function versionUp(task) {
             }
         }
     });
- }
+}
  
- setParameters();
- versionUp(versionUpdateTask);
+setParameters();
+versionUp(versionUpdateTask);
  

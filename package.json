@@ -1,11 +1,13 @@
 {
   "name": "inxys",
-  "version": "3.1.8",
+  "version": "3.1.11",
   "description": "inXys: The Information Exchange",
   "main": "js/index.js",
+  "type": "module",
   "scripts": {
     "build": "node ./bin/build.js",
     "deploy": "node ./bin/deploy.js --config=bin/deploy-config.json",
+    "lint": "npm exec -- eslint ./public/js/*.js",
     "start": "echo Load index.php in a web browser",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "versionup": "node ./bin/versionUp.js --debug --task build --path ./"
@@ -31,9 +33,10 @@
   "devDependencies": {
     "async": "^3.2.6",
     "axios": "^1.7.9",
-    "chalk": "^4.1.2",
+    "chalk": "^5.4.1",
     "cheerio": "^1.0.0",
-    "fs-extra": "^11.2.0",
+    "eslint": "^9.18.0",
+    "fs-extra": "^11.3.0",
     "glob": "^11.0.1",
     "imagemin": "^9.0.0",
     "imagemin-gifsicle": "^7.0.0",

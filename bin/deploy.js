@@ -4,15 +4,19 @@
  * To really deploy, run `npm run deploy -- --no-dryrun`
  * After deploy, test on the target stage e.g. https://inxys-q.net
  */
+import Rsync from "rsync";
+import Chalk from "chalk";
+import fs from "fs";
+import path from "path";
+import shelljs from "shelljs";
+import yargs from "yargs";
+import { hideBin } from "yargs/helpers";
+// const { exit } = require("process");
+
+const defaultConfigurationFilePath = "bin/deploy-config.json";
 let rsyncFlags = "zrptcv";
 let debug = false;
 let configuration = {};
-const Rsync = require("rsync");
-const Chalk = require("chalk");
-const fs = require("fs");
-const { exit } = require("process");
-require('shelljs/global');
-const defaultConfigurationFilePath = "bin/deploy-config.json";
 
 /**
  * Set defaults for things that we may not receive from the configuration file
@@ -47,6 +51,8 @@ function loadConfigurationData(configurationFilePath) {
         let rawData = fs.readFileSync(configurationFilePath);
         if (rawData != null) {
             return JSON.parse(rawData) || {};  
+        } else {
+            immediateLog(configurationFilePath + " has no data", true);
         }
     }
     return {};
@@ -91,6 +97,9 @@ function mergeConfigurationData(configurationDefault) {
  * @return {object} Configuration information.
  */
 function mergeArgs(args, configuration) {
+    if (args.conf) {
+        configuration.configurationFile = args.conf;
+    }
     if (args.destination) {
         configuration.destinationPath = args.destination;
     }
@@ -124,7 +133,7 @@ function mergeArgs(args, configuration) {
     if (args.hasOwnProperty('dryrun')) {
         configuration.isDryRun = args.dryrun;
     }
-    console.log(Chalk.blue("isDryRun is " + (configuration.isDryRun?"true":"false")));
+    console.log(Chalk.yellow("isDryRun is " + (configuration.isDryRun?"true":"false")));
     return configuration;
 }
 
@@ -133,88 +142,87 @@ function mergeArgs(args, configuration) {
  * @return {object} Args object.
  */
 function getArgs() {
-    const args = require("yargs")
-    .options({
-        "c": {
-            alias: "config",
+    const args = yargs(hideBin(process.argv));
+    args.options({
+        "conf": {
+            alias: "c",
             type: "string",
             describe: "path to config file",
             demandOption: false,
             default: defaultConfigurationFilePath
         },
-        "d": {
-            alias: "destination",
+        "destination": {
+            alias: "d",
             type: "string",
             describe: "destination root path to copy to on host",
             demandOption: false
         },
-        "e": {
-            alias: "site",
+        "site": {
+            alias: "e",
             type: "string",
             describe: "set which site to deploy",
             demandOption: false
         },
-        "h": {
-            alias: "host",
+        "host": {
+            alias: "h",
             type: "string",
             describe: "host domain to copy to",
             demandOption: false
         },
-        "k": {
-            alias: "key",
+        "key": {
+            alias: "k",
             type: "string",
             describe: "path to ssh key file (pem format)",
             demandOption: false
         },
-        "l": {
-            alias: "log",
+        "log": {
+            alias: "l",
             type: "string",
             describe: "path to log file",
             demandOption: false
         },
-        "s": {
-            alias: "source",
+        "source": {
+            alias: "s",
             type: "string",
             describe: "set the source file root folder",
             demandOption: false
         },
-        "t": {
-            alias: "targetstage",
+        "targetstage": {
+            alias: "t",
             type: "string",
             describe: "set the server stage to deploy to",
             demandOption: false
         },
-        "u": {
-            alias: "user",
+        "user": {
+            alias: "u",
             type: "string",
             describe: "user on destination to login as (using key file)",
             demandOption: false
         },
-        "v": {
-            alias: "verbose",
-            boolean: true,
+        "verbose": {
+            alias: "v",
+            type: "boolean",
             describe: "turn on debugging",
             demandOption: false,
             default: false
         },
-        "x": {
-            alias: "exclude",
+        "exclude": {
+            alias: "x",
             type: "string",
             describe: "path to exclude file list (text file)",
             demandOption: false
         },
-        "y": {
-            alias: "dryrun",
-            boolean: true,
+        "dryrun": {
+            alias: "y",
+            type: "boolean",
             describe: "perform dry run (no actual sync)",
             demandOption: false,
             default: true
         },
     })
     .alias("?", "help")
-    .help()
-    .argv;
-    return args;
+    .help();
+    return args.argv;
 }
 
 /**
@@ -267,21 +275,17 @@ function immediateLog(message, error = true) {
 }
 
 function updateBuildInfoFile() {
-    var path = require('path'),
-        buildFileName = 'build-info.json',
-        buildFolder = './public',
-        user = env['USER'],
-        package_name = env['npm_package_name'],
-        version = env['npm_package_version'],
-        buildFile = path.join(buildFolder, buildFileName),
-        currentDateTime = (new Date()).toISOString(),
-        buildInfo = {
-            packageName: package_name,
-            version: version,
+    const buildFileName = 'build-info.json';
+    const buildFolder = './public';
+    const buildFile = path.join(buildFolder, buildFileName);
+    const currentDateTime = new Date().toLocaleString();
+    const buildInfo = {
+            site: process.env.npm_package_name,
+            version: process.env.npm_package_version,
             publish_date: currentDateTime,
-            user: user
+            user: process.env.USER
         };
-    echo(JSON.stringify(buildInfo)).to(buildFile);
+    shelljs.echo(JSON.stringify(buildInfo)).to(buildFile);
 }
 
 function deploy(configuration) {
