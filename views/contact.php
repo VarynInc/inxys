@@ -1,5 +1,5 @@
 <?php
-$hackerVerification = generateHackerVerificationCode();
+$hackerVerification = makeInputFormHackerToken();
 ?>
 <form id="contact-form" method="POST" action="/contact/">
     <div class="login-form p-3">

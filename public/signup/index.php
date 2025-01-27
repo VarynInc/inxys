@@ -1,7 +1,90 @@
 <?php
 include_once('../../services/inxys_common.php');
+include_once('../../services/strings.php');
 $pageId = 'signup';
 $pageTitle = '';
+$signupErrorMessage = '';
+
+function handleSignUpAttempt() {
+    global $enginesis;
+    global $stringTable;
+
+    $signUp = getPostVar('signupButton', '');
+    $action = getPostVar('action', '');
+    $hackerToken = getPostVar('all-clear', '');
+    $login = getPostVar('loginButton', null);
+    $hackerToken = getPostVar('all-clear', '');
+    $isSignUpAttempt = false;
+    $isLoggedIn = false;
+    $errorMessage = '';
+    $errorParameter = '';
+
+    if ($signUp != null && $action == 'signup' && validateInputFormHackerToken($hackerToken)) {
+        $isSignUpAttempt = true;
+        if ($errorMessage == '') {
+            // user name must be valid and unique
+            $formField = 'signup-username';
+            $userName = cleanString(strip_tags(getPostVar($formField, '')));
+            if ( ! isValidUserName($userName)) {
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_INVALID);
+                $errorParameter = $formField;
+            } elseif ( ! checkUserNameUnique($userName)) {
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_NAME_IN_USE);
+                $errorParameter = $formField;
+            }
+        }
+        if ($errorMessage == '') {
+            // @todo: email must valid and not be assign to another account
+            $formField = 'signup-email';
+            $email = strip_tags(getPostVar($formField, ''));
+            if ( ! checkEmailAddress($email)) {
+                $errorMessage = 'The email address provided (' . $email . ') is not valid.';
+                $errorParameter = $formField;
+            } elseif ( ! checkEmailUnique($email)) {
+                $errorMessage = 'The email address provided (' . $email . ') is already assigned to another user. Please choose a different email address.';
+                $errorParameter = $formField;
+            }
+        }
+        if ($errorMessage == '') {
+            // @todo: password strength
+            $formField = 'signup-password';
+            $password = strip_tags(getPostVar($formField, ''));
+            if ( ! isValidPassword($password)) {
+                $errorMessage = 'The password (' . $password . ') does not conform to security requirements. Please choose a different password.';
+                $errorParameter = $formField;
+            }
+        }
+        if ($errorMessage == '') {
+            // @todo: agree to terms
+            $formField = 'agree-terms';
+            $agreeToTerms = getPostVar('agree-terms', '');
+            if ($agreeToTerms != 'on') {
+                $errorMessage = 'You must agree to the terms of service';
+                $errorParameter = $formField;
+            }
+        }
+        $rememberMe = getPostVar('rememberme', '');
+    } else {
+        $errorMessage = 'Sign up request was not valid, please check your entry and try again.';
+        $errorParameter = 'signup-username';
+    }
+    return [
+        'isSignUpAttempt' => $isSignUpAttempt,
+        'isLoggedIn' => $isLoggedIn,
+        'errorMessage' => $errorMessage,
+        'errorParameter' => $errorParameter
+    ];
+}
+$signUpResult = handleSignUpAttempt();
+$isSignUpAttempt = $signUpResult['isSignUpAttempt'];
+if ($isSignUpAttempt) {
+    if ($signUpResult['isLoggedIn']) {
+        $signupErrorMessage = "You are logged in!";
+    } else {
+        $signupErrorMessage = $signUpResult['errorMessage'];
+    }
+}
+
 include(VIEWS_ROOT . 'page-header.php');
 ?>
 <body>
@@ -11,7 +94,10 @@ include(VIEWS_ROOT . 'page-header.php');
     <div class="row justify-content-md-center">
         <div class="col col-md-4"></div>
         <div class="col col-md-4 align-self-center">
-            <?php include(VIEWS_ROOT . 'signup.php');?>
+            <?php if ($signupErrorMessage != '') {
+                echo('<div class="modalMessageArea"><p class="text-error">' . $signupErrorMessage . '</p></div>');
+            }
+            include(VIEWS_ROOT . 'signup.php');?>
         </div>
         <div class="col col-md-4"></div>
     </div>
@@ -27,6 +113,22 @@ include(VIEWS_ROOT . 'page-header.php');
         the email confirmation.
     </p>
 </div>
-<?php include(VIEWS_ROOT . 'footer.php');?>
+<?php
+include(VIEWS_ROOT . 'footer.php');
+if ($isSignUpAttempt) {
+    $errorParameter = $signUpResult['errorParameter'];
+    if ( ! empty($errorParameter)) {
+?>
+<script>
+    const formElement = document.getElementById("<?php echo($errorParameter);?>");
+    if (formElement) {
+        formElement.focus();
+        formElement.classList.add("login-form-input-error");
+    }
+</script>
+<?php
+    }
+}
+?>
 </body>
 </html>

@@ -1,11 +1,23 @@
 <?php
 include_once('../services/inxys_common.php');
+require_once('../services/strings.php');
+
 $pageId = 'home';
 $pageTitle = 'About The Information Exchange';
 $pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.';
 $hackerVerification = '';
 $isLoggedIn = false;
+$loginErrorMessage = '';
 include(VIEWS_ROOT . 'page-header.php');
+$loginResult = handleLoginAttempt();
+if ($loginResult['isLogInAttempt']) {
+    if ($loginResult['isLoggedIn']) {
+        $loginErrorMessage = "You are logged in!";
+    } else {
+        $loginErrorMessage = $loginResult['errorMessage'];
+    }
+}
+
 ?>
 <body>
 <?php include(VIEWS_ROOT . 'top-nav.php');?>
@@ -35,7 +47,10 @@ include(VIEWS_ROOT . 'page-header.php');
     <div class="row justify-content-md-center">
         <div class="col col-md-4"></div>
         <div class="col col-md-4 align-self-center">
-            <?php include(VIEWS_ROOT . 'login.php');?>
+            <?php if ($loginErrorMessage != '') {
+                echo('<div class="modalMessageArea"><p class="text-error">' . $loginErrorMessage . '</p></div>');
+            }
+            include(VIEWS_ROOT . 'login.php');?>
         </div>
         <div class="col col-md-4"></div>
     </div>

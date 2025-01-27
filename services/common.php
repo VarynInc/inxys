@@ -1333,14 +1333,16 @@ function cleanUserName ($userName) {
 }
 
 /**
- * Performs basic user password validation. The password can be any printable characters between 4 and 20 in length
+ * Performs basic user password validation. The password can be any printable characters between 8 and 20 in length
  * with no leading or trailing spaces.
  * @param string $password The password to check.
  * @return bool true if acceptable otherwise false.
  */
 function isValidPassword ($password) {
+    $minPasswordLength = 8;
+    $maxPasswordLength = 20;
     $len = strlen(trim($password));
-    return $len == strlen($password) && ctype_graph($password) && $len > 3 && $len < 21;
+    return $len == strlen($password) && ctype_graph($password) && $len >= $minPasswordLength && $len <= $maxPasswordLength;
 }
 
 /**
@@ -1348,7 +1350,7 @@ function isValidPassword ($password) {
  * certain we have a value our system can deal with.
  * @param $gender {string} a proposed value for gender, either a single character M, F, or N, or a word Male, Female, or Neutral.
  * @return string One of the gender setting we will accept.
- * TODO: This should be localized, so move the possible names table into a lookup table.
+ * @todo: This should be localized, so move the possible names table into a lookup table.
  */
 function validateGender ($gender) {
     $validGenders = array('Male', 'Female', 'Neutral');
@@ -1406,7 +1408,7 @@ function cleanString ($input) {
  * @return string The source string cleaned of all bad characters.
  */
 function fullyCleanString($source) {
-    return htmlspecialchars(cleanString($source));
+    return htmlspecialchars(strip_tags(cleanString($source)));
 }
 
 /**

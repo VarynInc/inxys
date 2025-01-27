@@ -799,11 +799,7 @@ class Enginesis {
             $statusMessage = '';
             $extendedInfo = '';
             $results = $this->getResponseStatus($enginesisResponse, $success, $statusMessage, $extendedInfo);
-            if ($results === null) {
-                $this->m_lastError = ['success' => $success, 'message' => $statusMessage, 'extended_info' => $extendedInfo];
-            } else {
-                $this->m_lastError = Enginesis::noError();
-            }
+            $this->m_lastError = ['success' => $success, 'message' => $statusMessage, 'extended_info' => $extendedInfo];
         } else {
             $this->m_lastError = ['success' => '0', 'message' => EnginesisErrors::SERVER_RESPONSE_NOT_VALID, 'extended_info' => 'The request did not complete due to an internal error.'];
         }
@@ -2555,8 +2551,28 @@ class Enginesis {
     }
 
     /**
+     * Determine if an email address is assigned to an Enginesis account.
+     * @param string An email address to check.
+     * @return integer A user id, if authorized to see it, or a 1 if the email is assigned or 0 if
+     * no account currently uses that email.
+     */
+    public function userGetByEmail ($email) {
+        $service = 'UserGetByEmail';
+        $user = null;
+        if ($this->isValidEmailAddress($email)) {
+            $parameters = ['email' => $email];
+            $enginesisResponse = $this->callServerAPI($service, $parameters);
+            $results = $this->setLastErrorFromResponse($enginesisResponse);
+            if (is_array($results) && count($results) > 0) {
+                $user = $results[0];
+            }
+        }
+        return $user;
+    }
+
+    /**
      * The general public user get by a user name - returns a minimum set of public attributes about a user.
-     * @param $userName - may be either an int indicating a user_id or a string indicating a user_name.
+     * @param string|integer $userName - may be either an int indicating a user_id or a string indicating a user_name.
      * @return object A user info object containing only the public attributes.
      */
     public function userGetByName ($userName) {

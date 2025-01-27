@@ -1,21 +1,25 @@
 <?php
-$hackerVerification = generateHackerVerificationCode();
+$hackerVerification = makeInputFormHackerToken();
+$userName = strip_tags(getPostVar('login-username', ''));
+$password = strip_tags(getPostVar('login-password', ''));
+$rememberMe = getPostVar('rememberme', '');
+$rememberMeChecked = $rememberMe == 'on' ? 'checked' : '';
 ?>
 <form id="login-form" method="POST" action="index.php">
     <div class="login-form">
         <h3 class="text-center">Welcome!</h3>
         <div class="form-group">
             <label for="login_username">Name or number:</label><br>
-            <input type="text" id="login_username" name="login_username" tabindex="17" maxlength="20" class="login-form-input required" autocorrect="off" autocomplete="name" />
+            <input type="text" id="login-username" name="login-username" tabindex="17" maxlength="50" class="login-form-input required" autocorrect="off" autocomplete="name" value="<?php echo($userName);?>"/>
         </div>
         <div class="form-group">
             <label for="login_password">Password:</label><br>
-            <input type="password" id="login_password" name="login_password" tabindex="18" maxlength="20" class="login-form-input required" />
+            <input type="password" id="login-password" name="login-password" tabindex="18" maxlength="32" class="login-form-input required" value="<?php echo($password);?>"/>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-lg btn-success" value="loginButton" name="loginButton" id="loginButton">Login</button>
+            <button type="submit" class="btn btn-lg btn-success" value="loginButton" name="loginButton" id="loginButton" tabindex="19">Login</button>
             <input type="hidden" name="all-clear" value="<?php echo ($hackerVerification); ?>" />
-            <span id="rememberme-container"><input type="checkbox" tabindex="20" checked="checked" name="rememberme" id="rememberme"><label for="rememberme">Remember Me</label></span>
+            <span id="rememberme-container"><input type="checkbox" tabindex="20" <?php echo($rememberMeChecked);?> name="rememberme" id="rememberme"><label for="rememberme">Remember Me</label></span>
             <div class="text-right">
                 <a id="loginPopup_forgot_password" href="/forgotpassword/" tabindex="21">Forgot password?</a>
             </div>
@@ -23,4 +27,3 @@ $hackerVerification = generateHackerVerificationCode();
         </div>
     </div>
 </form>
-<div class="modalMessageArea"></div>

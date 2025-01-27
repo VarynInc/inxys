@@ -35,6 +35,11 @@
     transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
 }
 
+.text-error {
+    color: #ac2925;
+    font-weight: 600;
+}
+
 .navbar-brand {
     padding: 8px;
 }
