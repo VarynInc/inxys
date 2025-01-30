@@ -34,38 +34,38 @@ function handleSignUpAttempt() {
             }
         }
         if ($errorMessage == '') {
-            // @todo: email must valid and not be assign to another account
+            // email must valid and not be assign to another account
             $formField = 'signup-email';
             $email = strip_tags(getPostVar($formField, ''));
             if ( ! checkEmailAddress($email)) {
-                $errorMessage = 'The email address provided (' . $email . ') is not valid.';
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::INVALID_EMAIL);
                 $errorParameter = $formField;
             } elseif ( ! checkEmailUnique($email)) {
-                $errorMessage = 'The email address provided (' . $email . ') is already assigned to another user. Please choose a different email address.';
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_EMAIL_IN_USE);
                 $errorParameter = $formField;
             }
         }
         if ($errorMessage == '') {
-            // @todo: password strength
+            // password strength
             $formField = 'signup-password';
             $password = strip_tags(getPostVar($formField, ''));
             if ( ! isValidPassword($password)) {
-                $errorMessage = 'The password (' . $password . ') does not conform to security requirements. Please choose a different password.';
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_INVALID_PASSWORD);
                 $errorParameter = $formField;
             }
         }
         if ($errorMessage == '') {
-            // @todo: agree to terms
+            // agree to terms
             $formField = 'agree-terms';
             $agreeToTerms = getPostVar('agree-terms', '');
             if ($agreeToTerms != 'on') {
-                $errorMessage = 'You must agree to the terms of service';
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_TOS);
                 $errorParameter = $formField;
             }
         }
         $rememberMe = getPostVar('rememberme', '');
     } else {
-        $errorMessage = 'Sign up request was not valid, please check your entry and try again.';
+        $errorMessage = $stringTable->lookup(EnginesisUIStrings::REG_INFO_INCOMPLETE);
         $errorParameter = 'signup-username';
     }
     return [
@@ -79,7 +79,7 @@ $signUpResult = handleSignUpAttempt();
 $isSignUpAttempt = $signUpResult['isSignUpAttempt'];
 if ($isSignUpAttempt) {
     if ($signUpResult['isLoggedIn']) {
-        $signupErrorMessage = "You are logged in!";
+        $signupErrorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_ACCEPTED);
     } else {
         $signupErrorMessage = $signUpResult['errorMessage'];
     }
@@ -130,5 +130,102 @@ if ($isSignUpAttempt) {
     }
 }
 ?>
+<script>
+    // @todo: onchange handler for name, password, email, to remove class "login-form-input-error"
+    // @todo: onchange handler for username to check if available
+    // @todo: button handler for show password toggle
+    /**
+     * On change handler for the user name field on a registration form.
+     * Try to make sure the user name is not already registered to another account.
+     * @param {object} element that is changing.
+     * @param {string} domIdImage id that will receive update of name status either acceptable or unacceptable.
+     */
+    function onChangeUserName (element, domIdImage) {
+        element.classList.remove("login-form-input-error");
+        if ( ! waitingForUserNameReply && element != null) {
+            if (element.target != null) {
+                element = element.target;
+            }
+            if (domIdImage == null) {
+                domIdImage = element.dataset.target;
+            }
+            const userName = element.value.toString();
+            if (userName && varynApp.isValidUserName(userName)) {
+                waitingForUserNameReply = true;
+                domImage = domIdImage;
+                enginesis.userGetByName(userName, onChangeUserNameServerResponse);
+            } else {
+                setUserNameIsUnique(domIdImage, false);
+            }
+        }
+    }
+
+    function onChangeUserNameServerResponse (enginesisResponse) {
+        var userNameAlreadyExists = false;
+        waitingForUserNameReply = false;
+        if (enginesisResponse != null && enginesisResponse.fn != null) {
+            userNameAlreadyExists = enginesisResponse.results.status.success == "1";
+        }
+        setUserNameIsUnique(domImage, ! userNameAlreadyExists);
+        domImage = null;
+    }
+
+    /**
+     * When we dynamically query the server to determine if the user name is a unique selection
+     * use this function to indicate uniqueness result on the form.
+     * @param {string} id for which DOM element we wish to manipulate.
+     * @param {boolean} isUnique true if the name is unique, false if it is taken by someone else.
+     */
+    function setUserNameIsUnique (id, isUnique) {
+        if (id) {
+            var element = document.getElementById(id);
+            if (element != null) {
+                if (isUnique) {
+                    element.classList.remove('username-is-not-unique');
+                    element.classList.add('username-is-unique');
+                    element.style.display = "inline-block";
+                } else {
+                    element.classList.remove('username-is-unique');
+                    element.classList.add('username-is-not-unique');
+                    element.style.display = "inline-block";
+                }
+            }
+        }
+    }
+
+    function setupUserNameChangeHandler () {
+        const registerFormUserName = document.getElementById("signup-username");
+        if (registerFormUserName != null) {
+            registerFormUserName.addEventListener("change", onChangeRegisterUserName);
+            registerFormUserName.addEventListener("input", onChangeRegisterUserName);
+            registerFormUserName.addEventListener("propertychange", onChangeRegisterUserName);
+            setupRegisterUserNameOnChangeHandler();
+            onChangeRegisterUserName(registerFormUserName, "signup-email"); // in case field is pre-populated
+            const emailFormField = document.getElementById("signup-email");
+            if (emailFormField != null) {
+                emailFormField.addEventListener("change", onChangeEmail);
+                emailFormField.addEventListener("input", onChangeEmail);
+            }
+        }
+    }
+
+    function onClickRegisterShowPassword (event) {
+        const passwordInput = document.getElementById("signup-password");
+        const icon = document.getElementById("show-password-icon");
+        const text = document.getElementById("show-password-text");
+        const show = icon.classList.contains("iconEyeSlash");
+
+        if (show) {
+            passwordInput.type = 'password';
+            icon.className = 'iconEye';
+            text.innerText = 'Show';
+        } else {
+            passwordInput.type = 'text';
+            icon.className = 'iconEyeSlash';
+            text.innerText = 'Hide';
+        }
+    }
+
+</script>
 </body>
 </html>

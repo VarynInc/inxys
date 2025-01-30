@@ -9,9 +9,11 @@ $enginesis_strings_en = [
     EnginesisUIStrings::REGISTRATION_NAME_IN_USE => 'The user name you selected is assigned to another user. Please select a different user name.',
     EnginesisUIStrings::REGISTRATION_EMAIL_IN_USE => 'The email address you selected is used by another account. Please use a different email address or use forgot password to recover that account.',
     EnginesisUIStrings::REGISTRATION_INVALID => 'The user name or password you entered does not meet our system requirements. Please try again.',
+    EnginesisUIStrings::REGISTRATION_INVALID_PASSWORD => 'The password entered does not conform to our security requirements. Please choose a different password.',
     EnginesisUIStrings::REGISTRATION_ERROR => 'There was a system error (%error%) while registering your account. Our support team is looking into the issue. Please try again.',
     EnginesisUIStrings::REGISTRATION_ACCEPTED => 'Your registration has been accepted. To complete your registration you must accept the email confirmation. Please check your email and use the link provided to complete your registration.',
     EnginesisUIStrings::REGISTRATION_ERRORS_FIELDS => 'Incorrect values in the following fields: %fields%. Please check your entry and try again.',
+    EnginesisUIStrings::REGISTRATION_TOS => 'You must agree to the terms of service in order to register for an account.',
     EnginesisUIStrings::SECURITY_ERRORS_FIELDS => 'Incorrect values in your security information. Please check your entry and try again.',
     EnginesisUIStrings::MUST_BE_LOGGED_IN => 'You must be logged in to use this feature.',
     EnginesisUIStrings::REG_INFO_UPDATED => 'Your profile has been updated.',
@@ -22,4 +24,5 @@ $enginesis_strings_en = [
     EnginesisUIStrings::REG_COMPLETE_RESET_MESSAGE => 'Email has been sent with instructions to complete your account password reset.',
     EnginesisUIStrings::REFRESH_TOKEN_ERROR => 'There was an unexpected system error refreshing your session. Please login again.',
     EnginesisUIStrings::LOGOUT_COMPLETE => 'You have been logged out.',
+    EnginesisUIStrings::INVALID_EMAIL => 'The email address provided is not valid. Please check your entry and try again.'
 ];
