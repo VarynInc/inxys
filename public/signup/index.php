@@ -131,9 +131,6 @@ if ($isSignUpAttempt) {
 }
 ?>
 <script>
-    // @todo: onchange handler for name, password, email, to remove class "login-form-input-error"
-    // @todo: onchange handler for username to check if available
-    // @todo: onchange handler for email to check if available
     let waitingForUserNameReply = false;
 
     function onChangeUserName () {
