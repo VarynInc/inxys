@@ -109,7 +109,7 @@ include(VIEWS_ROOT . 'page-header.php');
     </p>
     <p>
         By registering you agree to the <a href="/terms/">Terms of Service</a>. We require a valid email address. Once you register
-        you will receive an email be asking you to confirm your email address. You accouint is not active until you complete
+        you will receive an email asking you to confirm your email address. Your account is not active until you complete
         the email confirmation.
     </p>
 </div>
@@ -133,74 +133,59 @@ if ($isSignUpAttempt) {
 <script>
     // @todo: onchange handler for name, password, email, to remove class "login-form-input-error"
     // @todo: onchange handler for username to check if available
-    // @todo: button handler for show password toggle
-    /**
-     * On change handler for the user name field on a registration form.
-     * Try to make sure the user name is not already registered to another account.
-     * @param {object} element that is changing.
-     * @param {string} domIdImage id that will receive update of name status either acceptable or unacceptable.
-     */
-    function onChangeUserName (element, domIdImage) {
+    // @todo: onchange handler for email to check if available
+    let waitingForUserNameReply = false;
+
+    function onChangeUserName () {
+        const element = document.getElementById("signup-username");
         element.classList.remove("login-form-input-error");
         if ( ! waitingForUserNameReply && element != null) {
-            if (element.target != null) {
-                element = element.target;
-            }
-            if (domIdImage == null) {
-                domIdImage = element.dataset.target;
-            }
             const userName = element.value.toString();
-            if (userName && varynApp.isValidUserName(userName)) {
+            if (userName && enginesis.isValidUserName(userName)) {
                 waitingForUserNameReply = true;
-                domImage = domIdImage;
                 enginesis.userGetByName(userName, onChangeUserNameServerResponse);
             } else {
-                setUserNameIsUnique(domIdImage, false);
+                setUserNameIsUnique(false);
             }
         }
     }
 
     function onChangeUserNameServerResponse (enginesisResponse) {
-        var userNameAlreadyExists = false;
+        let userNameAlreadyExists = false;
         waitingForUserNameReply = false;
         if (enginesisResponse != null && enginesisResponse.fn != null) {
             userNameAlreadyExists = enginesisResponse.results.status.success == "1";
         }
-        setUserNameIsUnique(domImage, ! userNameAlreadyExists);
-        domImage = null;
+        setUserNameIsUnique( ! userNameAlreadyExists);
     }
 
-    /**
-     * When we dynamically query the server to determine if the user name is a unique selection
-     * use this function to indicate uniqueness result on the form.
-     * @param {string} id for which DOM element we wish to manipulate.
-     * @param {boolean} isUnique true if the name is unique, false if it is taken by someone else.
-     */
-    function setUserNameIsUnique (id, isUnique) {
-        if (id) {
-            var element = document.getElementById(id);
-            if (element != null) {
-                if (isUnique) {
-                    element.classList.remove('username-is-not-unique');
-                    element.classList.add('username-is-unique');
-                    element.style.display = "inline-block";
-                } else {
-                    element.classList.remove('username-is-unique');
-                    element.classList.add('username-is-not-unique');
-                    element.style.display = "inline-block";
-                }
+    function onChangeEmail(element, domIdImage) {
+        const emailElement = document.getElementById("signup-email");
+
+    }
+
+    function setUserNameIsUnique (isUnique) {
+        const element = document.getElementById("username-unique");
+        if (element != null) {
+            if (isUnique) {
+                element.classList.remove('username-is-not-unique');
+                element.classList.add('username-is-unique');
+                element.style.display = "inline-block";
+            } else {
+                element.classList.remove('username-is-unique');
+                element.classList.add('username-is-not-unique');
+                element.style.display = "inline-block";
             }
         }
     }
 
-    function setupUserNameChangeHandler () {
+    function setupFormChangeHandlers () {
         const registerFormUserName = document.getElementById("signup-username");
         if (registerFormUserName != null) {
-            registerFormUserName.addEventListener("change", onChangeRegisterUserName);
-            registerFormUserName.addEventListener("input", onChangeRegisterUserName);
-            registerFormUserName.addEventListener("propertychange", onChangeRegisterUserName);
-            setupRegisterUserNameOnChangeHandler();
-            onChangeRegisterUserName(registerFormUserName, "signup-email"); // in case field is pre-populated
+            registerFormUserName.addEventListener("change", onChangeUserName);
+            registerFormUserName.addEventListener("input", onChangeUserName);
+            registerFormUserName.addEventListener("propertychange", onChangeUserName);
+            onChangeUserName(registerFormUserName, "signup-email"); // in case field is pre-populated
             const emailFormField = document.getElementById("signup-email");
             if (emailFormField != null) {
                 emailFormField.addEventListener("change", onChangeEmail);
@@ -225,7 +210,7 @@ if ($isSignUpAttempt) {
             text.innerText = 'Hide';
         }
     }
-
+    setupFormChangeHandlers();
 </script>
 </body>
 </html>

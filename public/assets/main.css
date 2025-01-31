@@ -2,6 +2,7 @@
     margin: 1rem -1rem;
     padding: 0 2rem;
     border: 1px solid #cdcdcd;
+    border-radius: 0.25rem;
 }
 
 #login-form label {
@@ -63,22 +64,22 @@
     display: inline-block;
     background: url(/assets/green_tick.png) no-repeat;
     background-size: contain;
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
-    line-height: 48px;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin: -6px;
 }
 
 .username-is-not-unique {
     display: inline-block;
     background: url(/assets/red_x.png) no-repeat;
     background-size: contain;
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    min-height: 32px;
-    line-height: 48px;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin: -6px;
 }
 
 .text-error {

@@ -8,7 +8,6 @@ $allMenuPages = [
     ['id' => 'home', 'name' => 'Home', 'path' => '/'],
     ['id' => 'conferences', 'name' => 'Conferences', 'path' => '/conf/'],
     ['id' => 'users', 'name' => 'Users', 'path' => '/users/'],
-    ['id' => 'groups', 'name' => 'Groups', 'path' => '/groups/'],
     ['id' => 'profile', 'name' => 'Profile', 'path' => 'profile.php']
 ];
 $isLoggedIn = false;  // true when we have a user logged in
