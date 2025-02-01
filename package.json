@@ -10,6 +10,7 @@
     "lint": "npm exec -- eslint ./public/js/*.js",
     "start": "echo Load index.php in a web browser",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
+    "updatemodules": "node bin/updateModules.js",
     "versionup": "node ./bin/versionUp.js --debug --task build --path ./"
   },
   "repository": {

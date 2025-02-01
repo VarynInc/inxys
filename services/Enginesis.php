@@ -6,7 +6,7 @@
  */
 
 if ( ! defined('ENGINESIS_VERSION')) {
-    define('ENGINESIS_VERSION', '2.10.1');
+    define('ENGINESIS_VERSION', '2.12.1');
 }
 require_once('EnginesisErrors.php');
 if ( ! defined('SESSION_COOKIE')) {
@@ -2496,9 +2496,9 @@ class Enginesis {
 
     /**
      * When the user comes back to reset the password.
-     * @param $userId: int the user's internal user id.
-     * @param $newPassword: string the user's replacement password.
-     * @param $token: string the user's granted token allowing the reset from an authorized source.
+     * @param int the user's internal user id.
+     * @param string the user's replacement password.
+     * @param string the user's granted token allowing the reset from an authorized source.
      * @return object: null if reset fails, otherwise returns the user info object and logs the user in.
      */
     public function userVerifyForgotPassword ($userId, $newPassword, $token) {
@@ -2528,7 +2528,7 @@ class Enginesis {
 
     /**
      * The general public user get - returns a minimum set of public attributes about a user.
-     * @param $userId - may be either an int indicating a user_id or a string indicating a user_name.
+     * @param integer|string may be either an int indicating a user_id or a string indicating a user_name.
      * @return object A user info object containing only the public attributes.
      */
     public function userGet ($userId) {
@@ -2560,7 +2560,7 @@ class Enginesis {
         $service = 'UserGetByEmail';
         $user = null;
         if ($this->isValidEmailAddress($email)) {
-            $parameters = ['email' => $email];
+            $parameters = ['email_address' => $email];
             $enginesisResponse = $this->callServerAPI($service, $parameters);
             $results = $this->setLastErrorFromResponse($enginesisResponse);
             if (is_array($results) && count($results) > 0) {
