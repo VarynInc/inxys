@@ -4,12 +4,11 @@
  We expect to find a semantic version string "#.#.#" in the first file.
  In each file specified, we replace the first occurrence of #.#.# with the new version number.
  **/
-
 import fs from "fs";
 import chalk from "chalk";
 import commandLineArgs from "yargs";
 import { hideBin } from "yargs/helpers";
-  
+
 // The current version is based off the first file, incremented, and updated in all files:
 const filesContainingVersion = [
     "services/version.php",
@@ -52,7 +51,7 @@ function setParameters() {
             files: filesContainingVersion
         }));
 }
- 
+
 function versionUp(task) {
     const versionMatch = "[\"'][0-9]+\.[0-9]+\.[0-9]+[\"']";
     const nextFile = pathToRoot + filesContainingVersion[0];
@@ -135,7 +134,6 @@ function versionUp(task) {
         }
     });
 }
- 
+
 setParameters();
 versionUp(versionUpdateTask);
- 
