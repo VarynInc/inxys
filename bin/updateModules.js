@@ -13,15 +13,19 @@ const configuration = {
     librariesManifest: [
         {
             source: "EnginesisSDK/enginesis-php/source/Enginesis.php",
-            destination: "services/Enginesis.php"
+            destination: "./services/Enginesis.php"
         },
         {
             source: "EnginesisSDK/enginesis-php/source/EnginesisErrors.php",
-            destination: "services/EnginesisErrors.php"
+            destination: "./services/EnginesisErrors.php"
         },
         {
             source: "EnginesisSDK/enginesis-js/js/enginesis.cjs",
-            destination: "public/js/enginesis.js"
+            destination: "./public/js/enginesis.js"
+        },
+        {
+            source: "commonUtilities/js/commonUtilities.js",
+            destination: "./public/js/commonUtilities.js"
         }
     ]
 };
@@ -48,7 +52,12 @@ function logError(message) {
 async function updateModuleFiles() {
     configuration.librariesManifest.forEach(async function(fileProperties) {
         const sourceFile = path.join(configuration.librariesSourcePath, fileProperties.source);
-        const destinationFile = path.join(configuration.destinationPath, fileProperties.destination);
+        let destinationFile;
+        if (fileProperties.destination.startsWith("/") || fileProperties.destination.startsWith("./") || fileProperties.destination.startsWith("../")) {
+            destinationFile = fileProperties.destination;
+        } else {
+            destinationFile = path.join(configuration.destinationPath, fileProperties.destination);
+        }
         try {
             await fsExtra.copy(sourceFile, destinationFile)
             logInfo(`Copied ${sourceFile} to ${destinationFile}`);
