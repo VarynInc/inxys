@@ -20,7 +20,7 @@ const configuration = {
             destination: "./services/EnginesisErrors.php"
         },
         {
-            source: "EnginesisSDK/enginesis-js/js/enginesis.cjs",
+            source: "EnginesisSDK/enginesis-js/js/enginesis.mjs",
             destination: "./public/js/enginesis.js"
         },
         {

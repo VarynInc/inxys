@@ -22,3 +22,14 @@ Any tasks that are specified fully and determined to be worked on should go to [
     - show user activity feed
     - preferences
     - edit profile (name, nickname, email, password, profile image)
+- ✅ All build commands
+  - build ✅
+  - clean ✅
+  - deploy ✅
+  - deployemail ✅
+  - lint ✅
+  - sitemap ✅
+  - start ✅
+  - test ✅
+  - updatemodules ✅
+  - versionup ✅

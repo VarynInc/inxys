@@ -1,0 +1,33 @@
+%date%
+
+--------------------------
+Message from %friend_name%
+--------------------------
+
+Your friend %friend_name% sent you this request to check out our game %game_title% on Varyn.com
+
+https://%domain%/play/%game_name%?playbackid=%playbackid%&e=1e6
+
+%message%
+
+%short_desc%
+
+Let's play!
+Varyn
+
+* ( https://www.facebook.com/varyndev )
+* ( https://twitter.com/@varyndev )
+* ( https://www.linkedin.com/company/varyn )
+* ( https://www.youtube.com/channel/UC-TLi2sZGxNptz4p6tdbIqw )
+* ( https://www.pinterest.com/varyn/varyndev/ )
+* ( https://www.instagram.com/varyndev/ )
+
+At Varyn, we build games for everyone. Our content is fun for all ages and our technology
+performs on all the most popular platforms.
+
+Copyright © 2023 Varyn, Inc., All rights reserved.
+You are receiving this because you signed up for Varyn's services.
+Privacy policy ( https://varyn.com/privacy/ ).
+
+Varyn:
+New York, NY 10018

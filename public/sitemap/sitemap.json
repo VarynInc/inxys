@@ -1,0 +1,43 @@
+{
+    "sitemap": {
+        "inxys": {
+            "Home": {
+                "loc": "/",
+                "changefreq": "weekly",
+                "priority": 0.9
+            },
+            "About": {
+                "loc": "/about/",
+                "changefreq": "monthly",
+                "priority": 0.8
+            },
+            "Contact": {
+                "loc": "/contact/",
+                "changefreq": "monthly",
+                "priority": 0.8
+            },
+            "Privacy": {
+                "loc": "/privacy/",
+                "changefreq": "monthly",
+                "priority": 0.8
+            },
+            "Terms of service": {
+                "loc": "/terms/",
+                "changefreq": "monthly",
+                "priority": 0.8
+            }
+        },
+        "Conferences": {
+            "All conferences": {
+                "loc": "/conf/",
+                "changefreq": "daily",
+                "priority": 0.8
+            },
+            "Your profile": {
+                "loc": "/profile/",
+                "changefreq": "weekly",
+                "priority": 0.8
+            }
+        }
+    }
+}

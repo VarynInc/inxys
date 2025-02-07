@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Friend Request</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #ffffff;
+            color: #1f1f1f;
+        }
+        a {
+            transition: color .25s ease-in;
+            color: rgb(107, 5, 0);
+            text-decoration: none;
+        }
+        a:hover {
+            color: #ffc4da;
+        }
+        h1, h2, h3 {
+            font-family: sans-serif;
+            font-weight: bold;
+            color: #080808;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+        h1 {
+            font-size: 40px;
+        }
+        h2 {
+            font-size: 32px;
+        }
+        h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        p {
+            max-width: 960px;
+            font-size: 22px;
+            line-height: 1.3em;
+            font-family: sans-serif;
+            margin-bottom: 15px;
+        }
+        .copy {
+            font-size: 14px;
+            line-height: 1.5em;
+            color: #666666;
+        }
+        .copy-heavy {
+            font-size: 14px;
+            line-height: 1.5em;
+            color: #999;
+            font-weight: bold;
+        }
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 36px;
+            }
+            h2 {
+                font-size: 22px;
+            }
+            h3 {
+                font-size: 20px;
+            }
+            p {
+                font-size: 16px;
+                max-width: 100%;
+            }
+            .copy {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div style="margin:0;padding:0;width:100%!important;max-width:960px;">
+    <table cellpadding="0" cellspacing="0" height="100%" width="100%" style="border-collapse:collapse;margin:0;padding:0;height:100%!important;width:100%!important;max-width:960px;">
+        <tbody><tr>
+            <td valign="top" style="border-collapse:collapse;">
+                <table cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:960px;">
+                    <tbody>
+                    <tr>
+                        <td valign="top" style="border-collapse:collapse;padding-top:20px;padding-right:0;vertical-align:top">
+                            <a href="https://%domain%/?id=10009&e=1e1" style="background:none;border-bottom:none;" target="_blank">
+                                <img src="https://enginesis.varyn.com/sites/106/email/email-header.png" width="100%" style="max-width:960px;margin:0;width:100%;border:0;">
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="border-collapse:collapse;padding:10px 20px 0 20px;vertical-align:top">
+                            <p class="copy-heavy">%date%</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="border-collapse:collapse;padding:20px 20px;">
+                            <h2>Friend Request</h2>
+                            <p>
+                                Hello %user_name%:
+                            </p>
+                            <p>
+                                <a href="https://%domain%/profile/?e=1e6&s=%site_id%&u=%friend_id%">%friend_name%</a> requested to be your friend on <a href="https://%domain%/?id=10009&e=1e6&s=%site_id%">Enginesis.com</a>.
+                                Friend requests require your approval.
+                            </p>
+                            <ul style="font-size: 20px; font-family: sans-serif; line-height: 1.8em;margin-left: 4em;margin-bottom: 15px;">
+                                <li><a href="https://%domain%/procs/requestConfirm.php?id=10009&e=1e7&s=%site_id%&u=%friend_id%&r=9&a=1">Approve request</a></li>
+                                <li><a href="https://%domain%/procs/requestConfirm.php?id=10009&e=1e7&s=%site_id%&u=%friend_id%&r=9&a=0">Deny request</a></li>
+                            </ul>
+                            <p class="copy">
+                                If you are unfamiliar with this request or consider this an abuse then contact <a href="mailto:support@enginesis.com?subject=User%20Report">support</a> with this information.
+                            </p>
+                            <br><p>Let's play!<br><i>Varyn</i></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="border-collapse:collapse;padding-top:0;padding-bottom:0;text-align:left">
+                            <a href="https://%domain%/?id=10009&e=1e2" style="border-bottom:none;" target="_blank"><img src="https://enginesis.varyn.com/sites/106/email/email-footer.png" width="100%" style="max-width:960px;margin:0;width:100%;border:0;"></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="border-collapse:collapse;padding-top:0;padding-bottom:0;text-align:center;">
+                            <table cellpadding="0" cellspacing="0" style="Margin:0 auto;">
+                                <tr>
+                                    <td style="padding:8px;"><a href="https://www.facebook.com/varyndev" title="Follow Varyn on Facebook"><img src="https://enginesis.varyn.com/images/icn-facebook-small.png" width="48px" height="48px" border="0"/></a></td>
+                                    <td style="padding:8px;"><a href="https://twitter.com/@varyndev" title="Follow Varyn on Twitter"><img src="https://enginesis.varyn.com/images/icn-twitter-small.png" width="48px" height="48px" border="0"/></a></td>
+                                    <td style="padding:8px;"><a href="https://www.linkedin.com/company/varyn-inc-" title="Follow Varyn on LinkedIn"><img src="https://enginesis.varyn.com/images/icn-linkedin-small.png" width="48px" height="48px" border="0"/></a></td>
+                                    <td style="padding:8px;"><a href="https://www.youtube.com/channel/UC-TLi2sZGxNptz4p6tdbIqw" title="Follow Varyn on YouTube"><img src="https://enginesis.varyn.com/images/icn-youtube-small.png" width="48px" height="48px" border="0"/></a></td>
+                                    <td style="padding:8px;"><a href="https://www.pinterest.com/varyn/varyndev/" title="Follow Varyn on Pinterest"><img src="https://enginesis.varyn.com/images/icn-pinterest-small.png" width="48px" height="48px" border="0"/></a></td>
+                                    <td style="padding:8px;"><a href="https://www.instagram.com/varyndev/" title="Follow Varyn on Instagram"><img src="https://enginesis.varyn.com/images/icn-instagram-small.png" width="48px" height="48px" border="0"/></a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-collapse:collapse;text-align:left;padding: 20px;">
+                            <p class="copy">At Varyn, we build games for everyone. Our content is fun for all ages and our technology performs on all the most popular platforms.</p>
+                            <p class="copy">
+                                <small>(Help us spread the word about Varyn: send your friends and followers to <a href="https://%domain%/?id=10009&e=1e3" target="_blank">our home page</a>.)</small><br/>
+                                <br><small><em>Copyright &copy; 2023 Varyn, Inc., All rights reserved.</em><br>You are receiving this because you signed up for Varyn&#39;s services.</small>
+                                <br><small><a href="https://varyn.com/privacy/">Privacy policy</a>.</small><br/><br/>
+                                <strong>Varyn:</strong><br>
+                                <span>New York</span>, <span>NY</span> <span>10018</span><br><small><a href="https://varyn.com/vcard.vcf?id=10009&e=1e4" target="_blank">Add us to your address book</a></small>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <img src="https://%domain%/procs/track.php?id=10009&e=1e0" height="1" width="1"></div>
+</body>
+</html>

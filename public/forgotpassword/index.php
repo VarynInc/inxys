@@ -42,7 +42,7 @@ function resetUserPassword ($userName, $emailAddress) {
     global $serverName;
     global $emailNotificationTypeIds;
 
-    $site_id = 100;
+    $site_id = 109;
     $language_code = 'en';
     $dbOpenedHere = false;
     if ( ! dbIsActiveConnection()) {

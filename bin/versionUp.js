@@ -1,8 +1,8 @@
 /**
- Update the version of the project by selectively updating specific files.
- Files are specified in the array filesContainingVersion.
- We expect to find a semantic version string "#.#.#" in the first file.
- In each file specified, we replace the first occurrence of #.#.# with the new version number.
+ * Update the version of the project by selectively updating specific files.
+ * Files are specified in the array filesContainingVersion.
+ * We expect to find a semantic version string "#.#.#" in the first file.
+ * In each file specified, we replace the first occurrence of #.#.# with the new version number.
  **/
 import fs from "fs";
 import chalk from "chalk";
@@ -11,7 +11,8 @@ import { hideBin } from "yargs/helpers";
 
 // The current version is based off the first file, incremented, and updated in all files:
 const filesContainingVersion = [
-    "services/version.php",
+    "./services/version.php",
+    "./public/js/inxys.js",
     "package.json"
 ];
 let pathToRoot;

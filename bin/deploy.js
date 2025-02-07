@@ -1,17 +1,17 @@
 /**
  * Deploy the local site to -d or -q
  * Verify changed files first, run deploy with `npm run deploy`
- * To really deploy, run `npm run deploy -- --no-dryrun`
+ * Run deploy with `npm run deploy` or `npm run deploy -- --no-dryrun`
  * After deploy, test on the target stage e.g. https://inxys-q.net
+ * Copy emails to Enginesis: `npm run deploy-email` or `npm run deploy-email -- --no-dryrun`
  */
 import Rsync from "rsync";
-import Chalk from "chalk";
+import chalk from "chalk";
 import fs from "fs";
 import path from "path";
-import shelljs from "shelljs";
-import yargs from "yargs";
+import shell from "shelljs";
+import args from "yargs";
 import { hideBin } from "yargs/helpers";
-// const { exit } = require("process");
 
 const defaultConfigurationFilePath = "bin/deploy-config.json";
 let rsyncFlags = "zrptcv";
@@ -33,6 +33,9 @@ const configurationDefault = {
     destinationPath: "/var/www/vhosts/inxys-q",
     excludeFiles: "./bin/exclude-inxys-files.txt",
     sourcePath: "./",
+    email: false,
+    emailSourcePath: "./sitedev/email/",
+    emailDestinationPath: "../Enginesis/public/sites/",
     sshKeyFile: "",
     debug: false,
     logFile: "",
@@ -50,9 +53,7 @@ function loadConfigurationData(configurationFilePath) {
     if (fs.existsSync(configurationFilePath)) {
         let rawData = fs.readFileSync(configurationFilePath);
         if (rawData != null) {
-            return JSON.parse(rawData) || {};  
-        } else {
-            immediateLog(configurationFilePath + " has no data", true);
+            return JSON.parse(rawData) || {};
         }
     }
     return {};
@@ -97,9 +98,6 @@ function mergeConfigurationData(configurationDefault) {
  * @return {object} Configuration information.
  */
 function mergeArgs(args, configuration) {
-    if (args.conf) {
-        configuration.configurationFile = args.conf;
-    }
     if (args.destination) {
         configuration.destinationPath = args.destination;
     }
@@ -127,13 +125,16 @@ function mergeArgs(args, configuration) {
     if (args.exclude) {
         configuration.excludeFiles = args.exclude;
     }
+    if (args.hasOwnProperty('email') && args.email) {
+        configuration.email = args.email;
+    }
     if (args.hasOwnProperty('verbose') && args.verbose) {
         configuration.debug = args.verbose;
     }
     if (args.hasOwnProperty('dryrun')) {
         configuration.isDryRun = args.dryrun;
     }
-    console.log(Chalk.yellow("isDryRun is " + (configuration.isDryRun?"true":"false")));
+    console.log(chalk.blue("isDryRun is " + (configuration.isDryRun?"true":"false")));
     return configuration;
 }
 
@@ -142,87 +143,94 @@ function mergeArgs(args, configuration) {
  * @return {object} Args object.
  */
 function getArgs() {
-    const args = yargs(hideBin(process.argv));
-    args.options({
-        "conf": {
-            alias: "c",
+    return args(process.argv)
+    .options({
+        "c": {
+            alias: "config",
             type: "string",
             describe: "path to config file",
             demandOption: false,
             default: defaultConfigurationFilePath
         },
-        "destination": {
-            alias: "d",
+        "d": {
+            alias: "destination",
             type: "string",
             describe: "destination root path to copy to on host",
             demandOption: false
         },
-        "site": {
-            alias: "e",
+        "e": {
+            alias: "site",
             type: "string",
             describe: "set which site to deploy",
             demandOption: false
         },
-        "host": {
-            alias: "h",
+        "h": {
+            alias: "host",
             type: "string",
             describe: "host domain to copy to",
             demandOption: false
         },
-        "key": {
-            alias: "k",
+        "k": {
+            alias: "key",
             type: "string",
             describe: "path to ssh key file (pem format)",
             demandOption: false
         },
-        "log": {
-            alias: "l",
+        "l": {
+            alias: "log",
             type: "string",
             describe: "path to log file",
             demandOption: false
         },
-        "source": {
-            alias: "s",
+        "m": {
+            alias: "email",
+            boolean: true,
+            describe: "deploy email source files to local Enginesis instance",
+            demandOption: false,
+            default: false
+        },
+        "s": {
+            alias: "source",
             type: "string",
             describe: "set the source file root folder",
             demandOption: false
         },
-        "targetstage": {
-            alias: "t",
+        "t": {
+            alias: "targetstage",
             type: "string",
             describe: "set the server stage to deploy to",
             demandOption: false
         },
-        "user": {
-            alias: "u",
+        "u": {
+            alias: "user",
             type: "string",
             describe: "user on destination to login as (using key file)",
             demandOption: false
         },
-        "verbose": {
-            alias: "v",
-            type: "boolean",
+        "v": {
+            alias: "verbose",
+            boolean: true,
             describe: "turn on debugging",
             demandOption: false,
             default: false
         },
-        "exclude": {
-            alias: "x",
+        "x": {
+            alias: "exclude",
             type: "string",
             describe: "path to exclude file list (text file)",
             demandOption: false
         },
-        "dryrun": {
-            alias: "y",
-            type: "boolean",
+        "y": {
+            alias: "dryrun",
+            boolean: true,
             describe: "perform dry run (no actual sync)",
             demandOption: false,
             default: true
         },
     })
     .alias("?", "help")
-    .help();
-    return args.argv;
+    .help()
+    .argv;
 }
 
 /**
@@ -234,7 +242,7 @@ function writeToLogFile(message) {
         try {
             fs.appendFileSync(configuration.logFile, message + "\r\n");
         } catch (err) {
-            console.log(Chalk.red("Error writing to " + configuration.logFile + ": " + err));
+            console.log(chalk.red("Error writing to " + configuration.logFile + ": " + err));
         }
     }
 }
@@ -245,7 +253,7 @@ function writeToLogFile(message) {
  */
 function errorLog(message) {
     if (debug) {
-        console.log(Chalk.red(message));
+        console.log(chalk.red(message));
         writeToLogFile(message);
     }
 }
@@ -256,7 +264,7 @@ function errorLog(message) {
  */
 function debugLog(message) {
     if (debug) {
-        console.log(Chalk.green(message));
+        console.log(chalk.green(message));
         writeToLogFile(message);
     }
 }
@@ -267,27 +275,35 @@ function debugLog(message) {
  */
 function immediateLog(message, error = true) {
     if (error) {
-        console.log(Chalk.red(message));
+        console.log(chalk.red(message));
     } else {
-        console.log(Chalk.blue(message));
+        console.log(chalk.blue(message));
     }
     writeToLogFile(message);
 }
 
+/**
+ * Update the build info and save it in a JSON file.
+ */
 function updateBuildInfoFile() {
     const buildFileName = 'build-info.json';
     const buildFolder = './public';
     const buildFile = path.join(buildFolder, buildFileName);
-    const currentDateTime = new Date().toLocaleString();
     const buildInfo = {
-            site: process.env.npm_package_name,
-            version: process.env.npm_package_version,
-            publish_date: currentDateTime,
-            user: process.env.USER
-        };
-    shelljs.echo(JSON.stringify(buildInfo)).to(buildFile);
+        packageName: shell.env['npm_package_name'],
+        version: shell.env['npm_package_version'],
+        publish_date: (new Date()).toISOString(),
+        user: shell.env['USER']
+    };
+    shell.echo(JSON.stringify(buildInfo)).to(buildFile);
 }
 
+/**
+ * Deploy the site to the target environment (usually either -d or -q) by using ssh to connect
+ * to the server and rsync to synchronize the file set. This will use this environment as the
+ * source of truth and overwrite or delete any non-matching files on the target.
+ * @param {object} configuration The configuration parameters.
+ */
 function deploy(configuration) {
     const site = configuration.site;
     const isDryRun = configuration.isDryRun;
@@ -357,5 +373,75 @@ function deploy(configuration) {
     });
 }
 
+/**
+ * Assuming the email files have been updated on this local environment, update the matching
+ * email files on the local Enginesis environment. From there those emails should be optimized
+ * and then deployed to Enginesis servers.
+ * @param {object} configuration The configuration parameters.
+ */
+function deployEmail(configuration) {
+    const site = configuration.site;
+    const isDryRun = configuration.isDryRun;
+    const sourcePath = configuration.emailSourcePath;
+    const destinationPath = configuration.emailDestinationPath + configuration.siteId + "/email/";
+    const excludeFiles = configuration.excludeFiles;
+    const dryRunFlag = "n";
+    let logMessage = "Deploying emails to " + destinationPath + " on " + (new Date).toISOString();
+
+    if (configuration.logFile && fs.existsSync(configuration.logFile)) {
+        fs.unlinkSync(configuration.logFile);
+    }
+    if (isDryRun) {
+        rsyncFlags += dryRunFlag;
+        logMessage += " -- This is a DRY RUN - no files will be copied."
+    }
+    immediateLog(logMessage, false);
+    let rsync = new Rsync()
+        .shell("ssh")
+        .flags(rsyncFlags)
+        .set("exclude-from", excludeFiles)
+        .source(sourcePath)
+        .destination(destinationPath);
+
+    if (isDryRun) {
+        immediateLog("Review copy dry run " + site + " emails to " + destinationPath, false);
+    } else {
+        immediateLog("Copy " + site + " emails to " + destinationPath, false);
+    }
+
+    rsync.execute(function(error, exitCode, cmd) {
+        const timeNow = (new Date).toISOString();
+        if (error) {
+            immediateLog("Email deploy fails for " + site + " " + error.toString() + " at " + timeNow);
+        } else if (isDryRun) {
+            immediateLog("Email dry run for " + site + " complete at "  + timeNow);
+        } else {
+            immediateLog("Email deploy for " + site + " complete at "  + timeNow);
+        }
+    }, function (output) {
+        // stdout
+        debugLog(output);
+    }, function (output) {
+        // stderr
+        errorLog(output);
+    });
+}
+
+/**
+ * Detect which platform we are running on, because some things cannot be done from
+ * a Windows computer.
+ */
+function platformDetect() {
+    if (process.platform == "win32") {
+        immediateLog("Deploy task does not work on Windows systems.");
+        process.exit(29);
+    }
+}
+
+platformDetect();
 configuration = mergeConfigurationData(configurationDefault);
-deploy(configuration);
+if (configuration.email) {
+    deployEmail(configuration);
+} else {
+    deploy(configuration);
+}

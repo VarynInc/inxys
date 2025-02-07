@@ -13,6 +13,8 @@ cookie.txt
 data/
 services/serverConfig.php
 bin/deploy-config.json
+dist/
+distrib/
 
 # Other temp files and folders
 .idea/

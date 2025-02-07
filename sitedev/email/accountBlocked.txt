@@ -1,0 +1,33 @@
+%date%
+
+---------------
+Account Blocked
+---------------
+
+Hello %user_name%:
+
+This email is to alert you that your Enginesis account has been blocked due to too many
+failed password attempts in a short a period of time. You may try logging in again
+in a few hours. If you forgot your password you may reset it at
+https://%domain%/procs/forgotPassword.php?id=10095&e=1e6&s=%site_id
+
+If this was not you and someone is hacking your account please contact support@enginesis.com.
+
+Varyn
+
+* ( https://www.facebook.com/varyndev )
+* ( https://twitter.com/@varyndev )
+* ( https://www.linkedin.com/company/varyn-inc- )
+* ( https://www.youtube.com/channel/UC-TLi2sZGxNptz4p6tdbIqw )
+* ( https://www.pinterest.com/varyn/varyndev/ )
+* ( https://www.instagram.com/varyndev/ )
+
+At Varyn, we build games for everyone. Our content is fun for all ages and our technology
+performs on all the most popular platforms.
+
+Copyright © 2023 Varyn, Inc., All rights reserved.
+You are receiving this because you signed up for Varyn's services.
+Privacy policy ( https://varyn.com/privacy/ ).
+
+Varyn:
+New York, NY 10018

@@ -1,0 +1,41 @@
+%date%
+
+-------------------------
+Registration Confirmation
+-------------------------
+
+Hello %user_name% - welcome to Varyn!
+
+Thank you for signing up and joining our online community.
+
+We require all new accounts confirm their email address so we may communicate
+important information with you regarding your account.
+If you are ever locked out of your account, or we have important updates regarding
+your account, this is how we will contact you.
+
+Please confirm your registration now
+https://%domain%/procs/regconfirm.php?id=10092&e=1e6&s=%site_id%&u=%user_id%&t=%token%
+
+We will not ever give out your contact info to any third party. We will not use your
+contact info for marketing purposes. This is strictly so that we may contact you
+regarding your account and no other purpose.
+
+Let's play!
+Varyn
+
+* ( https://www.facebook.com/varyndev )
+* ( https://twitter.com/@varyndev )
+* ( https://www.linkedin.com/company/varyn-inc- )
+* ( https://www.youtube.com/channel/UC-TLi2sZGxNptz4p6tdbIqw )
+* ( https://www.pinterest.com/varyn/varyndev/ )
+* ( https://www.instagram.com/varyndev/ )
+
+At Varyn, we build games for everyone. Our content is fun for all ages and our technology
+performs on all the most popular platforms.
+
+Copyright © 2023 Varyn, Inc., All rights reserved.
+You are receiving this because you signed up for Varyn's services.
+Privacy policy ( https://varyn.com/privacy/ ).
+
+Varyn:
+New York, NY 10018
