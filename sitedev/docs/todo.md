@@ -16,6 +16,7 @@ Any tasks that are specified fully and determined to be worked on should go to [
     // @todo: onchange handler for password must be valid to remove class "login-form-input-error"
 
 - 🟦 Log in
+- 🟦 forgot password
 - 🟦 Menu not logged in: Home (sign in/sign up), Conferences (Public), Users (public), Sign up, Search, About
 - 🟦 Menu logged in: Home (feed), Conferences (Public & Private), Users (public), Profile, Search, About
 - 🟦 Profile page

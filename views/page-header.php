@@ -41,7 +41,7 @@
     <?php if ($pageId == 'Scratchpad') { ?>
         <link href="/assets/bootstrap-markdown.min.css" rel="stylesheet">
     <?php } ?>
-    <script src="/js/enginesis.js"></script>
+    <script src="/js/enginesis.js" type="module"></script>
     <script type="application/ld+json">
     {
       "@context" : "https://schema.org",
