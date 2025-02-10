@@ -31,7 +31,7 @@ include(VIEWS_ROOT . 'page-header.php');
         Our mission is to facilitate the free exchange of ideas and a strong sense of community. We encourage diversity, inclusion, and respect for all.
     </i></blockquote>
     <p>
-        We respect all ideas, all opinions, no matter the source. However, we will filter out deliberate acts of harm and deceit, no matter who authors it.
+        We respect all ideas, all opinions, no matter the source. However, we will filter out deliberate acts of harm and deceit, no matter who authors it. Review our <a href="/terms/" title="Terms of service">Terms of service</a> regarding our content policy.
     </p>
     <h2>Join us</h2>
     <p>
