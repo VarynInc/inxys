@@ -2,6 +2,18 @@ import enginesis from "/js/enginesis.js";
 
 let waitingForServerReply = false;
 
+const enginesisParameters = {
+    siteId: 109,
+    gameId: 0,
+    gameGroupId: 0,
+    serverStage: "enginesis.inxys-l.com",
+    authToken: "",
+    developerKey: "34A9EBE91B578504",
+    languageCode: "en",
+    callBackFunction: null
+};
+enginesis.init(enginesisParameters);
+
 /**
  * Determine if a string looks like a valid email address.
  * @param {string} email String to expect an email address

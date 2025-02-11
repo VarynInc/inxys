@@ -18,6 +18,7 @@ function handleSignUpAttempt() {
     $isLoggedIn = false;
     $errorMessage = '';
     $errorParameter = '';
+    $rememberMe = false;
 
     if ($signUp != null && $action == 'signup' && validateInputFormHackerToken($hackerToken)) {
         $isSignUpAttempt = true;
@@ -34,7 +35,7 @@ function handleSignUpAttempt() {
             }
         }
         if ($errorMessage == '') {
-            // email must valid and not be assign to another account
+            // email must valid and not assign to another account
             $formField = 'signup-email';
             $email = strip_tags(getPostVar($formField, ''));
             if ( ! checkEmailAddress($email)) {
@@ -63,7 +64,7 @@ function handleSignUpAttempt() {
                 $errorParameter = $formField;
             }
         }
-        $rememberMe = getPostVar('rememberme', '');
+        $rememberMe = getPostVar('rememberme', '') == 'on';
     } else {
         $errorMessage = $stringTable->lookup(EnginesisUIStrings::REG_INFO_INCOMPLETE);
         $errorParameter = 'signup-username';
@@ -72,7 +73,8 @@ function handleSignUpAttempt() {
         'isSignUpAttempt' => $isSignUpAttempt,
         'isLoggedIn' => $isLoggedIn,
         'errorMessage' => $errorMessage,
-        'errorParameter' => $errorParameter
+        'errorParameter' => $errorParameter,
+        'rememberUser' => $rememberMe
     ];
 }
 $signUpResult = handleSignUpAttempt();

@@ -23,8 +23,7 @@ function isActivePage($pageId) {
 /**
  * Create a URL that a user can link to in order to resend the confirmation email.
  */
-function createResendConfirmEmailLink($errorCode, $userId, $userName, $email, $confirmationToken)
-{
+function createResendConfirmEmailLink($errorCode, $userId, $userName, $email, $confirmationToken) {
     $regConfirmErrors = [EnginesisErrors::REGISTRATION_NOT_CONFIRMED, EnginesisErrors::INVALID_SECONDARY_PASSWORD, EnginesisErrors::PASSWORD_EXPIRED];
     if (in_array($errorCode, $regConfirmErrors)) {
         $params = '';
@@ -120,12 +119,18 @@ function checkUserNameUnique($userName) {
  */
 function checkEmailUnique($email) {
     global $enginesis;
+    $isUnique = false;
     $enginesisResponse = $enginesis->userGetByEmail($email);
     if (empty($enginesisResponse)) {
         $enginesisResult = $enginesis->getLastErrorCode();
         if ($enginesisResult == EnginesisErrors::USER_DOES_NOT_EXIST) {
             $isUnique = true;
         }
+    } elseif (isset($enginesisResponse->user_exists)) {
+        $isUnique = $enginesisResponse->user_exists == 0;
+    } else {
+        // @todo: userGetByEmail can send back a UserGet user object, in that case the user does already exist
+        $isUnique = false;
     }
-    return $enginesisResponse;
+    return $isUnique;
 }

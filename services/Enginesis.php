@@ -2553,7 +2553,7 @@ class Enginesis {
     /**
      * Determine if an email address is assigned to an Enginesis account.
      * @param string An email address to check.
-     * @return integer A user id, if authorized to see it, or a 1 if the email is assigned or 0 if
+     * @return object A user id, if authorized to see it, or a 1 if the email is assigned or 0 if
      * no account currently uses that email.
      */
     public function userGetByEmail ($email) {
@@ -2565,9 +2565,13 @@ class Enginesis {
             $results = $this->setLastErrorFromResponse($enginesisResponse);
             if (is_array($results) && count($results) > 0) {
                 $user = $results[0];
+            } else {
+                $user = ['user_exists' => $this->getLastErrorCode() != EnginesisErrors::USER_DOES_NOT_EXIST];
             }
+            return $user;
+        } else {
+            return $this->makeErrorResponse(EnginesisErrors::INVALID_PARAMETER, 'Email address does not appear to be valid.', null);
         }
-        return $user;
     }
 
     /**
