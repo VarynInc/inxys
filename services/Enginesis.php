@@ -240,7 +240,7 @@ class Enginesis {
      */
     public function isValidUserName ($userName) {
         $badNames = ['null', 'undefined', 'xxx', 'shit', 'fuck', 'dick'];
-        return strlen(trim($userName)) > 2 && ! in_array($userName, $badNames);
+        return (strlen(trim($userName)) == strlen($userName)) && (preg_match('/^[a-zA-Z0-9_@!~\$\.\-\|\s]{3,50}$/', $userName) == 1) && ( ! in_array($userName, $badNames));
     }
 
     /**
@@ -2118,11 +2118,11 @@ class Enginesis {
     }
 
     /**
-     * Register a new user by calling the Enginesis function and wait for the response. We must convert and field data
+     * Register a new user by calling the Enginesis function and wait for the response. We must convert any field data
      * from our version to the Enginesis version since we have multiple different ways to collect it.
      *
-     * @param $userInfo {array} key/value object of registration data.
-     * @return object: null if registration fails, otherwise returns the user info object and logs the user in.
+     * @param array $userInfo key/value object of registration data.
+     * @return object null if registration fails, otherwise returns the user info object and logs the user in.
      */
     public function userRegistration ($userInfo) {
         $service = 'RegisteredUserCreate';
@@ -2157,12 +2157,10 @@ class Enginesis {
         $results = $this->setLastErrorFromResponse($enginesisResponse);
         if (is_array($results) && count($results) > 0) {
             $userInfoResult = $results[0];
-            $cr = $userInfoResult->cr;
-            // @todo: Verify hash to make sure payload was not tampered
             $user_id = $userInfoResult->user_id;
             $secondary_password = $userInfoResult->secondary_password;
-            // @todo: If this site auto-confirms user registration then we should log the user in automatically now.
-            // We know this because the server gives us the token when we are to do this.
+            // @todo: Server sends the user an email to complete/confirm registration. If this site auto-confirms user registration,
+            // then we should log the user in automatically now. We know this because the server gives us authtok when we are to do this.
             if (isset($userInfoResult->authtok)) {
                 $this->sessionSave($userInfoResult->authtok, $userInfoResult->user_id, $userInfoResult->user_name, $userInfoResult->site_user_id, $userInfoResult->network_id, $userInfoResult->access_level, EnginesisNetworks::Enginesis);
                 $this->sessionUserInfoSave($userInfoResult);

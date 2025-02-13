@@ -2625,6 +2625,15 @@ export default {
     },
 
     /**
+     * Determine if a string looks like a valid email address.
+     * @param {string} email String to expect an email address
+     * @returns {boolean} true if we think it is a valid email address.
+     */
+    isValidEmail: function (email) {
+        return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
+    },
+
+    /**
      * Clean any invalid characters from a proposed user name.
      * @param {string} userName Proposed user name.
      * @returns {string} The userName but cleaned of any invalid characters.
