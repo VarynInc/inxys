@@ -2607,6 +2607,10 @@ export default {
     /**
      * Determine if the user name is a valid format that would be accepted by the server. Since user names are typically
      * provided by users, this helps determine if a proposed user name would be rejected by the server before sending it.
+     * User name requirements are:
+     * - no less than 3 and no more than 50 characters
+     * - letters and numbers
+     * - Specials allowed are @, $, !, ~, ., -, space
      * @param {string} userName User name to check.
      * @returns {boolean} True if considered valid.
      */
@@ -2615,7 +2619,7 @@ export default {
         if (typeof userName !== "string") {
             isValid = false;
         } else {
-            isValid = (userName.length == userName.trim().length) && userName.match(/^[a-zA-Z0-9_@!~\$\.\-\|\s]{3,20}$/) !== null;
+            isValid = (userName.length == userName.trim().length) && userName.match(/^[a-zA-Z0-9_@!~\$\.\-\|\s]{3,50}$/) !== null;
         }
         return isValid;
     },
