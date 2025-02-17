@@ -15,15 +15,6 @@ const enginesisParameters = {
 enginesis.init(enginesisParameters);
 
 /**
- * Determine if a string looks like a valid email address.
- * @param {string} email String to expect an email address
- * @returns {boolean} true if we think it is a valid email address.
- */
-function isValidEmail (email) {
-    return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
-};
-
-/**
  * Watch for changes to the user name so we can verify it.
  */
 function onChangeUserName () {
@@ -80,7 +71,7 @@ function onChangeEmail(element, domIdImage) {
     emailElement.classList.remove("login-form-input-error");
     if ( ! waitingForServerReply && emailElement != null) {
         const emailAddress = emailElement.value;
-        if (emailAddress && isValidEmail(emailAddress)) {
+        if (emailAddress && enginesis.isValidEmail(emailAddress)) {
             waitingForServerReply = true;
             enginesis.userGetByEmail(emailAddress, onChangeEmailServerResponse);
         } else {
