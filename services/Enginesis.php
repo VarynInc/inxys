@@ -240,7 +240,7 @@ class Enginesis {
      */
     public function isValidUserName ($userName) {
         $badNames = ['null', 'undefined', 'xxx', 'shit', 'fuck', 'dick'];
-        return strlen(trim($userName)) > 2 && ! in_array($userName, $badNames);
+        return (strlen(trim($userName)) == strlen($userName)) && (preg_match('/^[a-zA-Z0-9_@!~\$\.\-\|\s]{3,50}$/', $userName) == 1) && ( ! in_array($userName, $badNames));
     }
 
     /**
