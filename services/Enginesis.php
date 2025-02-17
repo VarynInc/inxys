@@ -235,10 +235,13 @@ class Enginesis {
     /**
      * Determine if a user name passes basic validity checks.
      *
-     * @param string $userName
-     * @return boolean
+     * @param string A user name to check.
+     * @return boolean true if OK, false if name is unacceptable.
      */
     public function isValidUserName ($userName) {
+        if (empty($userName)) {
+            return false;
+        }
         $badNames = ['null', 'undefined', 'xxx', 'shit', 'fuck', 'dick'];
         return (strlen(trim($userName)) == strlen($userName)) && (preg_match('/^[a-zA-Z0-9_@!~\$\.\-\|\s]{3,50}$/', $userName) == 1) && ( ! in_array($userName, $badNames));
     }
@@ -246,11 +249,11 @@ class Enginesis {
     /**
      * Determine if a password passes basic validity checks.
      *
-     * @param $password
-     * @return boolean
+     * @param string A password to check.
+     * @return boolean True if OK, false if unacceptable.
      */
     public function isValidPassword ($password) {
-        return strlen(trim($password)) > 3;
+        return strlen(trim($password)) > 12;
     }
 
     /**
@@ -2121,8 +2124,8 @@ class Enginesis {
      * Register a new user by calling the Enginesis function and wait for the response. We must convert any field data
      * from our version to the Enginesis version since we have multiple different ways to collect it.
      *
-     * @param array $userInfo key/value object of registration data.
-     * @return object null if registration fails, otherwise returns the user info object and logs the user in.
+     * @param array key/value object of registration data.
+     * @return object|null null if registration fails, otherwise returns the user info object and logs the user in.
      */
     public function userRegistration ($userInfo) {
         $service = 'RegisteredUserCreate';
@@ -2130,8 +2133,8 @@ class Enginesis {
         $parameters = [
             'user_name' => $userInfo['user_name'],
             'password' => $userInfo['password'],
-            'security_question_id' => $this->arrayValueOrDefault($userInfo, 'security_question_id', '3'),
-            'security_answer' => $this->arrayValueOrDefault($userInfo, 'security_answer', ''),
+            'security_question_id' => $this->arrayValueOrDefault($userInfo, 'security_question_id', '1'),
+            'security_answer' => $this->arrayValueOrDefault($userInfo, 'security_answer', 'yes'),
             'email_address' => $userInfo['email_address'],
             'dob' => $userInfo['dob'],
             'real_name' => $this->arrayValueOrDefault($userInfo, 'real_name', $userInfo['user_name']),
@@ -2172,13 +2175,14 @@ class Enginesis {
     }
 
     /**
-     * Update and existing user's registration information.
-     * @param $parameters: key/value object of registration data. Only changed keys may be provided.
+     * Update an existing user's registration information.
+     * @param array key/value object of registration data. Only changed keys may be provided.
      * @return object: null if registration fails, otherwise returns the user info object.
      */
     public function registeredUserUpdate ($userInfo) {
         $service = 'RegisteredUserUpdate';
         $parameters = [
+            'user_id' => $userInfo['user_id'],
             'user_name' => $userInfo['user_name'],
             'email_address' => $userInfo['email_address'],
             'dob' => $userInfo['dob'],

@@ -11,7 +11,7 @@
  **/
 
 const enginesis = {
-    VERSION: "2.12.1",
+    VERSION: "2.12.2",
     debugging: true,
     disabled: false, // use this flag to turn off communicating with the server
     isOnline: true,  // flag to determine if we are currently able to reach Enginesis servers
@@ -3646,8 +3646,6 @@ export default {
     registeredUserCreate: function (userName, password, email, realName, dateOfBirth, gender, city, state, zipcode, countryCode, mobileNumber, imId, tagline, siteUserId, networkId, agreement, securityQuestionId, securityAnswer, imgUrl, aboutMe, additionalInfo, sourceSiteId, captchaId, captchaResponse, overRideCallBackFunction) {
         return sendRequest("RegisteredUserCreate", {
             site_id: enginesis.siteId,
-            captcha_id: isEmpty(captchaId) ? enginesis.captchaId : captchaId,
-            captcha_response: isEmpty(captchaResponse) ? enginesis.captchaResponse : captchaResponse,
             user_name: userName,
             site_user_id: siteUserId,
             network_id: networkId,
@@ -3663,19 +3661,22 @@ export default {
             mobile_number: mobileNumber,
             im_id: imId,
             agreement: agreement,
-            security_question_id: 1,
-            security_answer: "",
-            img_url: "",
+            security_question_id: securityQuestionId,
+            security_answer: securityAnswer,
+            img_url: imgUrl,
             about_me: aboutMe,
             tagline: tagline,
             additional_info: additionalInfo,
-            source_site_id: sourceSiteId
+            source_site_id: sourceSiteId,
+            captcha_id: isEmpty(captchaId) ? enginesis.captchaId : captchaId,
+            captcha_response: isEmpty(captchaResponse) ? enginesis.captchaResponse : captchaResponse
         }, overRideCallBackFunction);
     },
 
-    registeredUserUpdate: function (userName, password, email, realName, dateOfBirth, gender, city, state, zipcode, countryCode, mobileNumber, imId, tagline, siteUserId, networkId, agreement, securityQuestionId, securityAnswer, imgUrl, aboutMe, additionalInfo, sourceSiteId, captchaId, captchaResponse, overRideCallBackFunction) {
+    registeredUserUpdate: function (userName, email, realName, dateOfBirth, gender, city, state, zipcode, countryCode, mobileNumber, imId, tagline, imgUrl, aboutMe, additionalInfo, captchaId, captchaResponse, overRideCallBackFunction) {
         return sendRequest("RegisteredUserUpdate", {
             site_id: enginesis.siteId,
+            user_id: enginesis.userId,
             captcha_id: isEmpty(captchaId) ? enginesis.captchaId : captchaId,
             captcha_response: isEmpty(captchaResponse) ? enginesis.captchaResponse : captchaResponse,
             user_name: userName,
@@ -3689,7 +3690,7 @@ export default {
             country_code: countryCode,
             mobile_number: mobileNumber,
             im_id: imId,
-            img_url: "",
+            img_url: imgUrl,
             about_me: aboutMe,
             tagline: tagline,
             additional_info: additionalInfo
