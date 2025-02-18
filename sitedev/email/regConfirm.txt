@@ -9,12 +9,12 @@ Hello %user_name% - welcome to inXys - The Information Exchange!
 Thank you for signing up and joining our online community.
 
 Please confirm your registration now
-https://%domain%/procs/regconfirm.php?id=10092&e=1e6&s=%site_id%&u=%user_id%&t=%token%
+https://%domain%/procs/regconfirm/?id=10092&e=1e6&s=%site_id%&u=%user_id%&t=%token%
 
 We require all new accounts confirm their email address so we may communicate
-important information with you regarding your account.
-If you are ever locked out of your account, or we have important updates regarding
-your account, this is how we will contact you.
+important information with you regarding your account. If you are ever locked
+out of your account, or we have important updates regarding your account, this
+is how we will contact you.
 
 We will not ever give out your contact info to any third party. We will not use your
 contact info for marketing purposes. This is strictly so that we may contact you
@@ -31,5 +31,5 @@ Our mission is to facilitate the free exchange of ideas and a strong sense of co
 We encourage diversity, inclusion, and respect for all.
 
 Copyright 2025 The Information Exchange, All rights reserved.
-You are receiving this because you signed up for inxys services.
+You are receiving this because you signed up for inXys services.
 Privacy policy ( https://inxys.net/privacy/ ).

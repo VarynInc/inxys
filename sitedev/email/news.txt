@@ -1,11 +1,12 @@
 %date%
 
 ----------------
-Varyn Newsletter
+inXys Newsletter
 ----------------
 
-New Games
----------
+New Conferences
+---------------
+
 The latest game we are excited to bring to you is Match Master 3000
 https://varyn.com/play/?game_id=1083&id=10004&e=1e7
 
@@ -27,9 +28,6 @@ Here's a random fact: The famously awful E.T. game for the Atari 2600 actually s
 more units than Space Invaders, the platforms most well known game. E.T. sold 1.5 million units,
 while Space Invaders only shot down one million units.
 
-Let's play!
-Varyn
-
 * ( https://www.facebook.com/inxys )
 * ( https://bsky.app/profile/inxys.bsky.social )
 * ( https://www.linkedin.com/company/inxys )
@@ -41,5 +39,5 @@ Our mission is to facilitate the free exchange of ideas and a strong sense of co
 We encourage diversity, inclusion, and respect for all.
 
 Copyright 2025 The Information Exchange, All rights reserved.
-You are receiving this because you signed up for inxys services.
+You are receiving this because you signed up for inXys services.
 Privacy policy ( https://inxys.net/privacy/ ).

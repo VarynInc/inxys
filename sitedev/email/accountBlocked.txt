@@ -6,14 +6,12 @@ Account Blocked
 
 Hello %user_name%:
 
-This email is to alert you that your Enginesis account has been blocked due to too many
+This email is to alert you that your inXys account has been blocked due to too many
 failed password attempts in a short a period of time. You may try logging in again
 in a few hours. If you forgot your password you may reset it at
-https://%domain%/procs/forgotPassword.php?id=10095&e=1e6&s=%site_id
+https://%domain%/procs/forgotpass/?id=10095&e=1e6&s=%site_id
 
-If this was not you and someone is hacking your account please contact support@enginesis.com.
-
-Varyn
+If this was not you and someone is hacking your account please contact support@inxys.net.
 
 * ( https://www.facebook.com/inxys )
 * ( https://bsky.app/profile/inxys.bsky.social )
@@ -26,5 +24,5 @@ Our mission is to facilitate the free exchange of ideas and a strong sense of co
 We encourage diversity, inclusion, and respect for all.
 
 Copyright 2025 The Information Exchange, All rights reserved.
-You are receiving this because you signed up for inxys services.
+You are receiving this because you signed up for inXys services.
 Privacy policy ( https://inxys.net/privacy/ ).

@@ -1,4 +1,4 @@
-# Varyn email templates
+# inXys email templates
 
 This folder holds all of the email templates. For each email there are 2 files: an HTML and a text file.
 
@@ -6,9 +6,10 @@ This is the definitive source of the email. Version and edit the files here. Mak
 
 Test all edits in all browsers for all responsive device resolutions: desktop, tablet, phone.
 
-When complete, copy the updated source files to ../../Enginesis/public/sites/106/email. Note these files are not
-version controlled in the Enginesis site (they are .gitignore'd) so the source remains here but the source seen
-by users is on Enginesis (it's really in the database.)
+When complete, copy the updated source files to ../../Enginesis/public/sites/109/email. You can use the node task
+`npm run deployemail` to do this. Note these files are not version controlled in the Enginesis site
+(they are .gitignore'd) so the source remains here but the source seen by users is on Enginesis
+(it's really in the database.)
 
 Once copied to Enginesis, run `npm run update-email`. This just minifies the HTML files. Sync the -d, -q, and live stages
 so that they all have the exact same version of the files. You must get the final email source on the live server in order
@@ -65,11 +66,10 @@ User name of the user the email is being sent to.
 For some notifications, such as change password, a token is required to identify the authenticity of the returning user matches the request.
 
 `%domain%`
-The server host matching the site id (e.g. varyn.com).
+The server host matching the site id (e.g. inxys.net).
 
-`%game_id%`
-Game id (integer) of the game that is the subject of the notification (e.g. Send to friend, Game data).
+`%title%`
+Title of the article, conference, topic, or item description of the item that is being shared.
 
-`%game_name%`
-Game name (string) of the game that is the subject of the notification (e.g. Send to friend, Game data). This is required
-to build URLs pointing to game assets or images.
+`%item_id%`
+Item id (integer) of the item that is the subject of the notification (e.g. Share, Send to friend).

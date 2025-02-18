@@ -6,14 +6,11 @@ Profile Change Notification
 
 Hello %user_name%:
 
-We recorded a recent security data change on your account at Varyn.com.
+We recorded a recent security data change on your account at inxys.net.
 This email serves as a notification of the change and our commitment
 to your account security. If you initiated this request then you can
 ignore this email. If you did not initiate a data change then please
-contact support@varyn.com immediately.
-
-Let's play!
-Varyn
+contact support@inxys.net immediately.
 
 * ( https://www.facebook.com/inxys )
 * ( https://bsky.app/profile/inxys.bsky.social )
@@ -26,5 +23,5 @@ Our mission is to facilitate the free exchange of ideas and a strong sense of co
 We encourage diversity, inclusion, and respect for all.
 
 Copyright 2025 The Information Exchange, All rights reserved.
-You are receiving this because you signed up for inxys services.
+You are receiving this because you signed up for inXys services.
 Privacy policy ( https://inxys.net/privacy/ ).

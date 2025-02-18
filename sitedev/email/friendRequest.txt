@@ -7,18 +7,15 @@ Friend Request
 Hello %user_name%:
 
 %friend_name% ( https://%domain%/profile/?e=1e6&s=%site_id%&u=%friend_id% )
-requested to be your friend on Varyn.com ( https://%domain%/?id=10009&e=1e6&s=%site_id% ).
+requested to follow you on inxys.net ( https://%domain%/?id=10009&e=1e6&s=%site_id% ).
 
-Friend requests require your approval.
+Follow requests require your approval.
 
-* Approve request ( https://%domain%/procs/requestConfirm.php?id=10009&e=1e7&s=%site_id%&u=%friend_id%&r=9&a=1 )
-* Deny request ( https://%domain%/procs/requestConfirm.php?id=10009&e=1e7&s=%site_id%&u=%friend_id%&r=9&a=0 )
+* Approve request ( https://%domain%/procs/follow/?id=10009&e=1e7&s=%site_id%&u=%friend_id%&r=9&a=1 )
+* Deny request ( https://%domain%/procs/follow/?id=10009&e=1e7&s=%site_id%&u=%friend_id%&r=9&a=0 )
 
-If you are unfamiliar with this request or consider this an abuse then contact support@varyn.com
+If you are unfamiliar with this request or consider this an abuse then contact support@inxys.net
 with this information.
-
-Let's play!
-Varyn
 
 * ( https://www.facebook.com/inxys )
 * ( https://bsky.app/profile/inxys.bsky.social )
@@ -31,5 +28,5 @@ Our mission is to facilitate the free exchange of ideas and a strong sense of co
 We encourage diversity, inclusion, and respect for all.
 
 Copyright 2025 The Information Exchange, All rights reserved.
-You are receiving this because you signed up for inxys services.
+You are receiving this because you signed up for inXys services.
 Privacy policy ( https://inxys.net/privacy/ ).

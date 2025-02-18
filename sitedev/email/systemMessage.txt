@@ -7,10 +7,7 @@ Hello %user_name%:
 
 %message%
 
-Let's play!
-Varyn
-
-If you received this message in error then please contact customer support at support@varyn.com.
+If you received this message in error then please contact customer support at support@inxys.net.
 
 * ( https://www.facebook.com/inxys )
 * ( https://bsky.app/profile/inxys.bsky.social )
@@ -23,5 +20,5 @@ Our mission is to facilitate the free exchange of ideas and a strong sense of co
 We encourage diversity, inclusion, and respect for all.
 
 Copyright 2025 The Information Exchange, All rights reserved.
-You are receiving this because you signed up for inxys services.
+You are receiving this because you signed up for inXys services.
 Privacy policy ( https://inxys.net/privacy/ ).

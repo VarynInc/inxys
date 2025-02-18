@@ -9,12 +9,9 @@ Hello %user_name%:
 This is a courtesy notification to let you know a sensitive change was made to your
 account. If you initiated a recent change then you need to take no action.
 If you are unfamiliar with any recent change to your account then contact
-support@enginesis.com with this information.
+support@inxys.net with this information.
 
-Visit your profile at https://%domain%/procs/profile.php?id=10093&e=1e6&s=%site_id%&u=%user_id%.
-
-Let's play!
-Varyn
+Visit your profile at https://%domain%/profile/?id=10093&e=1e6&s=%site_id%&u=%user_id%.
 
 * ( https://www.facebook.com/inxys )
 * ( https://bsky.app/profile/inxys.bsky.social )
@@ -27,5 +24,5 @@ Our mission is to facilitate the free exchange of ideas and a strong sense of co
 We encourage diversity, inclusion, and respect for all.
 
 Copyright 2025 The Information Exchange, All rights reserved.
-You are receiving this because you signed up for inxys services.
+You are receiving this because you signed up for inXys services.
 Privacy policy ( https://inxys.net/privacy/ ).
