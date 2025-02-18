@@ -73,3 +73,16 @@ Title of the article, conference, topic, or item description of the item that is
 
 `%item_id%`
 Item id (integer) of the item that is the subject of the notification (e.g. Share, Send to friend).
+
+## Email catalog
+
+Notification event           | Subject line                                     | Description
+-----------------------------|--------------------------------------------------|------------
+Send to friend / Follow user | Check out this item on inXys.net                 | User requests to follow another user.
+✅ Change password          | Change Password Request from inXys.net           | User requested a password change.
+✅ Forgot password          | Reset Password Request from inXys.net            | User requested a password change.
+✅ Registration confirmation| Welcome to inXys.net - The Information Exchange  | Email sent when signing up a new account.
+✅ Security update          | Account update from inXys.net                    | User updated their profile, confirmation.
+Site newsletter              | Your latest news and updates from inXys.net      | Newsletter.
+User Blocked                 | Your account is blocked at inXys.net             | User was blocked.
+✅ System message           | Notification from inXys.net                      | A general system notification.
