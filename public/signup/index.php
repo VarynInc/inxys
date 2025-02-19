@@ -2,7 +2,7 @@
 include_once('../../services/inxys_common.php');
 include_once('../../services/strings.php');
 $pageId = 'signup';
-$pageTitle = '';
+$pageTitle = 'Create your inXys account';
 $signupErrorMessage = '';
 $signupSuccessful = false;
 
