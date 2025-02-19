@@ -17,8 +17,9 @@ Any tasks that are specified fully and determined to be worked on should go to [
     - verify agree
     - handle sign up error (name in use, email in use, other errors?)
     - success sign up goes to Profile page.
+    - rememberme sets cookie
 
-- 🟦 Log in
+- 🟦 Log in, add show password. rememberme sets cookie
 - 🟦 forgot password, change password
 - 🟦 Menu not logged in: Home (sign in/sign up), Conferences (Public), Users (public), Sign up, Search, About
 - 🟦 Menu logged in: Home (feed), Conferences (Public & Private), Users (public), Profile, Search, About
