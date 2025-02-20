@@ -2132,37 +2132,40 @@ class Enginesis {
         // @todo: user_name, email_address, password are required. We can send it up to the server and wait for a response but we could save time and do it here.
         $parameters = [
             'user_name' => $userInfo['user_name'],
-            'password' => $userInfo['password'],
-            'security_question_id' => $this->arrayValueOrDefault($userInfo, 'security_question_id', '1'),
-            'security_answer' => $this->arrayValueOrDefault($userInfo, 'security_answer', 'yes'),
-            'email_address' => $userInfo['email_address'],
-            'dob' => $userInfo['dob'],
             'real_name' => $this->arrayValueOrDefault($userInfo, 'real_name', $userInfo['user_name']),
+            'dob' => $userInfo['dob'],
+            'gender' => $this->arrayValueOrDefault($userInfo, 'gender', 'U'),
+            'email_address' => $userInfo['email_address'],
             'city' => $this->arrayValueOrDefault($userInfo, 'city', ''),
             'state' => $this->arrayValueOrDefault($userInfo, 'state', ''),
             'zipcode' => $this->arrayValueOrDefault($userInfo, 'zipcode', ''),
             'country_code' => $this->arrayValueOrDefault($userInfo, 'country_code', 'US'),
-            'tagline' => $this->arrayValueOrDefault($userInfo, 'tagline', ''),
-            'gender' => $this->arrayValueOrDefault($userInfo, 'gender', 'U'),
             'mobile_number' => $this->arrayValueOrDefault($userInfo, 'mobile_number', ''),
             'im_id' => $this->arrayValueOrDefault($userInfo, 'im_id', ''),
             'img_url' => $this->arrayValueOrDefault($userInfo, 'img_url', ''),
             'about_me' => $this->arrayValueOrDefault($userInfo, 'about_me', ''),
+            'tagline' => $this->arrayValueOrDefault($userInfo, 'tagline', ''),
             'additional_info' => $this->arrayValueOrDefault($userInfo, 'additional_info', ''),
-            'agreement' => '1',
-            'captcha_id' => '99999',
-            'captcha_response' => 'DEADMAN',
             'site_user_id' => '',
             'network_id' => '1',
-            'source_site_id' => $this->m_siteId
+            'agreement' => '1',
+            'password' => $userInfo['password'],
+            'security_question_id' => $this->arrayValueOrDefault($userInfo, 'security_question_id', '1'),
+            'security_answer' => $this->arrayValueOrDefault($userInfo, 'security_answer', 'yes'),
+            'source_site_id' => $this->m_siteId,
+            'captcha_id' => '99999',
+            'captcha_response' => 'DEADMAN'
         ];
         $enginesisResponse = $this->callServerAPI($service, $parameters);
+
+        $this->debugInfo("RegisteredUserCreate response " . json_encode($enginesisResponse), __FILE__, __LINE__);
+
         $results = $this->setLastErrorFromResponse($enginesisResponse);
         if (is_array($results) && count($results) > 0) {
             $userInfoResult = $results[0];
-            $user_id = $userInfoResult->user_id;
-            $secondary_password = $userInfoResult->secondary_password;
-            // @todo: Server sends the user an email to complete/confirm registration. If this site auto-confirms user registration,
+            $user_id = $userInfoResult->user_id; // newly created user_id
+            $secondary_password = $userInfoResult->secondary_password; // token needed to complete registration confirmation
+            // @todo: Server sends the user an email with user_id+secondary_password to complete/confirm registration. If this site auto-confirms user registration,
             // then we should log the user in automatically now. We know this because the server gives us authtok when we are to do this.
             if (isset($userInfoResult->authtok)) {
                 $this->sessionSave($userInfoResult->authtok, $userInfoResult->user_id, $userInfoResult->user_name, $userInfoResult->site_user_id, $userInfoResult->network_id, $userInfoResult->access_level, EnginesisNetworks::Enginesis);

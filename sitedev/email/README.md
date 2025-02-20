@@ -78,11 +78,37 @@ Item id (integer) of the item that is the subject of the notification (e.g. Shar
 
 Notification event           | Subject line                                     | Description
 -----------------------------|--------------------------------------------------|------------
-Send to friend / Follow user | Check out this item on inXys.net                 | User requests to follow another user.
+🔴 Send to friend           | Check out this item on inXys.net                  | User shares item with another user.
+Text                         |                                                  | https://enginesis.com/sites/109/email/sendToFriend.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/sendToFriend.min.html
+🔴 Friend request / Follow user | Follow request on inXys.net                  | User requests to follow another user.
+Text                         |                                                  | https://enginesis.com/sites/109/email/friendRequest.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/friendRequest.min.html
 ✅ Change password          | Change Password Request from inXys.net           | User requested a password change.
+Text                         |                                                  | https://enginesis.com/sites/109/email/changePassword.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/changePassword.min.html
 ✅ Forgot password          | Reset Password Request from inXys.net            | User requested a password change.
+Text                         |                                                  | https://enginesis.com/sites/109/email/forgotPassword.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/forgotPassword.min.html
 ✅ Registration confirmation| Welcome to inXys.net - The Information Exchange  | Email sent when signing up a new account.
+Text                         |                                                  | https://enginesis.com/sites/109/email/regConfirm.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/regConfirm.min.html
+🔴 Account change            | Profile update notification from inXys.net      | A data change was made to your account.
+Text                         |                                                  | https://enginesis.com/sites/109/email/accountChange.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/accountChange.min.html
 ✅ Security update          | Account update from inXys.net                    | User updated their profile, confirmation.
-Site newsletter              | Your latest news and updates from inXys.net      | Newsletter.
-User Blocked                 | Your account is blocked at inXys.net             | User was blocked.
+Text                         |                                                  | https://enginesis.com/sites/109/email/securityUpdate.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/securityUpdate.min.html
+🔴 Site newsletter          | Your latest news and updates from inXys.net      | Newsletter.
+Text                         |                                                  | https://enginesis.com/sites/109/email/news.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/news.min.html
+⚒ Newsletter template       | Template for creating new newsletter             | Newsletter template. Do not publish.
+HTML                         |                                                  | https://enginesis.com/sites/109/email/news.template.html
+🔴 User Blocked             | Your account is blocked at inXys.net             | User was blocked.
+Text                         |                                                  | https://enginesis.com/sites/109/email/accountBlocked.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/accountBlocked.min.html
 ✅ System message           | Notification from inXys.net                      | A general system notification.
+Text                         |                                                  | https://enginesis.com/sites/109/email/systemMessage.txt
+HTML                         |                                                  | https://enginesis.com/sites/109/email/systemMessage.min.html
+⚒ Email template            | Template for email notifications                 | Template for creating a new email notification. This should not get published.
+HTML                         |                                                  | https://enginesis.com/sites/109/email/emailTemplate.html

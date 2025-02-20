@@ -107,6 +107,9 @@ function handleSignUpAttempt() {
             $userInfo['network_id'] = 1;
             $userInfo['source_site_id'] = 109;
             $enginesisResponse = $enginesis->userRegistration($userInfo);
+
+            var_dump($enginesisResponse);
+
             if (isset($enginesisResponse->results)) {
                 $results = $enginesisResponse->results;
                 if (isset($results->status)) {
@@ -119,6 +122,10 @@ function handleSignUpAttempt() {
                         // Successful registration. Email is sent to user with user_id & secondary_Password to confirm registration.
                     }
                 }
+            } else {
+                // registration failed probably due to a system bug
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_ERROR);
+                $errorParameter = 'signup-username';
             }
         }
     } else {
