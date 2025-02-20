@@ -107,9 +107,6 @@ function handleSignUpAttempt() {
             $userInfo['network_id'] = 1;
             $userInfo['source_site_id'] = 109;
             $enginesisResponse = $enginesis->userRegistration($userInfo);
-
-            var_dump($enginesisResponse);
-
             if (isset($enginesisResponse->results)) {
                 $results = $enginesisResponse->results;
                 if (isset($results->status)) {
@@ -124,7 +121,8 @@ function handleSignUpAttempt() {
                 }
             } else {
                 // registration failed probably due to a system bug
-                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_ERROR);
+                $errorDetails = $enginesis->getLastError();
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_ERROR, ['error' => $errorDetails->message . $errorDetails->extended_info]);
                 $errorParameter = 'signup-username';
             }
         }
