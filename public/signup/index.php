@@ -120,10 +120,19 @@ function handleSignUpAttempt() {
                     }
                 }
             } else {
-                // registration failed probably due to a system bug
                 $errorDetails = $enginesis->getLastError();
-                $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_ERROR, ['error' => $errorDetails->message . $errorDetails->extended_info]);
-                $errorParameter = 'signup-username';
+                if ($errorDetails['success'] == 0) {
+                    // registration failed probably due to a system bug
+                    if ($enginesis->getServerStage() == '') {
+                        $errorInfo = 'exception in registration service';
+                    } else {
+                        $errorInfo = ['error' => $errorDetails['message'] . ' ' . $errorDetails['extended_info']];
+                    }
+                    $errorMessage = $stringTable->lookup(EnginesisUIStrings::REGISTRATION_ERROR, $errorInfo);
+                    $errorParameter = 'signup-username';
+                } else {
+                    // Successful registration. Email is sent to user with user_id & secondary_Password to confirm registration.
+                }
             }
         }
     } else {
