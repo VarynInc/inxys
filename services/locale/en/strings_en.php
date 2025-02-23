@@ -24,5 +24,9 @@ $enginesis_strings_en = [
     EnginesisUIStrings::REG_COMPLETE_RESET_MESSAGE => 'Email has been sent with instructions to complete your account password reset.',
     EnginesisUIStrings::REFRESH_TOKEN_ERROR => 'There was an unexpected system error refreshing your session. Please login again.',
     EnginesisUIStrings::LOGOUT_COMPLETE => 'You have been logged out.',
-    EnginesisUIStrings::INVALID_EMAIL => 'The email address provided is not valid. Please check your entry and try again.'
+    EnginesisUIStrings::INVALID_EMAIL => 'The email address provided is not valid. Please check your entry and try again.',
+    inxysUIStrings::COMMON_PAGE_TITLE => 'inXys: The Information Exchange',
+    inxysUIStrings::COMMON_PAGE_DESCRIPTION => 'To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.',
+    inxysUIStrings::PROFILE_PAGE_TITLE => 'Profile',
+    inxysUIStrings::PROFILE_PAGE_DESCRIPTION => 'View your profile or review other followers and users at inxys.net.'
 ];

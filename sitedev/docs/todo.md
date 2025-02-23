@@ -18,6 +18,7 @@ Any tasks that are specified fully and determined to be worked on should go to [
     - handle sign up error (name in use, email in use, other errors?)
     - success sign up goes to Profile page.
     - rememberme sets cookie
+    - regconfirm call back
 
 - 🟦 Log in, add show password. rememberme sets cookie
 - 🟦 forgot password, change password

@@ -21,7 +21,7 @@ $rememberMeChecked = $rememberMe == 'on' ? 'checked' : '';
             <input type="hidden" name="all-clear" value="<?php echo ($hackerVerification); ?>" />
             <div>
                 <span id="rememberme-container"><input type="checkbox" tabindex="20" <?php echo($rememberMeChecked);?> name="rememberme" id="rememberme"><label for="rememberme">Remember Me</label></span>
-                <a id="loginPopup_forgot_password" href="/forgotpassword/" tabindex="21" style="float:right;">Forgot password?</a>
+                <a id="loginPopup_forgot_password" href="/procs/forgotpass/" tabindex="21" style="float:right;">Forgot password?</a>
             </div>
             <input type="hidden" name="action" value="login" />
         </div>

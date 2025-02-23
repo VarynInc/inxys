@@ -45,17 +45,16 @@ abstract class EnginesisUIStrings {
 }
 
 /**
- * Defines UI strings derived from Varyn code.
+ * Defines UI strings derived from inXys code.
  */
-abstract class VarynUIStrings {
+abstract class inxysUIStrings {
     const COMMON_PAGE_TITLE            = 'COMMON_PAGE_TITLE';
     const COMMON_PAGE_DESCRIPTION      = 'COMMON_PAGE_DESCRIPTION';
     const PROFILE_PAGE_TITLE           = 'PROFILE_PAGE_TITLE';
     const PROFILE_PAGE_DESCRIPTION     = 'PROFILE_PAGE_DESCRIPTION';
 }
 
-class EnginesisStringTable
-{
+class EnginesisStringTable {
     private $_siteId = 1000;
     private $_languageCode = 'en';
     private $_defaultLanguageCode = 'en';

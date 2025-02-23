@@ -1797,16 +1797,27 @@ function makeRandomToken ($length = 12) {
 }
 
 /**
+ * Append a URL parameter if the value is not empty.
+ * 
+ * @param string The URL string to update. This string updated if the value is not empty.
+ * @param string A key.
+ * @param string The value to assign to the key.
+ * @return string the update URL string.
+ */
+function appendParamIfNotEmpty( & $params, $key, $value) {
+    if ( ! empty($value)) {
+        $params .= '&' . $key . '=' . $value;
+    }
+    return $params;
+}
+
+/**
  * If the flag parameter is determined to be true (implicit cast to bool) then return a checkbox string.
- * @param $flag
- * @return string
+ * @param boolean True for checked, false for not checked.
+ * @return string Checked or empty.
  */
 function showBooleanChecked($flag) {
-    if ($flag) {
-        return ' checked';
-    } else {
-        return '';
-    }
+    return $flag ? 'checked' : '';
 }
 
 function debugLog($message) {

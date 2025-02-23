@@ -2,6 +2,7 @@
 include_once('common.php');
 
 // Global variables that should be defined on every page
+$siteId = 109;
 $pageId = '';         // Every page has an id so we can do per-page logic inside common functions
 $pageTitle = '';      // Every page has a title, many times this is dynamically generated
 $allMenuPages = [
