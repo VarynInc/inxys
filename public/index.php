@@ -8,13 +8,16 @@ $pageDescription = 'The Information Exchange: To facilitate the free exchange of
 $hackerVerification = '';
 $isLoggedIn = false;
 $loginErrorMessage = '';
+$errorParameter = '';
 include(VIEWS_ROOT . 'page-header.php');
 $loginResult = handleLoginAttempt();
-if ($loginResult['isLogInAttempt']) {
+$isLogInAttempt = $loginResult['isLogInAttempt'];
+if ($isLogInAttempt) {
     if ($loginResult['isLoggedIn']) {
         $loginErrorMessage = "You are logged in!";
     } else {
         $loginErrorMessage = $loginResult['errorMessage'];
+        $errorParameter = 'login-username';
     }
 }
 
@@ -66,6 +69,19 @@ if ($loginResult['isLogInAttempt']) {
     }
     ?>
 </div>
-<?php include(VIEWS_ROOT . 'footer.php');?>
+<?php include(VIEWS_ROOT . 'footer.php');
+if ($isLogInAttempt && ! empty($errorParameter)) {
+?>
+<script>
+    const formElement = document.getElementById("<?php echo($errorParameter);?>");
+    if (formElement) {
+        formElement.focus();
+        formElement.classList.add("login-form-input-error");
+    }
+</script>
+<?php
+}
+?>
+<script src="/js/login.js" type="module"></script>
 </body>
 </html>

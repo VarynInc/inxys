@@ -14,7 +14,8 @@ $rememberMeChecked = $rememberMe == 'on' ? 'checked' : '';
         </div>
         <div class="form-group">
             <label for="login_password">Password:</label><br>
-            <input type="password" id="login-password" name="login-password" tabindex="18" maxlength="32" class="login-form-input required" value="<?php echo($password);?>"/>
+            <input type="password" id="login-password" name="login-password" tabindex="18" maxlength="32" class="login-form-input required password" autocomplete="current-password" autocorrect="off" value="<?php echo($password);?>"/>
+            <span id="login-show-password" class="showPasswordButton" style="margin-top: 1rem;" tabindex="19"><span id="show-password-text">Show</span> <span id="show-password-icon" class="iconEye" aria-hidden="true"></span></span>
         </div>
         <div class="form-group p-3">
             <button type="submit" class="btn btn-lg btn-success" value="loginButton" name="loginButton" id="loginButton" tabindex="19">Login</button>
