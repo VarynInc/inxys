@@ -2192,8 +2192,7 @@ function _completeFileUpload(uploadAttributes, fileData) {
         }, function (error) {
             errorMessage = "Network error from service when requesting token. " + error.toString();
             reject(makeErrorResponse("SERVICE_ERROR", errorMessage, parameters));
-        })
-        .catch(function (exception) {
+        }).catch(function (exception) {
             errorMessage = "Unexpected response received from service when requesting token with " + exception.toString() + ".";
             reject(makeErrorResponse("SERVICE_ERROR", errorMessage, parameters));
         });
@@ -3254,9 +3253,9 @@ export default {
                         // there was an error uploading the file, should deal with it, but OK to continue
                         debugLog("SendToFriend exception " + exception.toString() + " while uploading image, continuing anyway.");
                         sendRequest(service, requestParameters, overRideCallBackFunction)
-                        .then(function(enginesisResponse) {
-                            resolve(enginesisResponse);
-                        });
+                            .then(function(enginesisResponse) {
+                                resolve(enginesisResponse);
+                            });
                     });
                     // callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesis.callBackFunction);
                 });

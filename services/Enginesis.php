@@ -26,6 +26,7 @@ abstract class EnginesisNetworks {
     const Google = 7;
     const Twitter = 11;
     const Apple = 14;
+    const bsky = 15;
 }
 
 abstract class EnginesisRefreshStatus {
@@ -233,7 +234,10 @@ class Enginesis {
     }
 
     /**
-     * Determine if a user name passes basic validity checks.
+     * Determine if a user name passes basic validity checks. User name rules:
+     * - at least 3 characters long, and no longer than 50.
+     * - no leading or trailing spaces.
+     * - may only contain letters, numbers, and the special symbols _@!~$.-|'
      *
      * @param string A user name to check.
      * @return boolean true if OK, false if name is unacceptable.
@@ -243,7 +247,7 @@ class Enginesis {
             return false;
         }
         $badNames = ['null', 'undefined', 'xxx', 'shit', 'fuck', 'dick'];
-        return (strlen(trim($userName)) == strlen($userName)) && (preg_match('/^[a-zA-Z0-9_@!~\$\.\-\|\s]{3,50}$/', $userName) == 1) && ( ! in_array($userName, $badNames));
+        return (strlen(trim($userName)) == strlen($userName)) && (preg_match('/^[a-zA-Z0-9_@!~\$\.\-\|\' ]{3,50}$/', $userName) == 1) && ( ! in_array($userName, $badNames));
     }
 
     /**
@@ -253,7 +257,7 @@ class Enginesis {
      * @return boolean True if OK, false if unacceptable.
      */
     public function isValidPassword ($password) {
-        return strlen(trim($password)) > 12;
+        return ! empty($password) && strlen($password) > 12;
     }
 
     /**
@@ -2015,12 +2019,12 @@ class Enginesis {
         // Convert parameters or use logical defaults
         $parameters = [
             'site_user_id' => $coregParameters['site_user_id'],
+            'network_id' => $coregParameters['network_id'],
             'user_name' => isset($coregParameters['user_name']) ? $coregParameters['user_name'] : '',
             'real_name' => isset($coregParameters['real_name']) ? $coregParameters['real_name'] : '',
             'email_address' => isset($coregParameters['email_address']) ? $coregParameters['email_address'] : '',
             'gender' => isset($coregParameters['gender']) ? $coregParameters['gender'] : 'U',
             'dob' => isset($coregParameters['dob']) ? $coregParameters['dob'] : '',
-            'network_id' => $coregParameters['network_id'],
             'scope' => isset($coregParameters['scope']) ? $coregParameters['scope'] : '',
             'agreement' => isset($coregParameters['agreement']) ? $coregParameters['agreement'] : '0',
             'avatar_url' => isset($coregParameters['avatar_url']) ? $coregParameters['avatar_url'] : '',
@@ -2057,7 +2061,7 @@ class Enginesis {
         $enginesisResponse = $this->callServerAPI($service, $parameters);
         $results = $this->setLastErrorFromResponse($enginesisResponse);
         $this->m_refreshToken = null;
-        setcookie(REFRESH_COOKIE, '', time() - SESSION_EXPIRE_SECONDS, '/', $this->sessionCookieDomain(), true, false);
+        setcookie(REFRESH_COOKIE, '', 1, '/', $this->sessionCookieDomain(), true, false);
         $this->sessionClear();
         return $results != null;
     }
@@ -2180,14 +2184,13 @@ class Enginesis {
             'captcha_response' => 'DEADMAN'
         ];
         $enginesisResponse = $this->callServerAPI($service, $parameters);
-
-        $this->debugInfo("RegisteredUserCreate response " . json_encode($enginesisResponse), __FILE__, __LINE__);
-
         $results = $this->setLastErrorFromResponse($enginesisResponse);
         if (is_array($results) && count($results) > 0) {
             $userInfoResult = $results[0];
-            $user_id = $userInfoResult->user_id; // newly created user_id
-            $secondary_password = $userInfoResult->secondary_password; // token needed to complete registration confirmation
+            $cr = $userInfoResult->cr;
+            // @todo: Verify hash to make sure payload was not tampered
+            $user_id = $userInfoResult->user_id;
+            $secondary_password = $userInfoResult->secondary_password;
             // @todo: Server sends the user an email with user_id+secondary_password to complete/confirm registration. If this site auto-confirms user registration,
             // then we should log the user in automatically now. We know this because the server gives us authtok when we are to do this.
             if (isset($userInfoResult->authtok)) {
