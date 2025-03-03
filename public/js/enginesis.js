@@ -11,7 +11,7 @@
  **/
 
 const enginesis = {
-    VERSION: "2.12.2",
+    VERSION: "2.12.3",
     debugging: true,
     disabled: false, // use this flag to turn off communicating with the server
     isOnline: true,  // flag to determine if we are currently able to reach Enginesis servers
@@ -300,21 +300,13 @@ function refreshTokenAndReissueRequest(enginesisResult) {
     return new Promise(function(resolve) {
         if (_getRefreshToken() !== null) {
             enginesisContext.sessionRefresh(_getRefreshToken(), null)
-                .then(function(sessionRefreshResult) {
-                    // Reissue original request
-                    const serviceName = enginesisResult.results.passthru.fn;
-                    const parameters = enginesisResult.results.passthru;
-                    sendRequest(serviceName, parameters, null)
-                        .then(function(reissueResult) {
-                            resolve(reissueResult);
-                        }, function(enginesisError) {
-                            debugLog("refreshTokenAndReissueRequest refresh error " + enginesisError.toString());
-                            resolve(enginesisResult);
-                        })
-                        .catch(function(exception) {
-                            debugLog("refreshTokenAndReissueRequest refresh exception " + exception.toString());
-                            resolve(enginesisResult);
-                        });
+            .then(function(sessionRefreshResult) {
+                // Reissue original request
+                const serviceName = enginesisResult.results.passthru.fn;
+                const parameters = enginesisResult.results.passthru;
+                sendRequest(serviceName, parameters, null)
+                .then(function(reissueResult) {
+                    resolve(reissueResult);
                 }, function(enginesisError) {
                     debugLog("refreshTokenAndReissueRequest refresh error " + enginesisError.toString());
                     resolve(enginesisResult);
@@ -323,6 +315,14 @@ function refreshTokenAndReissueRequest(enginesisResult) {
                     debugLog("refreshTokenAndReissueRequest refresh exception " + exception.toString());
                     resolve(enginesisResult);
                 });
+            }, function(enginesisError) {
+                debugLog("refreshTokenAndReissueRequest refresh error " + enginesisError.toString());
+                resolve(enginesisResult);
+            })
+            .catch(function(exception) {
+                debugLog("refreshTokenAndReissueRequest refresh exception " + exception.toString());
+                resolve(enginesisResult);
+            });
         } else {
             // We cannot refresh the token so respond with the original error.
             resolve(enginesisResult);
@@ -414,9 +414,9 @@ function preprocessEnginesisResult(enginesisResult) {
         // Handle an expired token here, issue a SessionRefresh, and then re-issue the original request
         if (resultIsExpiredToken(enginesisResult)) {
             refreshTokenAndReissueRequest(enginesisResult)
-                .then(function(reissueResult) {
-                    resolve(reissueResult);
-                });
+            .then(function(reissueResult) {
+                resolve(reissueResult);
+            });
         } else if (resultIsSuccess(enginesisResult) && serviceEndPoint) {
             // @todo: find a better place to define this dispatch table
             const dispatchTable = {
@@ -798,14 +798,14 @@ function sessionVerifyHash(hashFromServer, userInfo) {
             // game session is good but the user must refresh their authentication
             // debugLog("sessionVerifyHash Session expired but we think we can refresh it.");
             enginesisContext.sessionRefresh(_getRefreshToken(), null)
-                .then(function(enginesisResult) {
-                    debugLog("sessionVerifyHash users authentication has been refreshed. " + enginesisResult.toString());
-                }, function(enginesisError) {
-                    debugLog("sessionVerifyHash refresh error " + enginesisError.toString());
-                })
-                .catch(function(exception) {
-                    debugLog("sessionVerifyHash refresh exception " + exception.toString());
-                });
+            .then(function(enginesisResult) {
+                debugLog("sessionVerifyHash users authentication has been refreshed. " + enginesisResult.toString());
+            }, function(enginesisError) {
+                debugLog("sessionVerifyHash refresh error " + enginesisError.toString());
+            })
+            .catch(function(exception) {
+                debugLog("sessionVerifyHash refresh exception " + exception.toString());
+            });
         }
     }
     if ( ! isVerified) {
@@ -825,16 +825,16 @@ function sessionVerifyHash(hashFromServer, userInfo) {
  */
 function callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesisCallBackFunction) {
     preprocessEnginesisResult(enginesisResult)
-        .then(function(updatedEnginesisResult) {
-            if (overRideCallBackFunction != null) {
-                overRideCallBackFunction(updatedEnginesisResult);
-            } else if (enginesisCallBackFunction != null) {
-                enginesisCallBackFunction(updatedEnginesisResult);
-            }
-            if (resolve != null) {
-                resolve(updatedEnginesisResult);
-            }
-        });
+    .then(function(updatedEnginesisResult) {
+        if (overRideCallBackFunction != null) {
+            overRideCallBackFunction(updatedEnginesisResult);
+        } else if (enginesisCallBackFunction != null) {
+            enginesisCallBackFunction(updatedEnginesisResult);
+        }
+        if (resolve != null) {
+            resolve(updatedEnginesisResult);
+        }
+    });
 }
 
 /**
@@ -949,33 +949,33 @@ function sendNodeRequest(serviceName, enginesisParameters, overRideCallBackFunct
         headers: formatHTTPHeader(),
         body: new URLSearchParams(enginesisParameters)
     })
-        .then(async function(response) {
-            if (response.status != 200) {
-                const errorMessage = "Service error " + response.status + " from " + enginesis.siteResources.serviceURL;
-                // @todo: we still need to determine if this is a server error or a network error
-                // if (setOffline()) {
-                //     errorMessage = "Enginesis network error encountered, assuming we're offline. " + enginesis.siteResources.serviceURL + " for " + serviceName + ": " + requestError.toString();
-                // } else {
-                //     errorMessage = "Enginesis is already offline, leaving this message on the queue.";
-                // }
-                // debugLog(errorMessage);
-                serviceRequestComplete(enginesisParameters.state_seq, forceErrorResponseString(serviceName, enginesisParameters.state_seq, "OFFLINE", errorMessage, enginesisParameters), overRideCallBackFunction);
-            } else {
-                // depending on the response format type we should handle the response data
-                let responseData;
-                if (typeof enginesisParameters.response == "undefined" || enginesisParameters.response == "json") {
-                    responseData = await response.json();
-                } else {
-                    responseData = response.body;
-                }
-                serviceRequestComplete(enginesisParameters.state_seq, responseData, overRideCallBackFunction);
-            }
-        })
-        .catch(function(requestError) {
-            const errorMessage = "Internal error posting to " + enginesis.siteResources.serviceURL + ": " + requestError.toString();
-            debugLog(errorMessage);
+    .then(async function(response) {
+        if (response.status != 200) {
+            const errorMessage = "Service error " + response.status + " from " + enginesis.siteResources.serviceURL;
+            // @todo: we still need to determine if this is a server error or a network error
+            // if (setOffline()) {
+            //     errorMessage = "Enginesis network error encountered, assuming we're offline. " + enginesis.siteResources.serviceURL + " for " + serviceName + ": " + requestError.toString();
+            // } else {
+            //     errorMessage = "Enginesis is already offline, leaving this message on the queue.";
+            // }
+            // debugLog(errorMessage);
             serviceRequestComplete(enginesisParameters.state_seq, forceErrorResponseString(serviceName, enginesisParameters.state_seq, "OFFLINE", errorMessage, enginesisParameters), overRideCallBackFunction);
-        });
+        } else {
+            // depending on the response format type we should handle the response data
+            let responseData;
+            if (typeof enginesisParameters.response == "undefined" || enginesisParameters.response == "json") {
+                responseData = await response.json();
+            } else {
+                responseData = response.body;
+            }
+            serviceRequestComplete(enginesisParameters.state_seq, responseData, overRideCallBackFunction);
+        }
+    })
+    .catch(function(requestError) {
+        const errorMessage = "Internal error posting to " + enginesis.siteResources.serviceURL + ": " + requestError.toString();
+        debugLog(errorMessage);
+        serviceRequestComplete(enginesisParameters.state_seq, forceErrorResponseString(serviceName, enginesisParameters.state_seq, "OFFLINE", errorMessage, enginesisParameters), overRideCallBackFunction);
+    });
     return true;
 }
 
@@ -1024,64 +1024,64 @@ function processNextMessage(resolve, reject) {
                     headers: formatHTTPHeader(),
                     body: convertParamsToFormData(enginesisParameters)
                 })
-                    .then(function (response) {
-                        removeFromServiceQueue(enginesisParameters.state_seq);
-                        if (response.status == 200) {
-                            response.json()
-                                .then(function (enginesisResult) {
-                                    let errorMessage;
-                                    if (enginesisResult == null) {
-                                        // If Enginesis fails to return a valid object then the service must have failed, possible the response was not parsable JSON (e.g. error 500)
-                                        debugLog("Enginesis service error for " + serviceName + ": " + response.text());
-                                        errorMessage = "Enginesis service while contacting Enginesis at " + enginesis.serverHost + " for " + serviceName;
-                                        enginesisResult = forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "SERVICE_ERROR", errorMessage, enginesisParameters);
-                                    } else {
-                                        enginesisResult.fn = serviceName;
-                                    }
-                                    callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesis.callBackFunction);
-                                })
-                                .catch(function (error) {
-                                    const errorMessage = "Invalid response from Enginesis at " + enginesis.serverHost + " for " + serviceName + ": " + error.toString();
-                                    const enginesisResult = forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "SERVICE_ERROR", errorMessage, enginesisParameters);
-                                    debugLog(errorMessage);
-                                    callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesis.callBackFunction);
-                                });
-                        } else {
-                            const errorMessage = "Network error " + response.status + " while contacting Enginesis at " + enginesis.serverHost + " for " + serviceName;
+                .then(function (response) {
+                    removeFromServiceQueue(enginesisParameters.state_seq);
+                    if (response.status == 200) {
+                        response.json()
+                        .then(function (enginesisResult) {
+                            let errorMessage;
+                            if (enginesisResult == null) {
+                                // If Enginesis fails to return a valid object then the service must have failed, possible the response was not parsable JSON (e.g. error 500)
+                                debugLog("Enginesis service error for " + serviceName + ": " + response.text());
+                                errorMessage = "Enginesis service while contacting Enginesis at " + enginesis.serverHost + " for " + serviceName;
+                                enginesisResult = forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "SERVICE_ERROR", errorMessage, enginesisParameters);
+                            } else {
+                                enginesisResult.fn = serviceName;
+                            }
+                            callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesis.callBackFunction);
+                        })
+                        .catch(function (error) {
+                            const errorMessage = "Invalid response from Enginesis at " + enginesis.serverHost + " for " + serviceName + ": " + error.toString();
                             const enginesisResult = forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "SERVICE_ERROR", errorMessage, enginesisParameters);
                             debugLog(errorMessage);
                             callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesis.callBackFunction);
-                        }
-                    }, function (error) {
-                        // @todo: If the error is no network, then set offline and queue this request
-                        if (setOffline()) {
-                            errorMessage = "Enginesis Network error encountered, assuming we're offline. " + enginesis.serverHost + " for " + serviceName + ": " + error.toString();
-                        } else {
-                            errorMessage = "Enginesis is already offline, leaving this message on the queue.";
-                        }
+                        });
+                    } else {
+                        const errorMessage = "Network error " + response.status + " while contacting Enginesis at " + enginesis.serverHost + " for " + serviceName;
+                        const enginesisResult = forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "SERVICE_ERROR", errorMessage, enginesisParameters);
                         debugLog(errorMessage);
-                        callbackPriority(
-                            forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "OFFLINE", errorMessage, enginesisParameters),
-                            resolve,
-                            overRideCallBackFunction,
-                            enginesis.callBackFunction
-                        );
-                    })
-                    .catch(function (error) {
-                        // @todo: If the error is no network, then set offline and queue this request
-                        if (setOffline()) {
-                            errorMessage = "Enginesis Network error encountered, assuming we're offline. " + enginesis.serverHost + " for " + serviceName + ": " + error.toString();
-                        } else {
-                            errorMessage = "Enginesis is already offline, leaving this message on the queue.";
-                        }
-                        debugLog(errorMessage);
-                        callbackPriority(
-                            forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "OFFLINE", errorMessage, enginesisParameters),
-                            resolve,
-                            overRideCallBackFunction,
-                            enginesis.callBackFunction
-                        );
-                    });
+                        callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesis.callBackFunction);
+                    }
+                }, function (error) {
+                    // @todo: If the error is no network, then set offline and queue this request
+                    if (setOffline()) {
+                        errorMessage = "Enginesis Network error encountered, assuming we're offline. " + enginesis.serverHost + " for " + serviceName + ": " + error.toString();
+                    } else {
+                        errorMessage = "Enginesis is already offline, leaving this message on the queue.";
+                    }
+                    debugLog(errorMessage);
+                    callbackPriority(
+                        forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "OFFLINE", errorMessage, enginesisParameters),
+                        resolve,
+                        overRideCallBackFunction,
+                        enginesis.callBackFunction
+                    );
+                })
+                .catch(function (error) {
+                    // @todo: If the error is no network, then set offline and queue this request
+                    if (setOffline()) {
+                        errorMessage = "Enginesis Network error encountered, assuming we're offline. " + enginesis.serverHost + " for " + serviceName + ": " + error.toString();
+                    } else {
+                        errorMessage = "Enginesis is already offline, leaving this message on the queue.";
+                    }
+                    debugLog(errorMessage);
+                    callbackPriority(
+                        forceErrorResponseObject(serviceName, enginesisParameters.state_seq, "OFFLINE", errorMessage, enginesisParameters),
+                        resolve,
+                        overRideCallBackFunction,
+                        enginesis.callBackFunction
+                    );
+                });
             }
         } else {
             if (reject != null) {
@@ -1828,15 +1828,15 @@ function verifyUserSessionInfo() {
                 if (sessionExpired) {
                     debugLog("verifyUserSessionInfo Session expired but we think we can refresh it.");
                     enginesisContext.sessionRefresh(_getRefreshToken(), null)
-                        .then(function() {
-                            isRefreshed = true;
-                            resolve(isRefreshed);
-                        }, function(enginesisError) {
-                            reject(enginesisError);
-                        })
-                        .catch(function(exception) {
-                            reject(exception);
-                        });
+                    .then(function() {
+                        isRefreshed = true;
+                        resolve(isRefreshed);
+                    }, function(enginesisError) {
+                        reject(enginesisError);
+                    })
+                    .catch(function(exception) {
+                        reject(exception);
+                    });
                 } else {
                     const errorMessage = "Session hash does not match but session not expired.";
                     debugLog("verifyUserSessionInfo " + errorMessage + " from cache: " + userInfoSaved.cr + ". Computed here: " + hash);
@@ -2001,16 +2001,16 @@ function encryptScoreSubmit(siteId, userId, gameId, level, gameScore, gameData, 
             `site_id=${siteId}&user_id=${userId}&game_id=${gameId}&level_id=${level}&score=${gameScore}&time_played=${timePlayed}&game_data=${gameDataString}`,
             sessionId
         )
-            .then(function(encryptedData) {
-                if (encryptedData) {
-                    resolve(encryptedData);
-                } else {
-                    reject(new Error("Internal data encryption failed, verify your session is good."));
-                }
-            })
-            .catch(function(exception) {
-                reject(exception);
-            });
+        .then(function(encryptedData) {
+            if (encryptedData) {
+                resolve(encryptedData);
+            } else {
+                reject(new Error("Internal data encryption failed, verify your session is good."));
+            }
+        })
+        .catch(function(exception) {
+            reject(exception);
+        });
     });
 }
 
@@ -2060,62 +2060,62 @@ function _requestFileUpload(requestType, fileName, fileData) {
             body: convertParamsToFormData(parameters)
         };
         fetch(enginesis.siteResources.assetUploadURL, fetchOptions)
-            .then(function (response) {
-                if (response && response.ok) {
-                    const contentType = response.headers.get("content-type");
-                    if (contentType && contentType.includes("application/json")) {
-                        response.json()
-                            .then(function(enginesisResponse) {
-                                // if response is good, add to queue then schedule follow up to do the upload.
-                                if (enginesisResponse != null) {
-                                    if (enginesisResponse.status && enginesisResponse.status.success == "1" && enginesisResponse.results) {
-                                        uploadAttributes.token = enginesisResponse.results.token;
-                                        uploadAttributes.uploadId = enginesisResponse.results.id;
-                                        enginesis.assetUploadQueue.push(uploadAttributes);
-                                        _completeFileUpload(uploadAttributes, fileData)
-                                            .then(function(enginesisResponse) {
-                                                resolve(enginesisResponse);
-                                            }, function (enginesisResponse) {
-                                                resolve(enginesisResponse);
-                                            })
-                                            .catch(function(exception) {
-                                                errorCode = "SERVICE_ERROR";
-                                                errorMessage = "Error: " + exception.toString() + " Received from service with " + fileName + " with size " + uploadAttributes.fileSize + ".";
-                                            });
-                                    } else {
-                                        errorCode = "SERVICE_ERROR";
-                                        errorMessage = "Error: " + enginesisResponse.status.extended_info + " Received from service with " + fileName + " with size " + uploadAttributes.fileSize + ".";
-                                    }
-                                } else {
+        .then(function (response) {
+            if (response && response.ok) {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    response.json()
+                    .then(function(enginesisResponse) {
+                        // if response is good, add to queue then schedule follow up to do the upload.
+                        if (enginesisResponse != null) {
+                            if (enginesisResponse.status && enginesisResponse.status.success == "1" && enginesisResponse.results) {
+                                uploadAttributes.token = enginesisResponse.results.token;
+                                uploadAttributes.uploadId = enginesisResponse.results.id;
+                                enginesis.assetUploadQueue.push(uploadAttributes);
+                                _completeFileUpload(uploadAttributes, fileData)
+                                .then(function(enginesisResponse) {
+                                    resolve(enginesisResponse);
+                                }, function (enginesisResponse) {
+                                    resolve(enginesisResponse);
+                                })
+                                .catch(function(exception) {
                                     errorCode = "SERVICE_ERROR";
-                                    errorMessage = "There was a service error during the upload operation. The support team has been notified.";
-                                }
-                            })
-                            .catch(function(jsonParseException) {
+                                    errorMessage = "Error: " + exception.toString() + " Received from service with " + fileName + " with size " + uploadAttributes.fileSize + ".";
+                                });
+                            } else {
                                 errorCode = "SERVICE_ERROR";
-                                errorMessage = "Unexpected response received from service: " + jsonParseException.toString();
-                            });
-                    } else {
+                                errorMessage = "Error: " + enginesisResponse.status.extended_info + " Received from service with " + fileName + " with size " + uploadAttributes.fileSize + ".";
+                            }
+                        } else {
+                            errorCode = "SERVICE_ERROR";
+                            errorMessage = "There was a service error during the upload operation. The support team has been notified.";
+                        }
+                    })
+                    .catch(function(jsonParseException) {
                         errorCode = "SERVICE_ERROR";
-                        errorMessage = "Unexpected response received from service when requesting upload token.";
-                    }
+                        errorMessage = "Unexpected response received from service: " + jsonParseException.toString();
+                    });
                 } else {
                     errorCode = "SERVICE_ERROR";
-                    errorMessage = "Error received from service when requesting upload token.";
+                    errorMessage = "Unexpected response received from service when requesting upload token.";
                 }
-                if (errorCode != "") {
-                    reject(makeErrorResponse(errorCode, errorMessage, parameters));
-                }
-            }, function (error) {
+            } else {
                 errorCode = "SERVICE_ERROR";
-                errorMessage = "Network error from service when requesting token. " + error.toString();
+                errorMessage = "Error received from service when requesting upload token.";
+            }
+            if (errorCode != "") {
                 reject(makeErrorResponse(errorCode, errorMessage, parameters));
-            })
-            .catch(function (exception) {
-                errorCode = "SERVICE_ERROR";
-                errorMessage = "Unexpected response received from service when requesting token with " + exception.toString() + ".";
-                reject(makeErrorResponse(errorCode, errorMessage, parameters));
-            });
+            }
+        }, function (error) {
+            errorCode = "SERVICE_ERROR";
+            errorMessage = "Network error from service when requesting token. " + error.toString();
+            reject(makeErrorResponse(errorCode, errorMessage, parameters));
+        })
+        .catch(function (exception) {
+            errorCode = "SERVICE_ERROR";
+            errorMessage = "Unexpected response received from service when requesting token with " + exception.toString() + ".";
+            reject(makeErrorResponse(errorCode, errorMessage, parameters));
+        });
     });
 }
 
@@ -2152,50 +2152,51 @@ function _completeFileUpload(uploadAttributes, fileData) {
         let errorCode = "";
         let errorMessage = "";
         fetch(enginesis.siteResources.assetUploadURL, fetchOptions)
-            .then(function (response) {
-                if (response && response.ok) {
-                    const contentType = response.headers.get("content-type");
-                    if (contentType && contentType.includes("application/json")) {
-                        response.json()
-                            .then(function(enginesisResponse) {
-                                if (enginesisResponse != null) {
-                                    if (enginesisResponse.status && enginesisResponse.status.success == "1") {
-                                        resolve(enginesisResponse);
-                                    } else {
-                                        errorCode = enginesisResponse.status.message;
-                                        errorMessage = enginesisResponse.status.extended_info;
-                                    }
-                                } else {
-                                    errorCode = "SERVICE_ERROR";
-                                    errorMessage = "There was a service error during the upload operation. The support team has been notified.";
-                                }
-                                if (errorCode != "") {
-                                    reject(makeErrorResponse(errorCode, errorMessage, parameters));
-                                }
-                            })
-                            .catch(function(jsonParseException) {
-                                errorCode = "SERVICE_ERROR";
-                                errorMessage = jsonParseException.toString();
-                                reject(makeErrorResponse(errorCode, errorMessage, parameters));
-                            });
-                    } else {
+        .then(function (response) {
+            if (response && response.ok) {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    response.json()
+                    .then(function(enginesisResponse) {
+                        if (enginesisResponse != null) {
+                            if (enginesisResponse.status && enginesisResponse.status.success == "1") {
+                                resolve(enginesisResponse);
+                            } else {
+                                errorCode = enginesisResponse.status.message;
+                                errorMessage = enginesisResponse.status.extended_info;
+                            }
+                        } else {
+                            errorCode = "SERVICE_ERROR";
+                            errorMessage = "There was a service error during the upload operation. The support team has been notified.";
+                        }
+                        if (errorCode != "") {
+                            reject(makeErrorResponse(errorCode, errorMessage, parameters));
+                        }
+                    })
+                    .catch(function(jsonParseException) {
                         errorCode = "SERVICE_ERROR";
-                        errorMessage = "Unexpected response received from service when requesting upload token.";
-                    }
+                        errorMessage = jsonParseException.toString();
+                        reject(makeErrorResponse(errorCode, errorMessage, parameters));
+                    });
                 } else {
                     errorCode = "SERVICE_ERROR";
-                    errorMessage = "Error received from service when requesting upload token.";
+                    errorMessage = "Unexpected response received from service when requesting upload token.";
                 }
-                if (errorCode != "") {
-                    reject(makeErrorResponse(errorCode, errorMessage, parameters));
-                }
-            }, function (error) {
-                errorMessage = "Network error from service when requesting token. " + error.toString();
-                reject(makeErrorResponse("SERVICE_ERROR", errorMessage, parameters));
-            }).catch(function (exception) {
-                errorMessage = "Unexpected response received from service when requesting token with " + exception.toString() + ".";
-                reject(makeErrorResponse("SERVICE_ERROR", errorMessage, parameters));
-            });
+            } else {
+                errorCode = "SERVICE_ERROR";
+                errorMessage = "Error received from service when requesting upload token.";
+            }
+            if (errorCode != "") {
+                reject(makeErrorResponse(errorCode, errorMessage, parameters));
+            }
+        }, function (error) {
+            errorMessage = "Network error from service when requesting token. " + error.toString();
+            reject(makeErrorResponse("SERVICE_ERROR", errorMessage, parameters));
+        })
+        .catch(function (exception) {
+            errorMessage = "Unexpected response received from service when requesting token with " + exception.toString() + ".";
+            reject(makeErrorResponse("SERVICE_ERROR", errorMessage, parameters));
+        });
     });
 }
 
@@ -2219,26 +2220,26 @@ async function encryptString (data, key) {
             true,
             ["encrypt", "decrypt"]
         )
-            .then(function(cryptoKey) {
-                const encoder = new TextEncoder();
-                window.crypto.subtle.encrypt(
-                    {
-                        name: encryptMethod,
-                        iv: stringToByteArray(key.substring(3, 16 + 3)),
-                    },
-                    cryptoKey,
-                    encoder.encode(data)
-                )
-                    .then(function(cipherData) {
-                        resolve(arrayBufferToBase64(cipherData));
-                    })
-                    .catch(function(exception) {
-                        reject(exception);
-                    });
+        .then(function(cryptoKey) {
+            const encoder = new TextEncoder();
+            window.crypto.subtle.encrypt(
+                {
+                    name: encryptMethod,
+                    iv: stringToByteArray(key.substring(3, 16 + 3)),
+                },
+                cryptoKey,
+                encoder.encode(data)
+            )
+            .then(function(cipherData) {
+                resolve(arrayBufferToBase64(cipherData));
             })
             .catch(function(exception) {
                 reject(exception);
             });
+        })
+        .catch(function(exception) {
+            reject(exception);
+        });
     });
 }
 
@@ -2260,27 +2261,27 @@ async function decryptString(encryptedData, key) {
             true,
             ["encrypt", "decrypt"]
         )
-            .then(function(cryptoKey) {
-                window.crypto.subtle.decrypt(
-                    {
-                        name: encryptMethod,
-                        iv: stringToByteArray(key.substring(3, 16 + 3)),
-                    },
-                    cryptoKey,
-                    base64ToArrayBuffer(encryptedData)
-                )
-                    .then(function(decryptedData) {
-                        const decoder = new TextDecoder();
-                        const clearData = decoder.decode(decryptedData);
-                        resolve(clearData);
-                    })
-                    .catch(function(exception) {
-                        reject(exception);
-                    });
+        .then(function(cryptoKey) {
+            window.crypto.subtle.decrypt(
+                {
+                    name: encryptMethod,
+                    iv: stringToByteArray(key.substring(3, 16 + 3)),
+                },
+                cryptoKey,
+                base64ToArrayBuffer(encryptedData)
+            )
+            .then(function(decryptedData) {
+                const decoder = new TextDecoder();
+                const clearData = decoder.decode(decryptedData);
+                resolve(clearData);
             })
             .catch(function(exception) {
                 reject(exception);
             });
+        })
+        .catch(function(exception) {
+            reject(exception);
+        });
     });
 }
 
@@ -2557,12 +2558,12 @@ export default {
     resume: function() {
         enginesis.isPaused = false;
         enginesisContext.sessionRefreshIfExpired()
-            .then(function(isRefreshed) {
-                debugLog("Session was " + (isRefreshed ? "refreshed" : "OK"));
-            })
-            .catch(function(exception) {
-                debugLog("Session sessionRefreshIfExpired exception " + exception.toString());
-            });
+        .then(function(isRefreshed) {
+            debugLog("Session was " + (isRefreshed ? "refreshed" : "OK"));
+        })
+        .catch(function(exception) {
+            debugLog("Session sessionRefreshIfExpired exception " + exception.toString());
+        });
     },
 
     /**
@@ -3233,30 +3234,30 @@ export default {
             if (sendAttributes.game_image) {
                 return new Promise(function(resolve) {
                     _requestFileUpload("gameshare", "game_image.png", sendAttributes.game_image)
+                    .then(function(enginesisResponse) {
+                        if (enginesisResponse.status && enginesisResponse.status.success == "1") {
+                            requestParameters.user_files = enginesisResponse.results.path + enginesisResponse.results.file;
+                        }
+                        sendRequest(service, requestParameters, overRideCallBackFunction)
                         .then(function(enginesisResponse) {
-                            if (enginesisResponse.status && enginesisResponse.status.success == "1") {
-                                requestParameters.user_files = enginesisResponse.results.path + enginesisResponse.results.file;
-                            }
-                            sendRequest(service, requestParameters, overRideCallBackFunction)
-                                .then(function(enginesisResponse) {
-                                    resolve(enginesisResponse);
-                                });
-                        }, function(enginesisResponse) {
-                            // there was an error uploading the file, should deal with it, but OK to continue
-                            debugLog("SendToFriend error " + enginesisResponse.toString() + " while uploading image, continuing anyway.");
-                            sendRequest(service, requestParameters, overRideCallBackFunction)
-                                .then(function(enginesisResponse) {
-                                    resolve(enginesisResponse);
-                                });
-                        })
-                        .catch(function(exception) {
-                            // there was an error uploading the file, should deal with it, but OK to continue
-                            debugLog("SendToFriend exception " + exception.toString() + " while uploading image, continuing anyway.");
-                            sendRequest(service, requestParameters, overRideCallBackFunction)
-                                .then(function(enginesisResponse) {
-                                    resolve(enginesisResponse);
-                                });
+                            resolve(enginesisResponse);
                         });
+                    }, function(enginesisResponse) {
+                        // there was an error uploading the file, should deal with it, but OK to continue
+                        debugLog("SendToFriend error " + enginesisResponse.toString() + " while uploading image, continuing anyway.");
+                        sendRequest(service, requestParameters, overRideCallBackFunction)
+                        .then(function(enginesisResponse) {
+                            resolve(enginesisResponse);
+                        });
+                    })
+                    .catch(function(exception) {
+                        // there was an error uploading the file, should deal with it, but OK to continue
+                        debugLog("SendToFriend exception " + exception.toString() + " while uploading image, continuing anyway.");
+                        sendRequest(service, requestParameters, overRideCallBackFunction)
+                        .then(function(enginesisResponse) {
+                            resolve(enginesisResponse);
+                        });
+                    });
                     // callbackPriority(enginesisResult, resolve, overRideCallBackFunction, enginesis.callBackFunction);
                 });
             } else {
@@ -3476,16 +3477,16 @@ export default {
             const sessionId = enginesis.sessionId;
             const safePayload = base64URLDecode(payload);
             decryptString(safePayload, sessionId)
-                .then(function(decryptedData) {
-                    if (decryptedData) {
-                        resolve(decryptedData);
-                    } else {
-                        reject(new Error("Not able to decrypt payload from service, verify your session agrees with the server."));
-                    }
-                })
-                .catch(function(exception) {
-                    reject(exception);
-                });
+            .then(function(decryptedData) {
+                if (decryptedData) {
+                    resolve(decryptedData);
+                } else {
+                    reject(new Error("Not able to decrypt payload from service, verify your session agrees with the server."));
+                }
+            })
+            .catch(function(exception) {
+                reject(exception);
+            });
         });
     },
 
@@ -3538,37 +3539,37 @@ export default {
             }
             if (errorCode == "") {
                 encryptScoreSubmit(enginesis.siteId, enginesis.loggedInUserInfo.user_id, gameId, level, score, gameData, timePlayed, sessionId)
-                    .then(function(submitString) {
-                        if (submitString) {
-                            sendRequest(
-                                service,
-                                {
-                                    data: base64URLEncode(submitString)
-                                },
-                                overRideCallBackFunction
-                            )
-                                .then(function(enginesisResult) {
-                                    resolve(enginesisResult);
-                                })
-                                .catch(function(exception) {
-                                    respondWithError(
-                                        "SYSTEM_ERROR",
-                                        "Exception encountered while exchanging score with server: " + exception.toString()
-                                    );
-                                });
-                        } else {
+                .then(function(submitString) {
+                    if (submitString) {
+                        sendRequest(
+                            service,
+                            {
+                                data: base64URLEncode(submitString)
+                            },
+                            overRideCallBackFunction
+                        )
+                        .then(function(enginesisResult) {
+                            resolve(enginesisResult);
+                        })
+                        .catch(function(exception) {
                             respondWithError(
                                 "SYSTEM_ERROR",
-                                "System error encountered while processing score submit."
+                                "Exception encountered while exchanging score with server: " + exception.toString()
                             );
-                        }
-                    })
-                    .catch(function(exception) {
+                        });
+                    } else {
                         respondWithError(
-                            "INVALID_PARAMETER",
-                            "Exception encountered while processing score submit: " + exception.toString()
+                            "SYSTEM_ERROR",
+                            "System error encountered while processing score submit."
                         );
-                    });
+                    }
+                })
+                .catch(function(exception) {
+                    respondWithError(
+                        "INVALID_PARAMETER",
+                        "Exception encountered while processing score submit: " + exception.toString()
+                    );
+                });
             } else {
                 respondWithError(
                     errorCode,
@@ -4023,10 +4024,10 @@ export default {
         const isFavorite = enginesis.favoriteGames.has(gameId);
         if (typeof callBackFunction === "function" && enginesis.favoriteGamesNextCheck < Date.now()) {
             enginesisContext.userFavoriteGamesList()
-                .then(function(enginesisResult) {
-                    // @todo: handle error from enginesisResult
-                    callBackFunction(gameId, enginesis.favoriteGames.has(gameId));
-                });
+            .then(function(enginesisResult) {
+                // @todo: handle error from enginesisResult
+                callBackFunction(gameId, enginesis.favoriteGames.has(gameId));
+            });
         }
         return isFavorite;
     },

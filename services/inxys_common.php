@@ -13,7 +13,7 @@ $allMenuPages = [
 ];
 $isLoggedIn = false;  // true when we have a user logged in
 $userId = 0;          // when logged in, this is the id of the logged in user
-$serverName = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'inxys-l.com');
+$serverName = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'inxys-l.net');
 $serverStage = '';    // One of our server stages: -l, -d, -q, -x. Empty for the production server.
 
 function isActivePage($pageId) {

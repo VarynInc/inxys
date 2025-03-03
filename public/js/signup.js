@@ -6,7 +6,7 @@ const enginesisParameters = {
     siteId: 109,
     gameId: 0,
     gameGroupId: 0,
-    serverStage: "enginesis.inxys-l.com",
+    serverStage: "enginesis.inxys-l.net",
     authToken: "",
     developerKey: "34A9EBE91B578504",
     languageCode: "en",
@@ -19,12 +19,14 @@ enginesis.init(enginesisParameters);
  */
 function onChangeUserName () {
     const element = document.getElementById("signup-username");
-    element.classList.remove("login-form-input-error");
-    if ( ! waitingForServerReply && element != null) {
+    if (element != null) {
+        element.classList.remove("login-form-input-error");
         const userName = element.value;
         if (userName && enginesis.isValidUserName(userName)) {
-            waitingForServerReply = true;
-            enginesis.userGetByName(userName, onChangeUserNameServerResponse);
+            if ( ! waitingForServerReply) {
+                waitingForServerReply = true;
+                enginesis.userGetByName(userName, onChangeUserNameServerResponse);
+            }
         } else {
             setUserNameIsUnique(false);
         }

@@ -27,7 +27,7 @@ let enginesisParameters = {
     siteId: 109,
     gameId: 0,
     gameGroupId: 0,
-    serverStage: "enginesis.inxys-l.com",
+    serverStage: "enginesis.inxys-l.net",
     authToken: "",
     developerKey: "34A9EBE91B578504",
     languageCode: "en",
