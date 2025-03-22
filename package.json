@@ -36,13 +36,13 @@
   "homepage": "https://github.com/VarynInc/inxys#readme",
   "devDependencies": {
     "async": "^3.2.6",
-    "axios": "^1.7.9",
+    "axios": "^1.8.4",
     "chalk": "^5.4.1",
     "cheerio": "^1.0.0",
-    "eslint": "^9.19.0",
+    "eslint": "^9.23.0",
     "fs-extra": "^11.3.0",
     "glob": "^11.0.1",
-    "imagemin": "^9.0.0",
+    "imagemin": "^9.0.1",
     "imagemin-gifsicle": "^7.0.0",
     "imagemin-jpegtran": "^8.0.0",
     "imagemin-pngquant": "^10.0.0",
@@ -55,8 +55,8 @@
     "path": "^0.12.7",
     "pretty-bytes": "^6.1.1",
     "rsync": "^0.6.1",
-    "shelljs": "^0.8.5",
-    "terser": "^5.37.0",
+    "shelljs": "^0.9.2",
+    "terser": "^5.39.0",
     "yargs": "^17.7.2"
   }
 }
