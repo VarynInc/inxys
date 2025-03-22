@@ -10,9 +10,15 @@ Any tasks that are specified fully and determined to be worked on should go to [
 🐛 - bug report
 🔴 - high priority
 
+zamb33ZEE4269&&
+
 - 🏓 Get Sign up working
-    - Load email notifications in database
+    - Load email notifications in database (regConfirm, systemMessage, forgotPassword, changePassword, securityUpdate, accountChange)
     - onchange handler for name must be valid and unique to remove class "login-form-input-error"
+
+Set error message:
+User name does not meet our requirements or it is already assigned to another user.
+
     - onchange handler for email must be valid and unique, to remove class "login-form-input-error"
     - onchange handler for password must be valid to remove class "login-form-input-error"
     - verify agreement

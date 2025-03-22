@@ -164,32 +164,24 @@ include(VIEWS_ROOT . 'page-header.php');
 <div class="container main-container">
     <h1>Sign up</h1>
     <?php if ($signupSuccessful) { ?>
-    <div class="row justify-content-md-center">
-        <div class="col col-md-4"></div>
-        <div class="col col-md-4 align-self-center login-form p-3">
+    <div class="row justify-content-center">
+        <div class="col-10 col-md-8 col-lg-6 align-self-center login-form p-3">
             <p>Welcome to the Information Exchange! Your registration was successful. In order to complete your registration,
             you will receive an email asking you to confirm your account. Your account is not active until you complete the email confirmation.</p>
             <p>Please check your email and use the link provided to complete your registration.</p>
         </div>
-        <div class="col col-md-4"></div>
     </div>
     <?php } else { ?>
-    <div class="row justify-content-md-center">
-        <div class="col col-md-4"></div>
-        <div class="col col-md-4 align-self-center">
+    <div class="row justify-content-center">
+        <div class="col-10 col-md-8 col-lg-6 align-self-center">
             <?php if ($signupErrorMessage != '') {
                 echo('<div class="modalMessageArea"><p class="text-error">' . $signupErrorMessage . '</p></div>');
             }
             include(VIEWS_ROOT . 'signup.php');?>
         </div>
-        <div class="col col-md-4"></div>
     </div>
-    <p>
-        Create an account for free. You get one public conference with your free account.
-    </p>
-    <p>
-        Already a member? <a class="btn btn-primary" href="/" role="button">Log in &raquo;</a>
-    </p>
+    <p>Create an account for free. You get one public conference with your free account.</p>
+    <p>Already a member? <a class="btn btn-primary" href="/" role="button">Log in &raquo;</a></p>
     <p>
         By registering you agree to the <a href="/terms/">Terms of Service</a>. We require a valid email address. Once you register
         you will receive an email asking you to confirm your email address. Your account is not active until you complete

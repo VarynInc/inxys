@@ -2,7 +2,7 @@
 include_once('../../services/inxys_common.php');
 $pageId = 'about';
 $pageTitle = 'About The Information Exchange';
-$pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.';
+$pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all.';
 $loggedIn = false;
 
 if ( ! $loggedIn) {

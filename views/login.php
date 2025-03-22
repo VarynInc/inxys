@@ -20,9 +20,13 @@ $rememberMeChecked = $rememberMe == 'on' ? 'checked' : '';
         <div class="form-group p-3">
             <button type="submit" class="btn btn-lg btn-success" value="loginButton" name="loginButton" id="loginButton" tabindex="19">Login</button>
             <input type="hidden" name="all-clear" value="<?php echo ($hackerVerification); ?>" />
-            <div>
-                <span id="rememberme-container"><input type="checkbox" tabindex="20" <?php echo($rememberMeChecked);?> name="rememberme" id="rememberme"><label for="rememberme">Remember Me</label></span>
-                <a id="loginPopup_forgot_password" href="/procs/forgotpass/" tabindex="21" style="float:right;">Forgot password?</a>
+            <div class="row">
+                <div class="col-6">
+                    <span id="rememberme-container"><input type="checkbox" tabindex="20" <?php echo($rememberMeChecked);?> name="rememberme" id="rememberme"><label for="rememberme">Remember Me</label></span>
+                </div>
+                <div class="col-6">
+                    <a id="loginPopup_forgot_password" href="/procs/forgotpass/" tabindex="21" style="float:right;">Forgot password?</a>
+                </div>
             </div>
             <input type="hidden" name="action" value="login" />
         </div>

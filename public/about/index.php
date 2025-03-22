@@ -2,7 +2,7 @@
 include_once('../../services/inxys_common.php');
 $pageId = 'about';
 $pageTitle = 'About The Information Exchange';
-$pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.';
+$pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all.';
 $loggedIn = false;
 
 if ( ! $loggedIn) {
@@ -17,8 +17,9 @@ include(VIEWS_ROOT . 'page-header.php');
 <div class="container main-container">
     <h1>About The Information Exchange</h1>
     <p>
-        Following up on the work of the Electronic Information Exchange System (EIES) of the mid-1970s to early 1990s, inXys presents a communication model that is uncommon on the Internet today. Many of today's information systems follow the simple forum model that lends to a free-for-all discussion format.
-        To offer an alternative to the forum model, inXys leverages what we had learned in our prior research of connectivity and information systems to create a better system.
+        Following up on the work of the Electronic Information Exchange System (EIES) of the mid-1970s to early 1990s, inXys presents a communication model that is uncommon on the Internet today.
+        Many of today's information systems follow the simple forum model that lends to a free-for-all discussion format, or the social feed model that games algorithmic delivery of content designed to spark reactive engagement.
+        To offer an alternative to these inferrior models, inXys leverages what we had learned researching human behavior in our prior research of connectivity and information systems to create a better system.
     </p>
     <p>
         The Information Exchange is a public forum, open to all, based on the work originally done by Murray Turoff and Starr Roxanne Hiltz on the
@@ -28,10 +29,10 @@ include(VIEWS_ROOT . 'page-header.php');
     </p>
     <h2>Mission Statement</h2>
     <blockquote><i>
-        Our mission is to facilitate the free exchange of ideas and a strong sense of community. We encourage diversity, inclusion, and respect for all.
+        Our mission is to facilitate the free exchange of ideas and a strong sense of community. We encourage inclusion, diversity, and respect for all.
     </i></blockquote>
     <p>
-        We respect all ideas, all opinions, no matter the source. However, we will filter out deliberate acts of harm and deceit, no matter who authors it. Review our <a href="/terms/" title="Terms of service">Terms of service</a> regarding our content policy.
+        We respect all ideas, all opinions, regardless of the source. All voices should be heard. However, we will filter out deliberate acts of harm and deceit, no matter who authors it. Review our <a href="/terms/" title="Terms of service">Terms of service</a> regarding our content policy.
     </p>
     <h2>Join us</h2>
     <p>

@@ -4,7 +4,7 @@ require_once('../services/strings.php');
 
 $pageId = 'home';
 $pageTitle = 'About The Information Exchange';
-$pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all.';
+$pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all.';
 $hackerVerification = '';
 $isLoggedIn = false;
 $loginErrorMessage = '';
@@ -31,39 +31,31 @@ if ($isLogInAttempt) {
     } else {
     ?>
     <div class="row justify-content-center">
-        <div class="col-8 p-3 banner-light rounded-3">
+        <div class="col-12 col-md-10 col-lg-8 banner-light rounded-3">
             <div class="row justify-content-center">
-                <div class="col-12">
-                    <h1><img src="/assets/inxys-logo-96.png" width="80" height="80"> The Information Exchange</h1>
+                <div class="col-12 hero-banner">
+                    <h1><img src="/assets/inxys-logo-96.png" class="hero-logo"> The Information Exchange</h1>
                 </div>
-                <div class="col-6">
+                <div class="col-10 col-lg-8">
                     <blockquote><i>
-                    To facilitate the free exchange of ideas
-                    and a strong sense of community.
-                    Encourage diversity, inclusion,
-                    and respect for all.
+                    To facilitate the free exchange of ideas and a strong sense of community.
+                    Encourage inclusion, diversity, and respect for all.
                     </i></blockquote>
                 </div>
             </div>
         </div>
     </div>
     <div class="row justify-content-md-center">
-        <div class="col col-md-4"></div>
-        <div class="col col-md-4 align-self-center">
+        <div class="col-sm-10 col-md-6 align-self-center">
             <?php if ($loginErrorMessage != '') {
                 echo('<div class="modalMessageArea"><p class="text-error">' . $loginErrorMessage . '</p></div>');
             }
             include(VIEWS_ROOT . 'login.php');?>
         </div>
-        <div class="col col-md-4"></div>
     </div>
     <div class="row justify-content-md-center">
-        <p>
-        Not a member? <a class="btn btn-lg btn-primary" href="/signup/" role="button">Join us &raquo;</a>
-        </p>
-        <p>
-            Create an account for free. You get one public conference with your free account.
-        </p>
+        <p>Not a member? <a class="btn btn-lg btn-primary" href="/signup/" role="button">Join us &raquo;</a></p>
+        <p>Create an account for free. You get one public conference with your free account.</p>
     </div>
     <?php
     }

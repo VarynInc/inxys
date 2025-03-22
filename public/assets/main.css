@@ -157,6 +157,12 @@ pre {
     padding: 0;
 }
 
+.hero-logo {
+    width: 80px;
+    height: 80px;
+    padding: 0.25rem;
+}
+
 .md-example {
     display: block;
     padding: 1.5em;
@@ -194,4 +200,15 @@ pre {
 }
 .popup-form-address-input {
     display: none;
+}
+
+@media (max-width: 768px) {
+    .hero-banner {
+        padding: 0;
+    }
+    .hero-logo {
+        width: 48px;
+        height: 48px;
+        padding: 0.125rem;
+    }
 }

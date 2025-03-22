@@ -14,11 +14,11 @@ include(VIEWS_ROOT . 'page-header.php');
 <div id="section-inxys">
   <h3>inxys</h3>
   <ul>
-<li><a href="/">About The Information Exchange</a> The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all. </li>
+<li><a href="/">About The Information Exchange</a> The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all. </li>
 
-<li><a href="/about/">About The Information Exchange</a> The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all. </li>
+<li><a href="/about/">About The Information Exchange</a> The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all. </li>
 
-<li><a href="/contact/">About The Information Exchange</a> The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage diversity, inclusion, and respect for all. </li>
+<li><a href="/contact/">About The Information Exchange</a> The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all. </li>
 
 <li><a href="/privacy/">Privacy policy | inXys.net</a> Privacy policy for inXys.net </li>
 
