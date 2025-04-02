@@ -17,7 +17,7 @@
     "use strict";
 
     var commonUtilities = {
-        version: "1.7.1"
+        version: "1.7.2"
     };
     var _base64KeyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
     var _testNumber = 0;
@@ -398,7 +398,7 @@
 
     /**
      * Coerce a value to its boolean equivalent, causing the value to be interpreted as its
-     * boolean intention. This works very different that the JavaScript coercion. For example,
+     * boolean intention. This works very different than the JavaScript coercion. For example,
      * "0" == true and "false" == true in JavaScript but here "0" == false and "false" == false.
      * @param {*} value A value to test.
      * @returns {boolean} `true` if `value` is considered a coercible true value.
@@ -1156,6 +1156,24 @@
         );
     };
 
+    commonUtilities.shareOnBsky = function (message, url, related, hashTags) {
+        let shareMessage = "text=" + encodeURIComponent(message);
+        if (url && url != "") {
+            shareMessage += encodeURIComponent(url);
+        }
+        if (related && related != "") {
+            shareMessage += encodeURIComponent(related);
+        }
+        if (hashTags && hashTags != "") {
+            shareMessage += encodeURIComponent(hashTags);
+        }
+        window.open(
+            "https://bsky.app/intent/compose?" + shareMessage,
+            "_share",
+            "toolbar=no,status=0,width=626,height=436"
+        );
+    };
+
     commonUtilities.shareByEmail = function (title, message, url) {
         let shareMessage;
         if (url && url != "") {
@@ -1340,12 +1358,14 @@
     };
 
     /**
-     * Determine if a string looks like a valid email address.
+     * Determine if a string looks like a valid email address. This is a simple sanity test,
+     * must be in the form of "something @ something . something".
+     * Old version: return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
      * @param {string} email String to expect an email address
      * @returns {boolean} true if we think it is a valid email address.
      */
     commonUtilities.isValidEmail = function(email) {
-        return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
+        return /\S+@\S+\.\S+/.test(email);
     };
 
     /**

@@ -1693,7 +1693,7 @@ class Enginesis {
         if (! isset($lastErrorCode) || $lastErrorCode === null) {
             $lastErrorCode = $this->m_lastError;
         }
-        return $lastErrorCode != null && $this->m_lastError['message'] != EnginesisErrors::NO_ERROR;
+        return $lastErrorCode != null && $lastErrorCode['success'] == 0 && $lastErrorCode['message'] != EnginesisErrors::NO_ERROR;
     }
 
     /**
@@ -2186,16 +2186,18 @@ class Enginesis {
         $enginesisResponse = $this->callServerAPI($service, $parameters);
         $results = $this->setLastErrorFromResponse($enginesisResponse);
         if (is_array($results) && count($results) > 0) {
-            $userInfoResult = $results[0];
-            $cr = $userInfoResult->cr;
-            // @todo: Verify hash to make sure payload was not tampered
-            $user_id = $userInfoResult->user_id;
-            $secondary_password = $userInfoResult->secondary_password;
             // @todo: Server sends the user an email with user_id+secondary_password to complete/confirm registration. If this site auto-confirms user registration,
             // then we should log the user in automatically now. We know this because the server gives us authtok when we are to do this.
-            if (isset($userInfoResult->authtok)) {
+            $userInfoResult = $results[0];
+            if (isset($userInfoResult->cr) && isset($userInfoResult->authtok)) {
+                // user is automatically logged in
+                $cr = $userInfoResult->cr;
+                // @todo: Verify hash to make sure payload was not tampered
                 $this->sessionSave($userInfoResult->authtok, $userInfoResult->user_id, $userInfoResult->user_name, $userInfoResult->site_user_id, $userInfoResult->network_id, $userInfoResult->access_level, EnginesisNetworks::Enginesis);
                 $this->sessionUserInfoSave($userInfoResult);
+            } else {
+                $user_id = $userInfoResult->user_id;
+                $secondary_password = $userInfoResult->secondary_password;
             }
         } else {
             $userInfoResult = null;

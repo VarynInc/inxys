@@ -11,7 +11,7 @@
  **/
 
 const enginesis = {
-    VERSION: "2.12.3",
+    VERSION: "2.12.5",
     debugging: true,
     disabled: false, // use this flag to turn off communicating with the server
     isOnline: true,  // flag to determine if we are currently able to reach Enginesis servers
@@ -70,7 +70,8 @@ const enginesis = {
         Facebook:  2,
         Google:    7,
         Twitter:  11,
-        Apple:    14
+        Apple:    14,
+        bsky:     15
     }
 };
 let enginesisContext = null;
@@ -2609,28 +2610,25 @@ export default {
      * provided by users, this helps determine if a proposed user name would be rejected by the server before sending it.
      * User name requirements are:
      * - no less than 3 and no more than 50 characters
+     * - no leading or trailing space
      * - letters and numbers
-     * - Specials allowed are @, $, !, ~, ., -, space
+     * - specials allowed are ', @, $, !, ~, ., -, space
      * @param {string} userName User name to check.
      * @returns {boolean} True if considered valid.
      */
     isValidUserName: function (userName) {
-        let isValid;
-        if (typeof userName !== "string") {
-            isValid = false;
-        } else {
-            isValid = (userName.length == userName.trim().length) && userName.match(/^[a-zA-Z0-9_@!~\$\.\-\|\s]{3,50}$/) !== null;
-        }
-        return isValid;
+        return typeof(userName) == "string" && userName.trim().length == userName.length && /^[a-zA-Z0-9_@!~\$\.\-\|\'\s?]{3,50}$/.test(userName);
     },
 
     /**
-     * Determine if a string looks like a valid email address.
+     * Determine if a string looks like a valid email address. This is a simple sanity test,
+     * must be in the form of "something @ something . something".
+     * Old version: return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
      * @param {string} email String to expect an email address
      * @returns {boolean} true if we think it is a valid email address.
      */
-    isValidEmail: function (email) {
-        return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
+    isValidEmail: function(email) {
+        return /\S+@\S+\.\S+/.test(email);
     },
 
     /**
@@ -3647,26 +3645,26 @@ export default {
         return sendRequest("RegisteredUserCreate", {
             site_id: enginesis.siteId,
             user_name: userName,
-            site_user_id: siteUserId,
-            network_id: networkId,
             real_name: realName,
-            password: password,
             dob: dateOfBirth,
             gender: gender,
+            email_address: email,
             city: city,
             state: state,
             zipcode: zipcode,
-            email_address: email,
             country_code: countryCode,
             mobile_number: mobileNumber,
             im_id: imId,
-            agreement: agreement,
-            security_question_id: securityQuestionId,
-            security_answer: securityAnswer,
             img_url: imgUrl,
             about_me: aboutMe,
             tagline: tagline,
             additional_info: additionalInfo,
+            site_user_id: siteUserId,
+            network_id: networkId,
+            agreement: agreement,
+            password: password,
+            security_question_id: securityQuestionId,
+            security_answer: securityAnswer,
             source_site_id: sourceSiteId,
             captcha_id: isEmpty(captchaId) ? enginesis.captchaId : captchaId,
             captcha_response: isEmpty(captchaResponse) ? enginesis.captchaResponse : captchaResponse
@@ -3677,23 +3675,23 @@ export default {
         return sendRequest("RegisteredUserUpdate", {
             site_id: enginesis.siteId,
             user_id: enginesis.userId,
-            captcha_id: isEmpty(captchaId) ? enginesis.captchaId : captchaId,
-            captcha_response: isEmpty(captchaResponse) ? enginesis.captchaResponse : captchaResponse,
             user_name: userName,
             real_name: realName,
             dob: dateOfBirth,
             gender: gender,
+            email_address: email,
             city: city,
             state: state,
             zipcode: zipcode,
-            email_address: email,
             country_code: countryCode,
             mobile_number: mobileNumber,
             im_id: imId,
             img_url: imgUrl,
             about_me: aboutMe,
             tagline: tagline,
-            additional_info: additionalInfo
+            additional_info: additionalInfo,
+            captcha_id: isEmpty(captchaId) ? enginesis.captchaId : captchaId,
+            captcha_response: isEmpty(captchaResponse) ? enginesis.captchaResponse : captchaResponse,
         }, overRideCallBackFunction);
     },
 
