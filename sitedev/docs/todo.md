@@ -29,6 +29,7 @@ User name does not meet our requirements or it is already assigned to another us
     - regconfirm call back
     - add Send Again button on sign up complete page
     - add Send Again on login page if log in but unconfirmed ** Do also for Varyn
+- 🟦 Log in, verify correct account match, set login cookie
 - 🟦 Log in, add show password
 - 🟦 Log in, rememberme sets cookie
 - 🟦 forgot password form
