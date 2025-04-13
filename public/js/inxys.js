@@ -2,7 +2,7 @@
  * JavaScript client-side functionality for inXys website.
  */
 export const inxys = {
-    version: "3.1.14",
+    version: "3.1.15",
     siteConfiguration: {
         debug: true,
         originWhiteList: ["inxys.net", "www.inxys.net", "enginesis.inxys.net", "inxys-q.net", "www.inxys-q.net", "inxys-d.net", "www.inxys-d.net", "enginesis.inxys-d.net", "enginesis.inxys-q.net", "inxys-l.net", "enginesis.inxys-l.net"],

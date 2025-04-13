@@ -30,7 +30,7 @@ include(VIEWS_ROOT . 'page-header.php');
   <ul>
 <li><a href="/conf/">inXys Conferences</a> The Information Exchange is a discussion forum to exchange ideas </li>
 
-<li><a href="/profile/"></a> undefined</li>
+<li><a href="/profile/">Profile</a> View your profile or review other followers and users at inxys.net. </li>
   </ul>
 </div>
 </div>
