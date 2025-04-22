@@ -10,7 +10,7 @@
 *   update: change profile data for the current logged in user.
 *   resetpassword: The current logged in user requested a Password Reset, initiate the forgot password flow.
 *   resendconfirm: A user needs the registration confirmation form resent (lost it or it expired.)
-*   regconfirm: Handle a redirect from regconfirm.php so we can display the error message.
+*   regconfirm: Handle a redirect from regconfirm.php so we can display the error message or complete the log in.
 *   view: show the public profile of a specified user.
 */
 include_once('../../services/inxys_common.php');
@@ -35,7 +35,8 @@ if ($action == 'regconfirm') {
         $isValidSession = verifySessionIsValid($userId, $authToken);
         $isLoggedIn = true;
         $authToken = $userInfo->authtok;
-        $refreshToken = $userInfo->refreshToken;
+        $refreshToken = $userInfo->refresh_token;
+        $refreshTokenExpires = $userInfo->expires;
         $userId = $userInfo->user_id;
         $enginesis->userLoginRefresh();
     } else {
@@ -54,7 +55,8 @@ include(VIEWS_ROOT . 'page-header.php');
 <div id="user-profile" class="card m-2 p-4">
     <?php
     if ($redirectedStatusMessage != '') {
-        echo ('<div class="card text-bg-danger"><div class="card-body"><p class="card-text">' . $redirectedStatusMessage . '</p></div></div>');
+        $panelClass = $code == 'SUCCESS' ? 'text-bg-success' : 'text-bg-danger';
+        echo ('<div class="card ' . $panelClass . '"><div class="card-body"><p class="card-text">' . $redirectedStatusMessage . '</p></div></div>');
     }
     if ($debug) {
         echo ("<h3>Debug info:</h3>");

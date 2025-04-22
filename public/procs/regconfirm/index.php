@@ -23,8 +23,7 @@ if ($site_id == ENGINESIS_SITE_ID && isValidId($user_id) && ! empty($token)) {
     if ($serverResponse == null) {
         $errorCode = $enginesis->getLastErrorCode();
     } else {
-        $errorCode = 'SUCCESS';
-        $errorCode .= '&u=' . $user_id . '&t=' . $token;
+        $errorCode = 'SUCCESS&u=' . $user_id . '&t=' . $token;
     }
 } else {
     $errorCode = 'INVALID_PARAM';
