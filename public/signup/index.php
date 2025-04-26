@@ -20,10 +20,8 @@ function handleSignUpAttempt() {
     global $enginesis;
     global $stringTable;
 
-    $signUp = getPostVar('signupButton', '');
     $action = getPostVar('action', '');
     $hackerToken = getPostVar('all-clear', '');
-    $login = getPostVar('loginButton', null);
     $hackerToken = getPostVar('all-clear', '');
     $isSignUpAttempt = false;
     $isLoggedIn = false;
@@ -32,7 +30,7 @@ function handleSignUpAttempt() {
     $rememberMe = false;
     $userInfo = [];
 
-    if ($signUp != null && $action == 'signup' && validateInputFormHackerToken($hackerToken)) {
+    if ($action == 'signup' && validateInputFormHackerToken($hackerToken)) {
         $isSignUpAttempt = true;
         if ($errorMessage == '') {
             // user name must be valid and unique
@@ -136,6 +134,7 @@ function handleSignUpAttempt() {
             }
         }
     } else {
+        $isSignUpAttempt = $action == 'signup';
         $errorMessage = $stringTable->lookup(EnginesisUIStrings::REG_INFO_INCOMPLETE);
         $errorParameter = 'signup-username';
     }
@@ -156,7 +155,6 @@ if ($isSignUpAttempt) {
         $signupSuccessful = true;
     }
 }
-
 include(VIEWS_ROOT . 'page-header.php');
 ?>
 <body>
@@ -173,7 +171,7 @@ include(VIEWS_ROOT . 'page-header.php');
     </div>
     <?php } else { ?>
     <div class="row justify-content-center">
-        <div class="col-10 col-md-8 col-lg-6 align-self-center">
+        <div id="signup-form-container" class="col-10 col-md-8 col-lg-6 align-self-center">
             <?php if ($signupErrorMessage != '') {
                 echo('<div class="modalMessageArea"><p class="text-error">' . $signupErrorMessage . '</p></div>');
             }
@@ -207,5 +205,16 @@ if ($isSignUpAttempt) {
 }
 ?>
 <script src="/js/signup.js" type="module"></script>
+<script>
+    const signUpErrors = {
+        "REGISTRATION_INVALID": "<?php echo($stringTable->lookup(EnginesisUIStrings::REGISTRATION_INVALID));?>",
+        "REGISTRATION_INVALID_PASSWORD": "<?php echo($stringTable->lookup(EnginesisUIStrings::REGISTRATION_INVALID_PASSWORD));?>",
+        "REGISTRATION_EMAIL_IN_USE": "<?php echo($stringTable->lookup(EnginesisUIStrings::REGISTRATION_EMAIL_IN_USE));?>",
+        "REGISTRATION_NAME_IN_USE":  "<?php echo($stringTable->lookup(EnginesisUIStrings::REGISTRATION_NAME_IN_USE));?>",
+        "INVALID_EMAIL": "<?php echo($stringTable->lookup(EnginesisUIStrings::INVALID_EMAIL));?>",
+        "REGISTRATION_TOS": "<?php echo($stringTable->lookup(EnginesisUIStrings::REGISTRATION_TOS));?>",
+        "REGISTRATION_INCOMPLETE": "<?php echo($stringTable->lookup(EnginesisUIStrings::REGISTRATION_INCOMPLETE));?>"
+    };
+</script>
 </body>
 </html>

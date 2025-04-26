@@ -15,6 +15,7 @@ services/serverConfig.php
 bin/deploy-config.json
 dist/
 distrib/
+public/js/enginesisConfig.js
 
 # Other temp files and folders
 .idea/
