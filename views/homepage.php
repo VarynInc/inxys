@@ -3,7 +3,7 @@
     if ( ! empty($loginErrorMessage)) {
         echo($loginErrorMessage);
     } elseif (isset($userInfo)) {
-        echo('<h3>' . $userInfo->real_name . ' (' . $userInfo->user_name . ', ' . $userInfo->user_id . ')</h3>');
+        echo('<h3>' . formattedUserName($userInfo) . '</h3>');
     }
     ?>
     User profile card

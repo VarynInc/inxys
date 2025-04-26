@@ -9,16 +9,37 @@ $allMenuPages = [
     ['id' => 'home', 'name' => 'Home', 'path' => '/'],
     ['id' => 'conferences', 'name' => 'Conferences', 'path' => '/conf/'],
     ['id' => 'users', 'name' => 'Users', 'path' => '/users/'],
-    ['id' => 'profile', 'name' => 'Profile', 'path' => 'profile.php']
+    ['id' => 'profile', 'name' => 'Profile', 'path' => '/profile/']
 ];
-$isLoggedIn = false;  // true when we have a user logged in
-$userId = 0;          // when logged in, this is the id of the logged in user
+$userInfo = restoreLoggedInUser();
+$isLoggedIn = $userInfo != null;
+$userId = $isLoggedIn ? $userInfo->user_id : 0;
 $serverName = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'inxys-l.net');
 $serverStage = '';    // One of our server stages: -l, -d, -q, -x. Empty for the production server.
 
+/**
+ * Determine if the requested page is the current active page.
+ * @param String A page id to check (see global $allMenuPages array)
+ * @return Boolean True if the requested page is considered active.
+ */
 function isActivePage($pageId) {
     global $allMenuPages;
     return in_array($pageId, $allMenuPages) ? 'active' : '';
+}
+
+/**
+ * If no user is logged in then redirect to the indicated page.
+ * @param String A page to redirect to. If not provided then redirect to the home page.
+ */
+function redirectIfNotLoggedIn($page) {
+    global $isLoggedIn;
+    if ( ! $isLoggedIn) {
+        if (empty($page)) {
+            $page = '/';
+        }
+        header('location: ' . $page);
+        exit(9);
+    }
 }
 
 /**
@@ -81,7 +102,7 @@ function handleLoginAttempt($userName, $password, $rememberMe) {
             }
         } else {
             $isLoggedIn = true;
-            $errorMessage = "<p class=\"text-success\"> You are logged in as $userInfo->user_name ($userInfo->user_id).</p>";
+            $errorMessage = "<p class=\"text-success\"> You are logged in as " . formattedUserName($userInfo) . ".</p>";
             $errorParameter = 'login-password';
         }
     }
@@ -132,4 +153,12 @@ function checkEmailUnique($email) {
         $isUnique = false;
     }
     return $isUnique;
+}
+
+function formattedUserName($userInfo) {
+    if ($userInfo) {
+        return $userInfo->real_name . ' (' . $userInfo->user_name . ', ' . $userInfo->user_id . ')';
+    } else {
+        return 'Anonymous (anon, 0)';
+    }
 }

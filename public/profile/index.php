@@ -45,6 +45,10 @@ if ($action == 'regconfirm') {
         $linkToResendToken = createResendConfirmEmailLink($code, $user_user_id, $userName, '', $confirmation_token);
         $redirectedStatusMessage = errorToLocalString($code);
     }
+} elseif ($action == 'signout') {
+    $enginesis->userLogout();
+    header("location: /");
+    exit();
 }
 
 include(VIEWS_ROOT . 'page-header.php');
@@ -61,9 +65,22 @@ include(VIEWS_ROOT . 'page-header.php');
     if ($debug) {
         echo ("<h3>Debug info:</h3>");
     }
+    if ($isLoggedIn) {
+    ?>
+    <h1><?php echo(formattedUserName($userInfo));?></h1>
+    <a class="btn btn-lg btn-success" href="/profile/edit/" role="button">Edit profile &raquo;</a>
+    <a class="btn btn-lg btn-info" href="/scratchpad/" role="button">Enter scratchpad</a>
+    <a class="btn btn-lg btn-primary" href="/profile/?action=signout" role="button">Log out</a>
+    <?php
+    } else {
     ?>
     <h1>User profile</h1>
     <p>Create an account for free. You get one public conference with your free account.</p>
+    <p>Have an account? <a class="btn btn-lg btn-success" href="/" role="button">Log in &raquo;</a></p>
+    <p>Not a member? <a class="btn btn-lg btn-primary" href="/signup/" role="button">Join us &raquo;</a></p>
+    <?php
+    }
+    ?>
 </div>
 <?php include(VIEWS_ROOT . 'footer.php');?>
 </body>

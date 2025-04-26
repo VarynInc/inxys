@@ -6,15 +6,11 @@ $pageId = 'home';
 $pageTitle = 'About The Information Exchange';
 $pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all.';
 $hackerVerification = '';
-$isLoggedIn = false;
 $isLogInAttempt = false;
 $loginErrorMessage = '';
 $errorParameter = '';
 include(VIEWS_ROOT . 'page-header.php');
-$userInfo = restoreLoggedInUser();
-if ($userInfo != null) {
-    $isLoggedIn = true;
-} else {
+if ( ! $isLoggedIn) {
     $loginResult = handleLoginAttempt(getPostVar('login-username'), getPostVar('login-password'), valueToBoolean(getPostVar('rememberme', false)));
     $isLogInAttempt = $loginResult['isLogInAttempt'];
     if ($isLogInAttempt) {
