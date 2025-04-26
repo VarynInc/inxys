@@ -1,6 +1,10 @@
 <?php /* Sign up to register a new inXys account */
 include_once('../../services/inxys_common.php');
 include_once('../../services/strings.php');
+if ($isLoggedIn) {
+    header('location: /profile/');
+    exit(9);
+}
 $pageId = 'signup';
 $pageTitle = 'Create your inXys account';
 $signupErrorMessage = '';

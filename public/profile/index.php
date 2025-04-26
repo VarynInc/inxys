@@ -69,7 +69,7 @@ include(VIEWS_ROOT . 'page-header.php');
     ?>
     <h1><?php echo(formattedUserName($userInfo));?></h1>
     <a class="btn btn-lg btn-success" href="/profile/edit/" role="button">Edit profile &raquo;</a>
-    <a class="btn btn-lg btn-info" href="/scratchpad/" role="button">Enter scratchpad</a>
+    <a class="btn btn-lg btn-info" href="/profile/scratchpad/" role="button">Enter scratchpad</a>
     <a class="btn btn-lg btn-primary" href="/profile/?action=signout" role="button">Log out</a>
     <?php
     } else {

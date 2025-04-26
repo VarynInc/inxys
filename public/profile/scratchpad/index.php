@@ -1,6 +1,7 @@
 <?php
-include_once('../../services/inxys_common.php');
-$pageId = 'scratchpad';
+include_once('../../../services/inxys_common.php');
+$pageId = 'profile';
+$pageSubId = 'scratchpad';
 $pageTitle = 'Scratchpad';
 $hackerVerification = '';
 include(VIEWS_ROOT . 'page-header.php');
