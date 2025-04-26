@@ -14,7 +14,6 @@ $signupSuccessful = false;
  *   - `isLoggedIn`: true if the user is registered and we logged them is.
  *   - `errorMessage`: If a sign up attempt failed this is the reason.
  *   - `errorParameter`: If the sign up attempt failed this is the input field we didn't like.
- *   - `rememberUser`: true if the user checked the Remember Me checkbox.
  */
 function handleSignUpAttempt() {
     global $enginesis;
@@ -27,7 +26,6 @@ function handleSignUpAttempt() {
     $isLoggedIn = false;
     $errorMessage = '';
     $errorParameter = '';
-    $rememberMe = false;
     $userInfo = [];
 
     if ($action == 'signup' && validateInputFormHackerToken($hackerToken)) {
@@ -82,7 +80,6 @@ function handleSignUpAttempt() {
                 $userInfo['agreement'] = 1;
             }
         }
-        $rememberMe = getPostVar('rememberme', '') == 'on';
         if ($errorMessage == '') {
             $userInfo['dob'] = '2010-01-01';
             $userInfo['gender'] = 'U';
@@ -142,8 +139,7 @@ function handleSignUpAttempt() {
         'isSignUpAttempt' => $isSignUpAttempt,
         'isLoggedIn' => $isLoggedIn,
         'errorMessage' => $errorMessage,
-        'errorParameter' => $errorParameter,
-        'rememberUser' => $rememberMe
+        'errorParameter' => $errorParameter
     ];
 }
 $signUpResult = handleSignUpAttempt();

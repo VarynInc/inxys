@@ -12,6 +12,10 @@ Any tasks that are specified fully and determined to be worked on should go to [
 
 zamb33ZEE4269&&
 
+- 🟦 Log in, verify correct account match (cr), set login cookie
+- 🟦 Log in, rememberme sets cookie
+- ✅ Log in, add show password
+
 - 🏓 Get Sign up working
     - Load email notifications in database (regConfirm, systemMessage, forgotPassword, changePassword, securityUpdate, accountChange)
     - onchange handler for name must be valid and unique to remove class "login-form-input-error"
@@ -29,9 +33,6 @@ User name does not meet our requirements or it is already assigned to another us
     - regconfirm call back
     - add Send Again button on sign up complete page
     - add Send Again on login page if log in but unconfirmed ** Do also for Varyn
-- 🟦 Log in, verify correct account match, set login cookie
-- 🟦 Log in, add show password
-- 🟦 Log in, rememberme sets cookie
 - 🟦 forgot password form
 
 - 🟦 Menu not logged in: Home (sign in/sign up), Conferences (Public), Users (public), Sign up, Search, About

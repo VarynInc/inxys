@@ -39,15 +39,23 @@ function createResendConfirmEmailLink($errorCode, $userId, $userName, $email, $c
     }
 }
 
+function restoreLoggedInUser() {
+    global $enginesis;
+    return $enginesis->getLoggedInUserInfo();
+}
+
 /**
  * Check if this is a login attempt and if so validate the user.
+ * @param String User name to log in.
+ * @param String User's password.
+ * @param Boolean True to remember the user login session on this device.
  * @return Array A key value array with the following:
  * - isLogInAttempt: true if this looks like an attempt to log in.
  * - isLoggedIn: true if the user was successfully logged in.
  * - errorMessage: A non-empty string when a log in error occurred and isLogInAttempt is true and isLoggedIn is false
  * - errorParameter: Which form field was the source the error.
  */
-function handleLoginAttempt() {
+function handleLoginAttempt($userName, $password, $rememberMe) {
     global $enginesis;
     global $stringTable;
     $login = getPostVar('loginButton', null);
@@ -60,9 +68,6 @@ function handleLoginAttempt() {
     if ($login != null && validateInputFormHackerToken($hackerToken)) {
         $isLogInAttempt = true;
         // User issued a login request we expect user-name and password
-        $userName = getPostVar('login-username');
-        $password = getPostVar('login-password');
-        $rememberMe = valueToBoolean(getPostVar('rememberme', false));
         $userInfo = $enginesis->userLogin($userName, $password);
         if ($userInfo == null) {
             $error = $enginesis->getLastError();
@@ -76,14 +81,7 @@ function handleLoginAttempt() {
             }
         } else {
             $isLoggedIn = true;
-            $cr = $userInfo->cr;
-            // @todo: Verify hash matches, otherwise we should not trust this info.
-            $authToken = $userInfo->authtok;
-            $refreshToken = $userInfo->refresh_token;
-            $tokenExpires = $userInfo->expires;
-            $sessionExpires = $userInfo->session_expires;
-            $userId = $userInfo->user_id;
-            $errorMessage = "<p class=\"text-error\"> You are logged in as $userId $userInfo->username </p>";
+            $errorMessage = "<p class=\"text-success\"> You are logged in as $userInfo->user_name ($userInfo->user_id).</p>";
             $errorParameter = 'login-password';
         }
     }

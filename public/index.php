@@ -7,20 +7,26 @@ $pageTitle = 'About The Information Exchange';
 $pageDescription = 'The Information Exchange: To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all.';
 $hackerVerification = '';
 $isLoggedIn = false;
+$isLogInAttempt = false;
 $loginErrorMessage = '';
 $errorParameter = '';
 include(VIEWS_ROOT . 'page-header.php');
-$loginResult = handleLoginAttempt();
-$isLogInAttempt = $loginResult['isLogInAttempt'];
-if ($isLogInAttempt) {
-    if ($loginResult['isLoggedIn']) {
-        $loginErrorMessage = "You are logged in!";
-    } else {
-        $loginErrorMessage = $loginResult['errorMessage'];
-        $errorParameter = 'login-username';
+$userInfo = restoreLoggedInUser();
+if ($userInfo != null) {
+    $isLoggedIn = true;
+} else {
+    $loginResult = handleLoginAttempt(getPostVar('login-username'), getPostVar('login-password'), valueToBoolean(getPostVar('rememberme', false)));
+    $isLogInAttempt = $loginResult['isLogInAttempt'];
+    if ($isLogInAttempt) {
+        if ($loginResult['isLoggedIn']) {
+            $loginErrorMessage = 'You are logged in! ' . $loginResult['errorMessage'];
+            $isLoggedIn = true;
+        } else {
+            $loginErrorMessage = $loginResult['errorMessage'];
+            $errorParameter = 'login-username';
+        }
     }
 }
-
 ?>
 <body>
 <?php include(VIEWS_ROOT . 'top-nav.php');?>

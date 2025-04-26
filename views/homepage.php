@@ -1,4 +1,11 @@
 <div>
+    <?php
+    if ( ! empty($loginErrorMessage)) {
+        echo($loginErrorMessage);
+    } elseif (isset($userInfo)) {
+        echo('<h3>' . $userInfo->real_name . ' (' . $userInfo->user_name . ', ' . $userInfo->user_id . ')</h3>');
+    }
+    ?>
     User profile card
 </div>
 <div>

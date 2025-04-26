@@ -17,6 +17,7 @@ $enginesis_strings_en = [
     EnginesisUIStrings::REGISTRATION_TOS => 'You must agree to the terms of service in order to register for an account.',
     EnginesisUIStrings::SECURITY_ERRORS_FIELDS => 'Incorrect values in your security information. Please check your entry and try again.',
     EnginesisUIStrings::MUST_BE_LOGGED_IN => 'You must be logged in to use this feature.',
+    EnginesisUIStrings::LOGIN_HASH_MISMATCH => 'Something went wrong with your attempt to log in. Please sign in again.',
     EnginesisUIStrings::REG_INFO_UPDATED => 'Your profile has been updated.',
     EnginesisUIStrings::PROFILE_PAGE_SALUTATION => 'Welcome',
     EnginesisUIStrings::REDIRECT_CONFIRM_MESSAGE => 'Your registration confirmation email has been resent. Please check your email.',

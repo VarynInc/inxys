@@ -38,7 +38,6 @@ $rememberMeChecked = $rememberMe == 'on' ? 'checked' : '';
             <input type="hidden" name="action" value="signup" />
         </div>
         <div class="text-center">
-            <span id="rememberme-container" style="padding: 0 1rem;"><input type="checkbox" tabindex="22" <?php echo($rememberMeChecked);?> name="rememberme" id="rememberme"><label for="rememberme">&nbsp;&nbsp;Remember Me</label></span>
             <a href="/terms/" target="_new" class="right" tabindex="23">Terms of service</a> |
             <a href="/privacy/" target="_new" class="right" tabindex="24">Privacy policy</a>
         </div>

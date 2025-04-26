@@ -188,7 +188,7 @@ class Enginesis {
     function valueToBoolean($variable) {
         if (is_string($variable)) {
             $variable = strtoupper($variable);
-            $result =  $variable == '1' || $variable == 'Y' || $variable == 'T' || $variable == 'YES' || $variable == 'TRUE' || $variable == 'CHECKED';
+            $result =  $variable == '1' || $variable == 'Y' || $variable == 'T' || $variable == 'YES' || $variable == 'TRUE' || $variable == 'CHECKED' || $variable == 'ON';
         } elseif (is_numeric($variable)) {
             $result = ! ! $variable;
         } else {
@@ -1038,7 +1038,7 @@ class Enginesis {
      * Generate a time stamp for the current time rounded to the nearest SESSION_DAYSTAMP_HOURS hour.
      * @return int
      */
-    private function sessionDayStamp() {
+    public function sessionDayStamp() {
         return floor(time() / (SESSION_DAYSTAMP_HOURS * 60 * 60)); // good for SESSION_DAYSTAMP_HOURS hours
     }
 
@@ -1061,6 +1061,62 @@ class Enginesis {
      */
     private function sessionMakeId() {
         return md5($this->m_developerKey . '' . $this->sessionDayStamp() . '' . $this->m_userId . '' . $this->m_gameId);
+    }
+
+    /**
+     * Create a session hash that serves as a one-way hash to uniquely identify a session between the client and the server. It can be
+     * used to check if any session data was tampered with, or as a unique key. At least one of user-id, game-id, or site-mark must be
+     * provided and the combination must be unique across all users of the site on this day.
+     * - If $user_id is 0, then $site_make must be provided as a unique value to identify this session. Use something like a GUID or
+     * a random number with enough entropy across all clients.
+     * - Use $game_id to identify a game session, or 0 if not a game session.
+     * - Note that if the user changes their name or access level during the session then the session id must be regenerated.
+     * @param integer $site_id must be a valid site-id
+     * @param integer $user_id valid user-id on site-id, or 0 if creating an anonymous session
+     * @param integer $game_id valid game-id on site-id, or 0 if creating a site-wide session not associated with a game play session.
+     * @param string $user_name user name associated to user-id, would make the session invalid if the user changes their name.
+     * @param string $site_user_id if this user came from a SSO authentication then that site's unique id, otherwise an empty string.
+     * @param integer $network_id if this user came from a SSO authentication then that site's unique id, otherwise an empty string.
+     * @param integer $access_level the user's level of access for this session
+     * @param string $site_mark a value with enough entropy (e.g. a GUID or a large random number) to make this session unique when user-id and user-name are not provided (for example, an anonymous user playing a game.)
+     * @param integer $day_stamp the Enginesis day-stamp to limit the valid time of the session
+     * @return string session user game hash. Returns empty string if the session is not valid.
+     */
+    public function sessionMakeHash ($site_id, $user_id, $game_id, $user_name, $site_user_id, $network_id, $access_level, $site_mark, $day_stamp) {
+        if (isEmpty($day_stamp)) {
+            $day_stamp = $this->sessionDayStamp();
+        }
+        $site_key = $this->m_developerKey;
+        $hashClear = "s=$site_id&u=$user_id&d=$day_stamp&n=$user_name&g=$game_id&i=$site_user_id&w=$network_id&l=$access_level&m=$site_mark&k=$site_key";
+        return md5($hashClear);
+    }
+    // @TODO: debugging only, remove ASAP
+    public function sessionMakeHashClear ($site_id, $user_id, $game_id, $user_name, $site_user_id, $network_id, $access_level, $site_mark, $day_stamp) {
+        if (isEmpty($day_stamp)) {
+            $day_stamp = $this->sessionDayStamp();
+        }
+        $site_key = $this->m_developerKey;
+        $hashClear = "s=$site_id&u=$user_id&d=$day_stamp&n=$user_name&g=$game_id&i=$site_user_id&w=$network_id&l=$access_level&m=$site_mark&k=$site_key";
+        return $hashClear;
+    }
+
+    /**
+     * Anytime we look at the game session cookie we should validate the hash in case someone tampered the cookie.
+     * Compliment to `sessionMakeHash`.
+     * @param string $cr Session hash that was previously generated with `sessionMakeHash()`.
+     * @param integer $site_id must be a valid site-id
+     * @param integer $user_id valid user-id on site-id, or 0 if creating an anonymous session
+     * @param integer $game_id valid game-id on site-id, or 0 if creating a site-wide session
+     * @param string $user_name user name associated to user-id, would make the session invalid if the user changes their name.
+     * @param string $site_user_id if this user came from a SSO authentication then that site's unique id, otherwise an empty string.
+     * @param integer $network_id Network id associated with co-reg/SSO user-id.
+     * @param integer $access_level the user's level of access for this session
+     * @param string $site_mark a value with enough entropy (e.g. a GUID or a large random number) to make this session unique when user-id and user-name are not provided (for example, an anonymous user playing a game.)
+     * @param integer $day_stamp the Enginesis day-stamp to limit the valid time of the session
+     * @return boolean true if the hash matches, false if it does not.
+     */
+    public function sessionVerifyHash ($cr, $site_id, $user_id, $game_id, $user_name, $site_user_id, $network_id, $access_level, $site_mark, $day_stamp) {
+        return $cr == $this->sessionMakeHash($site_id, $user_id, $game_id, $user_name, $site_user_id, $network_id, $access_level, $site_mark, $day_stamp);
     }
 
     /**
@@ -1198,8 +1254,24 @@ class Enginesis {
         if (isset($_COOKIE[SESSION_USERINFO])) {
             try {
                 $userInfo = json_decode($_COOKIE[SESSION_USERINFO]);
-                // @todo: Validate this user data make sure it was not tampered, check if expired.
                 $this->debugInfo("decoded cookie for SESSION_USERINFO " . json_encode($userInfo), __FILE__, __LINE__);
+                // Validate this user data make sure it was not tampered, check if expired.
+                $isValid = $this->sessionVerifyHash(
+                    $userInfo->cr,
+                    $userInfo->site_id,
+                    $userInfo->user_id,
+                    0,
+                    $userInfo->user_name,
+                    $userInfo->site_user_id,
+                    $userInfo->network_id,
+                    $userInfo->access_level,
+                    0,
+                    0            
+                );
+                if ( ! $isValid) {
+                    $userInfo = null;
+                    $this->sessionClear();
+                }
             } catch (Exception $e) {
                 $this->setLastError('CANNOT_GET_USERINFO', 'sessionUserInfoGet could not get cookie: ' . $e->getMessage());
                 $this->debugInfo('sessionUserInfoGet fails: ' . json_encode($this->m_lastError), __FILE__, __LINE__);
@@ -1232,10 +1304,29 @@ class Enginesis {
                         $userInfo->access_level = $userData['accesslevel'];
                     }
                 }
-                $this->sessionSave($userInfo->authtok, $userInfo->user_id, $userInfo->user_name, $userInfo->site_user_id, $userInfo->network_id, $userInfo->access_level, $userInfo->network_id);
-                $this->sessionUserInfoSave($userInfo);
-                $this->m_refreshedUserInfo = $userInfo;
-                $this->debugInfo("Restored m_refreshedUserInfo from sessionRestoreFromResponse " . json_encode($this->m_refreshedUserInfo), __FILE__, __LINE__);
+                $dayStamp = $this->sessionDayStamp();
+                $isValidHash = $this->sessionVerifyHash(
+                    $userInfo->cr,
+                    $userInfo->site_id,
+                    $userInfo->user_id,
+                    0,
+                    $userInfo->user_name,
+                    $userInfo->site_user_id,
+                    $userInfo->network_id,
+                    $userInfo->access_level,
+                    0,
+                    $dayStamp
+                );
+                if ($isValidHash) {
+                    $this->sessionSave($userInfo->authtok, $userInfo->user_id, $userInfo->user_name, $userInfo->site_user_id, $userInfo->network_id, $userInfo->access_level, $userInfo->network_id);
+                    $this->sessionUserInfoSave($userInfo);
+                    $this->m_refreshedUserInfo = $userInfo;
+                    $this->debugInfo("Restored m_refreshedUserInfo from sessionRestoreFromResponse " . json_encode($this->m_refreshedUserInfo), __FILE__, __LINE__);
+                } else {
+                    $this->debugInfo("sessionRestoreFromResponse detected possible compromise in session data " . json_encode($userInfo), __FILE__, __LINE__);
+                    $userInfo = null;
+                    $this->sessionClear();
+                }
             }
         }
         if ($userInfo === null) {

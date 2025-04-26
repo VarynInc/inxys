@@ -87,6 +87,11 @@
     font-weight: 600;
 }
 
+.text-success {
+    color: #0f6907;
+    font-weight: 600;
+}
+
 .signup-form-error {
     color: #520e0c;
     font-weight: 400;

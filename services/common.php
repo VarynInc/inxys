@@ -1083,14 +1083,23 @@ function copyArrayKey($source, & $target, $key, $force = false) {
 }
 
 /**
- * Determine is a variable is considered empty. This goes beyond PHP empty() function to support Flash and JavaScript
+ * Determine if a variable is considered empty. This goes beyond PHP empty() function to support SQL and JavaScript
  * possibilities.
- * @param $str
- * @return bool
+ *
+ * @param any $value A variable to test for emptiness.
+ * @return boolean True if considered empty, false if considered not empty.
  */
-function isEmpty ($str) {
-    if (isset($str)) {
-        return (is_null($str) || strlen($str) == 0 || $str == 'undefined' || strtolower($str) == 'null');
+function isEmpty ($value) {
+    if (isset($value)) {
+        if (is_numeric($value)) {
+            return $value == 0;
+        } elseif (is_string($value)) {
+            return (strlen($value) == 0 || $value == 'undefined' || strtolower($value) == 'null');
+        } elseif (is_array($value)) {
+            return count($value) == 0;
+        } else {
+            return is_null($value);
+        }
     } else {
         return true;
     }
@@ -1227,13 +1236,13 @@ function boolToString($variable) {
 
 /**
  * Convert a value to its boolean representation.
- * @param $variable - any type will be coerced to a boolean value.
+ * @param any $variable - any type will be coerced to a boolean value.
  * @return boolean
  */
 function valueToBoolean($variable) {
     if (is_string($variable)) {
         $variable = strtoupper($variable);
-        $result =  $variable == '1' || $variable == 'Y' || $variable == 'T' || $variable == 'YES' || $variable == 'TRUE' || $variable == 'CHECKED';
+        $result =  $variable == '1' || $variable == 'Y' || $variable == 'T' || $variable == 'YES' || $variable == 'TRUE' || $variable == 'CHECKED' || $variable == 'ON';
     } elseif (is_numeric($variable)) {
         $result = ! ! $variable;
     } else {

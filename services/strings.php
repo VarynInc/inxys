@@ -32,6 +32,7 @@ abstract class EnginesisUIStrings {
     const REGISTRATION_TOS             = 'REGISTRATION_TOS';
     const REGISTRATION_INCOMPLETE      = 'REGISTRATION_INCOMPLETE';
     const REG_INFO_UPDATED             = 'REG_INFO_UPDATED';
+    const LOGIN_HASH_MISMATCH          = 'LOGIN_HASH_MISMATCH';
     const MUST_BE_LOGGED_IN            = 'MUST_BE_LOGGED_IN';
     const PROFILE_PAGE_SALUTATION      = 'PROFILE_PAGE_SALUTATION';
     const REFRESH_TOKEN_ERROR          = 'REFRESH_TOKEN_ERROR';
