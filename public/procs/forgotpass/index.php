@@ -90,7 +90,7 @@ include(VIEWS_ROOT . 'page-header.php');
                     </div>
                     <?php if ($showForm) { ?>
                     <form id="forgot-password-form" method="POST" action="/procs/forgotpass/">
-                        <p>To recover your password, please identify your account. We will send email to the address set on the account to enable you to reset your password.</p>
+                        <p>To reset your password, please identify your account with either your user name or your email address. We will send email to the address set on the account to enable you to reset your password.</p>
                         <div class="form-group">
                             <label for="forgot-password-username" class="col-sm-2 col-form-label">User name:</label>
                             <input type="text" id="forgot-password-username" name="forgot-password-username" maxlength="20" class="popup-form-input" placeholder="Your user name" autocorrect="off" autocomplete="username"/>
