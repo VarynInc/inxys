@@ -30,5 +30,8 @@ $enginesis_strings_en = [
     inxysUIStrings::COMMON_PAGE_TITLE => 'inXys: The Information Exchange',
     inxysUIStrings::COMMON_PAGE_DESCRIPTION => 'To facilitate the free exchange of ideas and a strong sense of community. Encourage inclusion, diversity, and respect for all.',
     inxysUIStrings::PROFILE_PAGE_TITLE => 'Profile',
-    inxysUIStrings::PROFILE_PAGE_DESCRIPTION => 'View your profile or review other followers and users at inxys.net.'
+    inxysUIStrings::PROFILE_PAGE_DESCRIPTION => 'View your profile or review other followers and users at inxys.net.',
+    inxysUIStrings::BAD_SERVER_RESPONSE => 'Unexpected service response.<br/>Please check your entry or contact support.',
+    inxysUIStrings::PASSWORD_RESET_MISSING_ID => `You must provide either your user name or your email address to request a password reset.`,
+    inxysUIStrings::CHECK_YOUR_ENTRY => `Please check your entry or contact support.`
 ];

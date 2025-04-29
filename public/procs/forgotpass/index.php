@@ -3,9 +3,11 @@
  * user name or the email address. If successful, this process sends the email to lead them
  * back to resetting the password. This page redirects to /profile/?action=forgotpassword to
  * complete the process if the form is filled out successfully.
- * 
+ *
  * @todo: DoS attack, can we rate-limit?
  * @todo: counter hacking make sure bot doesn't use this to discover emails/user-names, etc.
+ * Don't allow error messages to give too much away in case of hack.
+ *
  * @author jf 2016-01-11
  * @param `action` if the action parameter is set it means the user attempted to submit the form.
  * @param `forgot-password-email` Submitted email address to look up.
@@ -24,7 +26,9 @@ $pageDescription = $stringTable->lookup(inxysUIStrings::PROFILE_PAGE_DESCRIPTION
 $hackerVerification = makeInputFormHackerToken();
 $inputFocusId = '';
 $errorMessage = '';
+$errorCode = EnginesisErrors::NO_ERROR;
 $showForm = true;
+$showErrors = false;
 
 if ($action == 'forgotpassword') {
     // user completed the Forgot Password form, initiate a forgot password flow.
@@ -38,42 +42,48 @@ if ($action == 'forgotpassword') {
                     $errorMessage = '<p class="text-info">' . $stringTable->lookup(EnginesisUIStrings::REG_RESET_PASSWORD, null) . '</p>';
                     $showForm = false;
                 } else {
-                    $errorMessage = '<p class="text-error">Unexpected service response.<br/>Please check your entry or contact support.</p>';
+                    $errorMessage = '<p class="text-error">' . $stringTable->lookup(inxysUIStrings::BAD_SERVER_RESPONSE, null) . '</p>';
                     $inputFocusId = 'forgot-password-username';
                     $result = null;
                 }
             }
-            // @todo: Edge case, the query can return results AND and error if server fails to send email.
+            // The query can return results AND and error if server fails to send email.
             if ($result == null) {
                 $error = $enginesis->getLastError();
                 $errorCode = $error['message'];
                 $info = '';
-                if (!empty($userName)) {
+                if ( ! empty($userName)) {
                     $info = $userName;
                 }
-                if (!empty($email)) {
+                if ( ! empty($email)) {
                     $info = ($info == '' ? '' : ', ') . $email;
                 }
                 if ($info != '') {
                     $info = '(' . htmlentities($info) . ')';
                 }
-                $errorMessage = '<p class="text-error">' . errorToLocalString($errorCode) . '<br/>Please check your entry ' . $info . ' or contact support.</p>';
+                debugLog('forgotpassword form submission error '. errorToLocalString($errorCode) . ' ' . $info);
+                $errorMessage = '<p class="text-error">' . errorToLocalString($errorCode) . '<br/>' . $stringTable->lookup(inxysUIStrings::CHECK_YOUR_ENTRY, null) . '</p>';
                 $inputFocusId = 'forgot-password-username';
             }
         } else {
             // bad parameters
-            $errorMessage = '<p class="text-error">You must provide either your user name or your email address to request a password reset.</p>';
+            $errorCode = EnginesisErrors::INVALID_PARAMETER;
+            $errorMessage = '<p class="text-error">' . $stringTable->lookup(inxysUIStrings::PASSWORD_RESET_MISSING_ID, null) . '</p>';
         }
     } else {
         debugLog('forgotpassword form submission failed the hacker test.');
         $errorCode = EnginesisErrors::SERVICE_ERROR;
-        $errorMessage = '<p class="text-error">' . errorToLocalString($errorCode) . '<br/>Please check your entry or contact support.</p>';
+        $errorMessage = '<p class="text-error">' . errorToLocalString($errorCode) . '<br/>' . $stringTable->lookup(inxysUIStrings::CHECK_YOUR_ENTRY, null) . '</p>';
         $inputFocusId = 'forgot-password-username';
+    }
+    if ( ! $showErrors && $errorCode != EnginesisErrors::INVALID_PARAMETER) {
+        // when not showing errors an error is ignored so the user thinks the request succeeded, this is to prevent hackers from mining user accounts.
+        $errorMessage = '<p class="text-info">' . $stringTable->lookup(EnginesisUIStrings::REG_RESET_PASSWORD, null) . '</p>';
+        $showForm = false;
     }
 } else {
     $inputFocusId = 'forgot-password-username';
 }
-
 include(VIEWS_ROOT . 'page-header.php');
 ?>
 <div class="container">

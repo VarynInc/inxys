@@ -54,6 +54,9 @@ abstract class inxysUIStrings {
     const COMMON_PAGE_DESCRIPTION      = 'COMMON_PAGE_DESCRIPTION';
     const PROFILE_PAGE_TITLE           = 'PROFILE_PAGE_TITLE';
     const PROFILE_PAGE_DESCRIPTION     = 'PROFILE_PAGE_DESCRIPTION';
+    const BAD_SERVER_RESPONSE          = 'BAD_SERVER_RESPONSE';
+    const PASSWORD_RESET_MISSING_ID    = 'PASSWORD_RESET_MISSING_ID';
+    const CHECK_YOUR_ENTRY             = 'CHECK_YOUR_ENTRY';
 }
 
 class EnginesisStringTable {
