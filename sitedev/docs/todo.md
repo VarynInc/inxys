@@ -12,20 +12,23 @@ Any tasks that are specified fully and determined to be worked on should go to [
 
 zamb33ZEE4269&&
 
+- 🟦 Log in, if not confirmed offer resend link
+- 🟦 Log in, if BLOCKED or other error do not show resend confirm
 - 🟦 Log in, rememberme sets cookie. if rememberme is not checked then the cookie only lasts for the session until closed
+- 🟦 add Send Again on login page if log in but unconfirmed ** Do also for Varyn. If user logs in but in not confirmed, offer to resend the confirm email.
 - 🟦 forgot password form
 - 🟦 reset password form
-- 🟦 add Send Again button on sign up complete page
-- 🟦 add Send Again on login page if log in but unconfirmed ** Do also for Varyn. If user logs in but in not confirmed, offer to resend the confirm email.
 - 🟦 Profile page
     - Edit profile
+    - Upload avatar image - UI to crop/scale image and then upload it to server and set on user account
     - show avatar
     - show user activity feed
     - preferences
     - edit profile (name, nickname, email, password, profile image)
 - 🟦 Scratchpad
-    - build out using the concept of a Notebook, user has compositions notes that can be organized
-    - notes are organizaed documents, list by date, tags, title
+    - List scratchpads, list by date, tags, title
+    - create new
+    - edit/update
     - markdown editor like Medium
 
 - ✅ Log in, verify correct account match (cr), set login cookie

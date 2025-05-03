@@ -188,11 +188,20 @@ function appendQueryParameter($url, $key, $value) {
     return $updatedURL;
 }
 
+/**
+ * Turn a key/value array into a query string with each parameter URL encoded.
+ * For example it will return a=1&b=2 for the array ['a' => 1, 'b' => 2]
+ * @param Array $parameters A key/value array of parameters.
+ * @return String A URL query parameter string (without the leading '?')
+ */
 function encodeURLParams ($parameters) {
     $encodedURLParams = '';
     foreach ($parameters as $key => $value) {
         if ($encodedURLParams != '') {
             $encodedURLParams .= '&';
+        }
+        if ($value == null) {
+            $value = '';
         }
         $encodedURLParams .= urlencode($key) . '=' . urlencode($value);
     }
@@ -1807,14 +1816,14 @@ function makeRandomToken ($length = 12) {
 
 /**
  * Append a URL parameter if the value is not empty.
- * 
+ *
  * @param string The URL string to update. This string updated if the value is not empty.
  * @param string A key.
  * @param string The value to assign to the key.
  * @return string the update URL string.
  */
 function appendParamIfNotEmpty( & $params, $key, $value) {
-    if ( ! empty($value)) {
+    if ( ! empty($key) && ! empty($value)) {
         $params .= '&' . $key . '=' . $value;
     }
     return $params;

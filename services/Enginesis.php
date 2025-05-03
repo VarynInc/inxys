@@ -1266,7 +1266,7 @@ class Enginesis {
                     $userInfo->network_id,
                     $userInfo->access_level,
                     0,
-                    0            
+                    0
                 );
                 if ( ! $isValid) {
                     $userInfo = null;
@@ -1563,15 +1563,19 @@ class Enginesis {
     }
 
     /**
-     * Encode a key/value array into URL parameters. `key=value&key=value&...`.
-     * @param array $data A key/value array.
-     * @return string a URL parameter query string.
+     * Turn a key/value array into a query string with each parameter URL encoded.
+     * For example it will return a=1&b=2 for the array ['a' => 1, 'b' => 2]
+     * @param Array $parameters A key/value array of parameters.
+     * @return String A URL query parameter string (without the leading '?')
      */
-    public function encodeURLParams ($data) {
+    function encodeURLParams ($parameters) {
         $encodedURLParams = '';
-        foreach ($data as $key => $value) {
+        foreach ($parameters as $key => $value) {
             if ($encodedURLParams != '') {
                 $encodedURLParams .= '&';
+            }
+            if ($value == null) {
+                $value = '';
             }
             $encodedURLParams .= urlencode($key) . '=' . urlencode($value);
         }

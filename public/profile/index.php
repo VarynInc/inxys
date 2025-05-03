@@ -23,11 +23,13 @@ processTrackBack();
 $action = strtolower(getPostOrRequestVar('action', '')); // this value tells the page how to function.
 $userName = '';
 $redirectedStatusMessage = '';
+$registrationErrorCode = '';
 
 if ($action == 'regconfirm') {
     // A redirect from regconfirm.php so we can complete registration and display any error message
-    $code = getPostOrRequestVar('code', '');
-    if ($code == 'NO_ERROR' || $code == 'SUCCESS' || $code == '') {
+    $registrationErrorCode = getPostOrRequestVar('code', '');
+    if ($registrationErrorCode == 'NO_ERROR' || $registrationErrorCode == 'SUCCESS' || $registrationErrorCode == '') {
+        $registrationErrorCode = 'SUCCESS';
         $redirectedStatusMessage = $stringTable->lookup(EnginesisUIStrings::WELCOME_MESSAGE, null);
         // @todo: Verify the cookie/token matches this user
         // @todo: There should be a safeguard if a hacker comes with action+code but is really not the user we think he is spoofing
@@ -40,10 +42,28 @@ if ($action == 'regconfirm') {
         $userId = $userInfo->user_id;
         $enginesis->userLoginRefresh();
     } else {
-        $user_user_id = getPostOrRequestVar('u', '');
-        $confirmation_token = getPostOrRequestVar('t', '');
-        $linkToResendToken = createResendConfirmEmailLink($code, $user_user_id, $userName, '', $confirmation_token);
-        $redirectedStatusMessage = errorToLocalString($code);
+        // regconfirm failed for some reason so ask the user to do something about it.
+        $userUserId = getPostOrRequestVar('u', '');
+        $userName = getPostOrRequestVar('n', '');
+        $userEmail = getPostOrRequestVar('e', '');
+        $confirmationToken = getPostOrRequestVar('t', '');
+        $linkToResendToken = createResendConfirmEmailLink($userUserId, $userName, $userEmail, $confirmationToken);
+        $redirectedStatusMessage = errorToLocalString($registrationErrorCode);
+    }
+} elseif ($action == 'resendconfirm') {
+    // called from login when the user has not confirmed their email with https://inxys-l.net/profile/?action=resendconfirm&n=jim&d=1745976307
+    // u=user-id, n=user-name, e=email, t=token, d=timestamp
+    // if u || n || e, then look up account info and determine if not confirmed. if not confirmed, resend the email.
+    $userUserId = getPostOrRequestVar('u', '');
+    $userName = getPostOrRequestVar('n', '');
+    $userEmail = getPostOrRequestVar('e', '');
+    $confirmationToken = getPostOrRequestVar('t', '');
+    $results = $enginesis->registeredUserResetSecondaryPassword($userUserId, $userName, $userEmail, $confirmationToken);
+    if (empty($results)) {
+        // most likely the parameters are incorrect and the user lookup failed.
+        $errorResponse = $enginesis->getLastError();
+        $registrationErrorCode = $errorResponse['message'];
+        $redirectedStatusMessage = $stringTable->lookup(EnginesisUIStrings::REG_CONFIRM_ERROR, null); // . ' ' . $errorResponse['extended_info'];
     }
 } elseif ($action == 'signout') {
     $enginesis->userLogout();
@@ -59,8 +79,11 @@ include(VIEWS_ROOT . 'page-header.php');
 <div id="user-profile" class="card m-2 p-4">
     <?php
     if ($redirectedStatusMessage != '') {
-        $panelClass = $code == 'SUCCESS' ? 'text-bg-success' : 'text-bg-danger';
-        echo ('<div class="card ' . $panelClass . '"><div class="card-body"><p class="card-text">' . $redirectedStatusMessage . '</p></div></div>');
+        $panelClass = $registrationErrorCode == 'SUCCESS' ? 'text-bg-success' : 'text-bg-danger';
+        echo('<div class="card ' . $panelClass . '"><div class="card-body"><p class="card-text">' . $redirectedStatusMessage . '</p></div></div>');
+        if ($action == 'regconfirm' && $registrationErrorCode != 'SUCCESS') {
+            echo('<div class="col-10 col-md-8 col-lg-6 align-self-center login-form p-3"><p>Your account is not active until you complete the email confirmation.</p><p>Please check your email and use the link provided to complete your registration, or ' . $linkToResendToken . '.</p></div>');
+        }
     }
     if ($debug) {
         echo ("<h3>Debug info:</h3>");
@@ -74,7 +97,16 @@ include(VIEWS_ROOT . 'page-header.php');
         <a class="btn btn-sm btn-outline-primary" href="/profile/?action=signout" role="button">Log out</a>
     </div>
     <?php
-    } else {
+    } elseif ($action == 'resendconfirm' && $redirectedStatusMessage == '') {
+    ?>
+    <div class="col-10 col-md-8 col-lg-6 align-self-center login-form p-3">
+        <p>Confirmation email has been resent to the email address on file for your account.
+        Your account is not active until you complete the email confirmation.</p>
+        <p>Please check your email and use the link provided to complete your registration.</p>
+        <p class="text-center"><a class="btn btn-primary" href="/" role="button">Log in &raquo;</a></p>
+    </div>
+    <?php
+    } elseif ($registrationErrorCode == '') {
     ?>
     <h1>User profile</h1>
     <p>Create an account for free. You get one public conference with your free account.</p>

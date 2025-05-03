@@ -22,6 +22,7 @@ abstract class EnginesisUIStrings {
     const NAME_PASSWORD_MISMATCH       = 'NAME_PASSWORD_MISMATCH';
     const LOGIN_SYSTEM_FAILURE         = 'LOGIN_SYSTEM_FAILURE';
     const REG_INFO_INCOMPLETE          = 'REG_INFO_INCOMPLETE';
+    const REG_CONFIRM_ERROR            = 'REG_CONFIRM_ERROR';
     const REGISTRATION_NAME_IN_USE     = 'NAME_IN_USE';
     const REGISTRATION_EMAIL_IN_USE    = 'EMAIL_IN_USE';
     const REGISTRATION_INVALID         = 'REGISTRATION_INVALID';
@@ -57,6 +58,9 @@ abstract class inxysUIStrings {
     const BAD_SERVER_RESPONSE          = 'BAD_SERVER_RESPONSE';
     const PASSWORD_RESET_MISSING_ID    = 'PASSWORD_RESET_MISSING_ID';
     const CHECK_YOUR_ENTRY             = 'CHECK_YOUR_ENTRY';
+    const REG_CHECK_YOUR_EMAIL         = 'REG_CHECK_YOUR_EMAIL';
+    const RESEND_CONFIRMATION_EMAIL    = 'RESEND_CONFIRMATION_EMAIL';
+
 }
 
 class EnginesisStringTable {

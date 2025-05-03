@@ -2,7 +2,6 @@
 include_once('common.php');
 
 // Global variables that should be defined on every page
-$siteId = 109;
 $pageId = '';         // Every page has an id so we can do per-page logic inside common functions
 $pageTitle = '';      // Every page has a title, many times this is dynamically generated
 $allMenuPages = [
@@ -45,19 +44,16 @@ function redirectIfNotLoggedIn($page) {
 /**
  * Create a URL that a user can link to in order to resend the confirmation email.
  */
-function createResendConfirmEmailLink($errorCode, $userId, $userName, $email, $confirmationToken) {
-    $regConfirmErrors = [EnginesisErrors::REGISTRATION_NOT_CONFIRMED, EnginesisErrors::INVALID_SECONDARY_PASSWORD, EnginesisErrors::PASSWORD_EXPIRED];
-    if (in_array($errorCode, $regConfirmErrors)) {
-        $params = '';
-        appendParamIfNotEmpty($params, 'u', $userId);
-        appendParamIfNotEmpty($params, 'n', $userName);
-        appendParamIfNotEmpty($params, 'e', $email);
-        appendParamIfNotEmpty($params, 't', $confirmationToken);
-        $params .= '&d=' . time();
-        return '<a href="/profile/?action=resendconfirm' . $params . '">Resend confirmation</a>';
-    } else {
-        return '';
-    }
+function createResendConfirmEmailLink($userId, $userName, $email, $confirmationToken) {
+    global $stringTable;
+    $params = '';
+    appendParamIfNotEmpty($params, 'u', $userId);
+    appendParamIfNotEmpty($params, 'n', $userName);
+    appendParamIfNotEmpty($params, 'e', $email);
+    appendParamIfNotEmpty($params, 't', $confirmationToken);
+    $params .= '&d=' . time();
+    $prompt = $stringTable->lookup(inxysUIStrings::RESEND_CONFIRMATION_EMAIL);
+    return '<a href="/profile/?action=resendconfirm' . $params . '">' . $prompt . '</a>';
 }
 
 function restoreLoggedInUser() {
@@ -93,8 +89,13 @@ function handleLoginAttempt($userName, $password, $rememberMe) {
         if ($userInfo == null) {
             $error = $enginesis->getLastError();
             if ($error != null) {
-                $linkToResendToken = createResendConfirmEmailLink($error['message'], null, $userName, null, null);
-                $errorMessage = $stringTable->lookup(EnginesisUIStrings::LOGIN_SYSTEM_FAILURE) . ' ' . errorToLocalString($error['message']) . ' ' . $linkToResendToken;
+                // log in failed but there are several reasons
+                $errorCode = $error['message'];
+                $linkToResendToken = createResendConfirmEmailLink($errorCode, null, $userName, null, null);
+                $errorMessage = $stringTable->lookup(EnginesisUIStrings::LOGIN_SYSTEM_FAILURE) . ' ' . errorToLocalString($errorCode);
+                if ($errorCode == EnginesisErrors::REGISTRATION_NOT_CONFIRMED) {
+                    $errorMessage .= ' ' . $linkToResendToken;
+                }
                 $errorParameter = 'login-username';
             } else {
                 $errorMessage = $stringTable->lookup(EnginesisUIStrings::NAME_PASSWORD_MISMATCH);
