@@ -1156,16 +1156,19 @@
         );
     };
 
-    commonUtilities.shareOnBsky = function (message, url, related, hashTags) {
+    /**
+     * Share a user message with Bluesky.
+     * @param {string} message User's share message text. This is required.
+     * @param {string} url Optional URL to link to.
+     * @param {string} hashTags Optional hash tags to include in the share message. This should be a string "#tag1 #tag2".
+     */
+    commonUtilities.shareOnBsky = function (message, url, hashTags) {
         let shareMessage = "text=" + encodeURIComponent(message);
-        if (url && url != "") {
-            shareMessage += encodeURIComponent(url);
-        }
-        if (related && related != "") {
-            shareMessage += encodeURIComponent(related);
+        if (url && url != "" && ! message.includes(url.toLowerCase())) {
+            shareMessage += " " + encodeURIComponent(url);
         }
         if (hashTags && hashTags != "") {
-            shareMessage += encodeURIComponent(hashTags);
+            shareMessage += " " + encodeURIComponent(hashTags);
         }
         window.open(
             "https://bsky.app/intent/compose?" + shareMessage,
