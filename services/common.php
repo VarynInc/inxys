@@ -189,6 +189,26 @@ function appendQueryParameter($url, $key, $value) {
 }
 
 /**
+ * Append all query parameters on to the end of a URL string. This helper function handles
+ * the edge cases.
+ * @param string The initial URL. Can be null or empty string.
+ * @param string|object Either a query string (k=v&k=v) or an key/value object.
+ * @return string A URL with updated query string.
+ */
+function appendQueryParameters($url, $keyValues) {
+    if (is_object($keyValues)) {
+        $parameters = $keyValues;
+    } elseif (is_string($keyValues)) {
+        parse_str($keyValues, $parameters);
+    }
+    $updatedURL = $url;
+    foreach($parameters as $key => $value) {
+        $updatedURL = appendQueryParameter($updatedURL, $key, $value);
+    }
+    return $updatedURL;
+}
+
+/**
  * Turn a key/value array into a query string with each parameter URL encoded.
  * For example it will return a=1&b=2 for the array ['a' => 1, 'b' => 2]
  * @param Array $parameters A key/value array of parameters.
