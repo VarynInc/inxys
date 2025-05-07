@@ -13,23 +13,19 @@
  * @exports commonUtilities
  */
 
-(function commonUtilities (global) {
-    "use strict";
-
-    var commonUtilities = {
-        version: "1.7.2"
-    };
-    var _base64KeyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-    var _testNumber = 0;
+export default {
+    version: "1.7.2",
+    _base64KeyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+    _testNumber: 0,
 
     /**
      * Determine if the current context is a browser. This assures we have access to window and document.
      * Otherwise it assumes it is a Node environment and we don't have access to the browser environment.
      * @returns {boolean} True if running in a browser environment.
      */
-    commonUtilities.isBrowserEnvironment = function() {
+    isBrowserEnvironment: function() {
         return typeof window === "object" && typeof document === "object";
-    }
+    },
 
     /**
      * Determine if HTML5 local or session storage is available.
@@ -37,8 +33,8 @@
      * @param {boolean} robustCheck - true for the more robust but un-performant test.
      * @returns {boolean} True if the storage type is supported.
      */
-    commonUtilities.browserStorageAvailable = function(storageType, robustCheck) {
-        if ( ! commonUtilities.isBrowserEnvironment()) {
+    browserStorageAvailable: function(storageType, robustCheck) {
+        if ( ! this.isBrowserEnvironment()) {
             return false;
         }
         let hasSupport = false;
@@ -61,7 +57,7 @@
             hasSupport = false;
         }
         return hasSupport;
-    }
+    },
 
     /**
      * Coerce a boolean value to its string representation, either "true" or "false". The input
@@ -69,9 +65,9 @@
      * @param {boolean} value Expected boolean value to be converted to a printable string, either "true" or "false".
      * @returns {string} Either "true" or "false".
      */
-    commonUtilities.booleanToString = function(value) {
+    booleanToString: function(value) {
         return ( ! ! value) ? "true" : "false";
-    }
+    },
 
     /**
      * Return the provided object represented as a string in "key: value;" format. Typically
@@ -81,7 +77,7 @@
      * @param {object} object The object to convert to a string representation.
      * @return {string} string The object converted to a string representation.
      */
-    commonUtilities.objectToString = function (object) {
+    objectToString: function (object) {
         var result,
             prop;
         if (object) {
@@ -95,7 +91,7 @@
             result = "null;";
         }
         return result;
-    };
+    },
 
     /**
      * Return the provided array as a string in key: value; format.
@@ -103,7 +99,7 @@
      * @param {array} array The array to convert to a string representation.
      * @return {string} string The array converted to a string representation.
      */
-    commonUtilities.arrayToString = function (array) {
+    arrayToString: function (array) {
         var result,
             key,
             value;
@@ -125,7 +121,7 @@
             result = "null";
         }
         return result;
-    };
+    },
 
     /**
      * Return the provided object as a string in key: value; format. This version handles
@@ -134,7 +130,7 @@
      * @param {object} object The object to convert to a string representation.
      * @return {string} string The object converted to a string representation.
      */
-    commonUtilities.objectStringify = function (object) {
+    objectStringify: function (object) {
         var subObjects = [], // An array of sub-objects that will later be joined into a string.
             property;
 
@@ -166,7 +162,7 @@
             subObjects.push(JSON.stringify(object))
         }
         return subObjects.join(", ");
-    };
+    },
 
     /**
      * Return the current document query string as an object with
@@ -176,7 +172,7 @@
      *   provided then use window.location.search.
      * @return {object} result The query string converted to an object of key/value pairs.
      */
-    commonUtilities.queryStringToObject = function (urlParameterString) {
+    queryStringToObject: function (urlParameterString) {
         const search = /([^&=]+)=?([^&]*)/g;
         let match;
         let result = {};
@@ -196,7 +192,7 @@
             result[unescapeURI(match[1])] = unescapeURI(match[2]);
         }
         return result;
-    };
+    },
 
     /**
      * Append an existing URL with additional query parameters.
@@ -204,7 +200,7 @@
      * @param {Object} parameters Expected object of key/value properties. Does not work for nested objects.
      * @returns {String} The url with query string parameters appended.
      */
-    commonUtilities.appendQueryParametersToURL = function (url, parameters) {
+    appendQueryParametersToURL: function (url, parameters) {
         var queryPos = url.indexOf("?");
         var safeParameters = [];
         for (var parameter in parameters) {
@@ -219,7 +215,7 @@
         }
         url += safeParameters.join("&");
         return url;
-    };
+    },
 
     /**
      * Extend an object with properties copied from other objects. Takes a variable number of arguments:
@@ -230,7 +226,7 @@
      *    properties conflict the last property is the one retained.
      * @returns {object}
      */
-    commonUtilities.extendObject = function() {
+    extendObject: function() {
         var key,
             value,
             extendedObject,
@@ -255,7 +251,7 @@
             extendedObject = {};
         }
         return extendedObject;
-    };
+    },
 
     /**
      * Determine if at least one string in the array matches the pattern. Since we are using regex pattern
@@ -264,7 +260,7 @@
      * @param {Array} arrayOfStrings strings to test each against the pattern.
      * @returns {number} index of first string in the array that matches the pattern, -1 when no match.
      */
-    commonUtilities.matchInArray = function (pattern, arrayOfStrings) {
+    matchInArray: function (pattern, arrayOfStrings) {
         var i = 0,
             numberOfTokens;
 
@@ -277,7 +273,7 @@
             }
         }
         return -1;
-    };
+    },
 
     /**
      * Given a path make sure it represents a full path with a leading and trailing /.
@@ -285,7 +281,7 @@
      * @param {string} path URI path to check.
      * @return {string} path Full URI path.
      */
-    commonUtilities.makeFullPath = function (path) {
+    makeFullPath: function (path) {
         if (path) {
             if (path[path.length - 1] !== "/") {
                 path += "/";
@@ -297,7 +293,7 @@
             path = "/";
         }
         return path;
-    };
+    },
 
     /**
      * Append a folder or file name to the end of an existing path string.
@@ -306,7 +302,7 @@
      * @param {string} file folder or file to append.
      * @return {string} path Full URI path.
      */
-    commonUtilities.appendFileToPath = function (path, file) {
+    appendFileToPath: function (path, file) {
         if (path && file) {
             if (path[path.length - 1] !== "/" && file[0] !== "/") {
                 path += "/" + file;
@@ -319,7 +315,7 @@
             path = file;
         }
         return path;
-    };
+    },
 
     /**
      * Replace occurrences of {token} with matching keyed values from parameters array.
@@ -328,7 +324,7 @@
      * @param {Array} parameters array/object of key/value pairs to match keys as tokens in text and replace with value.
      * @return {string} text replaced string.
      */
-    commonUtilities.tokenReplace = function (text, parameters) {
+    tokenReplace: function (text, parameters) {
         var token,
             regexMatch;
 
@@ -339,7 +335,7 @@
             }
         }
         return text;
-    };
+    },
 
     /**
      * Translate single characters of an input string.
@@ -349,7 +345,7 @@
      * @param {Array} desired characters to translate to in string.
      * @returns {String} the translated string.
      */
-    commonUtilities.stringTranslate = function(string, undesired, desired) {
+    stringTranslate: function(string, undesired, desired) {
         var i;
         var char;
         var found;
@@ -368,7 +364,7 @@
             result += char;
         }
         return result;
-    }
+    },
 
     /**
      * Determine if a given variable is considered an empty value. A value is considered empty if it is any one of
@@ -377,14 +373,14 @@
      * @param {any} field The parameter to be tested for emptiness.
      * @returns {boolean} `true` if `field` is considered empty.
      */
-    commonUtilities.isEmpty = function (field) {
+    isEmpty: function (field) {
         return field === undefined
             || field === null
             || field === false
             || (typeof field === "string" && (field === "" || field === "null" || field === "NULL"))
             || (field instanceof Array && field.length == 0)
             || (typeof field === "number" && (isNaN(field) || field === 0));
-    }
+    },
 
     /**
      * Determine if a given variable is considered null (either null or undefined).
@@ -392,9 +388,9 @@
      * @param {any} field A value to consider.
      * @returns {boolean} `true` if `value` is considered null.
      */
-    commonUtilities.isNull = function(field) {
+    isNull: function(field) {
         return field === undefined || field === null;
-    }
+    },
 
     /**
      * Coerce a value to its boolean equivalent, causing the value to be interpreted as its
@@ -403,51 +399,53 @@
      * @param {*} value A value to test.
      * @returns {boolean} `true` if `value` is considered a coercible true value.
      */
-    commonUtilities.coerceBoolean = function(value) {
+    coerceBoolean: function(value) {
         if (typeof value === "string") {
             value = value.toLowerCase();
             return value === "1" || value === "true" || value === "t" || value === "checked" || value === "yes" || value === "y";
         } else {
             return value === true || value === 1;
         }
-    }
+    },
 
     /**
      * Given a list of parameters, return the first parameter that is considered not empty.
-     * See `commonUtilities.isEmpty` for the meaning of "empty".
+     * See `isEmpty` for the meaning of "empty".
      * @param  {...any} parameters An arbitrary set of function parameters to test for emptiness.
      * @returns {any} The first function parameter that is considered not empty.
      */
-    commonUtilities.coalesceNotEmpty = function(...parameters) {
+    coalesceNotEmpty: function(...parameters) {
+        const commonUtilities = this;
         if ( ! parameters || parameters.length < 1) {
             return undefined;
         }
         return parameters.find(function(value) {
             return ! commonUtilities.isEmpty(value);
         });
-    }
+    },
 
     /**
      * Given a list of parameters, return the first parameter that is considered not null.
-     * See `commonUtilities.isNull` for the meaning of null.
+     * See `isNull` for the meaning of null.
      * @param  {...any} parameters An arbitrary set of function parameters to test for nullness.
      * @returns {any} The first function parameter that is considered not null.
      */
-     commonUtilities.coalesceNotNull = function(...parameters) {
+     coalesceNotNull: function(...parameters) {
+        const commonUtilities = this;
         if ( ! parameters || parameters.length < 1) {
             return undefined;
         }
         return parameters.find(function(value) {
             return ! commonUtilities.isNull(value);
         });
-    }
+    },
 
     /**
      * Convert a string into one that has no HTML vulnerabilities such that it can be rendered inside an HTML tag.
      * @param {string} string A string to check for HTML vulnerabilities.
      * @returns {string} A copy of the input string with any HTML vulnerabilities removed.
      */
-    commonUtilities.safeForHTML = function (string) {
+    safeForHTML: function (string) {
         var htmlEscapeMap = {
                 "&": "&amp;",
                 "<": "&lt;",
@@ -460,7 +458,7 @@
         return ("" + string).replace(htmlEscaper, function (match) {
             return htmlEscapeMap[match]
         });
-    };
+    },
 
     /**
      * Convert any string into a string that can be used as a DOM id (aka slug). Rules:
@@ -476,7 +474,7 @@
      * @param {string} label A string to consider.
      * @returns {string} The converted string.
      */
-    commonUtilities.makeSafeForId = function (label) {
+    makeSafeForId: function (label) {
         if (typeof label !== "string") {
             if (label !== undefined && label !== null) {
                 label = label.toString();
@@ -490,7 +488,7 @@
         } else {
             return "id";
         }
-    };
+    },
 
     /* ----------------------------------------------------------------------------------
      * Platform and feature detection
@@ -501,12 +499,12 @@
      * @return {bool} true if we think this device has a touch screen, false if we think otherwise.
      *
      */
-    commonUtilities.isTouchDevice = function () {
+    isTouchDevice: function () {
         if (window && (('ontouchstart' in window) || window.TouchEvent || (window.DocumentTouch && document instanceof DocumentTouch))) {
             return true;
         }
         return false;
-    };
+    },
 
     /**
      * Determine if the current UA environment is a mobile device.
@@ -514,25 +512,25 @@
      * @return {bool} true if we think this is a mobile device, false if we think otherwise.
      *
      */
-     commonUtilities.isMobile = function () {
-        return (commonUtilities.isMobileAndroid() || commonUtilities.isMobileIos());
-    };
+    isMobile: function () {
+        return (this.isMobileAndroid() || this.isMobileIos());
+    },
 
-    commonUtilities.isMobileAndroid = function () {
+    isMobileAndroid: function () {
         if (navigator && navigator.userAgent.match(/Android/i)) {
             // NOTE: tolower+indexof is about 10% slower than regex
             // return navigator.userAgent.toLowerCase().indexOf("android") != -1;
             return true;
         }
         return false;
-    };
+    },
 
-    commonUtilities.isMobileIos = function () {
+    isMobileIos: function () {
         if (navigator && navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
             return true;
         }
         return false;
-    };
+    },
 
     /**
      * On some platforms, web audio doesn't work until a user-initiated event occurs. This function
@@ -541,7 +539,7 @@
      * (e.g. a tap event) with your app the very first time.
      * @returns HTMLAudio An audio element that you call .play() on in order to unlock audio.
      */
-    commonUtilities.unlockWebAudio = function () {
+    unlockWebAudio: function () {
         var silence = "data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAADAAAGhgBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVWqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqr///////////////////////////////////////////8AAAA5TEFNRTMuOThyAc0AAAAAAAAAABSAJAiqQgAAgAAABobxtI73AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQxAACFEII9ACZ/sJZwWEoEb8w/////N//////JcxjHjf+7/v/H2PzCCFAiDtGeyBCIx7bJJ1mmEEMy6g8mm2c8nrGABB4h2Mkmn//4z/73u773R5qHHu/j/w7Kxkzh5lWRWdsifCkNAnY9Zc1HvDAhjhSHdFkHFzLmabt/AQxSg2wwzLhHIJOBnAWwVY4zrhIYhhc2kvhYDfQ4hDi2Gmh5KyFn8EcGIrHAngNgIwVIEMf5bzbAiTRoAD///8z/KVhkkWEle6IX+d/z4fvH3BShK1e5kmjkCMoxVmXhd4ROlTKo3iipasvTilY21q19ta30/v/0/idPX1v8PNxJL6ramnOVsdvMv2akO0iSYIzdJFirtzWXCZicS9vHqvSKyqm5XJBdqBwPxyfJdykhWTZ0G0ZyTZGpLKxsNwwoRhsx3tZfhwmeOBVISm3impAC/IT/8hP/EKEM1KMdVdVKM2rHV4x7HVXZvbVVKN/qq8CiV9VL9jjH/6l6qf7MBCjZmOqsAibjcP+qqqv0oxqpa/NVW286hPo1nz2L/h8+jXt//uSxCmDU2IK/ECN98KKtE5IYzNoCfbw+u9i5r8PoadUMFPKqWL4LK3T/LCraMSHGkW4bpLXR/E6LlHOVQxmslKVJ8IULktMN06N0FKCpHCoYsjC4F+Z0NVqdNFoGSTjSiyjzLdnZ2fNqTi2eHKONONKLMPMKLONKLMPQRJGlFxZRoKcJFAYEeIFiRQkUWUeYfef//Ko04soswso40UJAgMw8wosososy0EalnZyjQUGBRQGIFggOWUacWUeYmuadrZziQKKEgQsQLAhQkUJAgMQDghltLO1onp0cpkNInSFMqlYeSEJ5AHsqFdOwy1DA2sRmRJKxdKRfLhfLw5BzUxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVUxBTUUzLjk4LjJVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/7ksRRA8AAAaQAAAAgAAA0gAAABFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVU=";
         var audioTag = document.createElement("audio");
         audioTag.controls = false;
@@ -554,7 +552,7 @@
             }
         });
         return audioTag;
-    };
+    },
 
     /* ----------------------------------------------------------------------------------
      * Various conversion utilities - UTF-8, Base 64
@@ -566,7 +564,7 @@
      * @param {string} input string in Unicode to convert to UTF-8.
      * @return {string} result UTF-8 encoded input string.
      */
-    commonUtilities.utf8Encode = function (input) {
+    utf8Encode: function (input) {
         var result = "",
             inputLength = input.length,
             index,
@@ -587,7 +585,7 @@
             }
         }
         return result;
-    };
+    },
 
     /**
      * Decode a UTF-8 encoded string into a Unicode character coding format.
@@ -595,7 +593,7 @@
      * @param {string} utfText string in UTF-8 to convert to Unicode.
      * @return {string} result Unicode representation of input string.
      */
-    commonUtilities.utf8Decode = function (utfText) {
+    utf8Decode: function (utfText) {
         var result = "",
             utfTextLength = utfText.length,
             index = 0,
@@ -620,7 +618,7 @@
             }
         }
         return result;
-    };
+    },
 
     /**
      * Convert an image located at the URL specified into its Base 64 representation.
@@ -632,7 +630,7 @@
      *         a string that represents the Base 64 encoded image.
      * @return void
      */
-    commonUtilities.base64FromImageUrl = function(url, callback) {
+    base64FromImageUrl: function(url, callback) {
         var img = new Image();
         img.src = url;
         img.onload = function() {
@@ -649,7 +647,7 @@
         img.onerror = function() {
             callback(null);
         }
-    };
+    },
 
     /**
      * Encode a string into its base 64 representation.
@@ -657,12 +655,12 @@
      * @param {string} input string to encode in base 64.
      * @return {string} output encoded string.
      */
-    commonUtilities.base64Encode = function (input) {
+    base64Encode: function (input) {
         let output = "";
         let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
         let i = 0;
 
-        input = commonUtilities.utf8Encode(input);
+        input = this.utf8Encode(input);
         const inputLength = input.length;
         while (i < inputLength) {
             chr1 = input.charCodeAt(i ++);
@@ -678,11 +676,11 @@
                 enc4 = 64;
             }
             output = output +
-                _base64KeyStr.charAt(enc1) + _base64KeyStr.charAt(enc2) +
-                _base64KeyStr.charAt(enc3) + _base64KeyStr.charAt(enc4);
+                this._base64KeyStr.charAt(enc1) + this._base64KeyStr.charAt(enc2) +
+                this._base64KeyStr.charAt(enc3) + this._base64KeyStr.charAt(enc4);
         }
         return output;
-    };
+    },
 
     /**
      * Convert a base 64 encoded string to its UTF-8 character coding.
@@ -690,7 +688,7 @@
      * @param {string} input string in base 64 to convert to UTF-8.
      * @return {string} result UTF-8 string.
      */
-    commonUtilities.base64Decode = function (input) {
+    base64Decode: function (input) {
         let output = "";
         let chr1, chr2, chr3, enc1, enc2, enc3, enc4;
         let i = 0;
@@ -698,10 +696,10 @@
         input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
         const inputLength = input.length;
         while (i < inputLength) {
-            enc1 = _base64KeyStr.indexOf(input.charAt(i ++));
-            enc2 = _base64KeyStr.indexOf(input.charAt(i ++));
-            enc3 = _base64KeyStr.indexOf(input.charAt(i ++));
-            enc4 = _base64KeyStr.indexOf(input.charAt(i ++));
+            enc1 = this._base64KeyStr.indexOf(input.charAt(i ++));
+            enc2 = this._base64KeyStr.indexOf(input.charAt(i ++));
+            enc3 = this._base64KeyStr.indexOf(input.charAt(i ++));
+            enc4 = this._base64KeyStr.indexOf(input.charAt(i ++));
             chr1 = (enc1 << 2) | (enc2 >> 4);
             chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
             chr3 = ((enc3 & 3) << 6) | enc4;
@@ -713,8 +711,8 @@
                 output = output + String.fromCharCode(chr3);
             }
         }
-        return commonUtilities.utf8Decode(output);
-    };
+        return this.utf8Decode(output);
+    },
 
     /**
      * Replace base-64 chars that are not URL safe. This will help transmit a base 64 string
@@ -722,12 +720,12 @@
      * @param {string} data A string of base 64 characters to translate.
      * @return {string} Translates '+/=' found in data to '-_~'.
      */
-    commonUtilities.base64URLEncode = function(data) {
+    base64URLEncode: function (data) {
         return data
         .replace(/\+/g, '-')
         .replace(/\//g, '_')
         .replace(/\=/g, '~');
-    }
+    },
 
     /**
      * Replace base-64 chars that are not URL safe. This will help transmit a base 64 string
@@ -735,12 +733,12 @@
      * @param {string} data A string of translated base 64 characters to translate back to true base-64.
      * @return {string} Translates '-_~' found in $data to '+/='.
      */
-    commonUtilities.base64URLDecode = function(data) {
+    base64URLDecode: function (data) {
         return data
         .replace(/\-/g, '+')
         .replace(/\_/g, '/')
         .replace(/\~/g, '=');
-    }
+    },
 
     /**
      * Convert a binary byte array into its base 64 representation. This will handle
@@ -749,9 +747,9 @@
      * @param {ArrayBuffer} arrayBuffer An array of bytes.
      * @return {String} The base 64 string representation of the input array.
      */
-    commonUtilities.arrayBufferToBase64 = function(arrayBuffer) {
+    arrayBufferToBase64: function(arrayBuffer) {
         return btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
-    };
+    },
 
     /**
      * Convert a base 64 string to a binary byte array. This will convert it to unsigned
@@ -759,9 +757,9 @@
      * @param {String} base64String A string of base 64 data.
      * @return {ArrayBuffer} The binary representation of the base 64 string.
      */
-    commonUtilities.base64ToArrayBuffer = function(base64String) {
+    base64ToArrayBuffer: function(base64String) {
         return Uint8Array.from(atob(base64String), function(char) { return char.charCodeAt(0) });
-    };
+    },
 
     /**
      * Convert a string of hexadecimal digits to its binary byte array equivalent. For
@@ -771,7 +769,7 @@
      * @returns {Uint8Array|null} Returns an array of the binary representation of the hex string,
      *   or null if there was an error where the input string could not be reliably converted.
      */
-    commonUtilities.hexStringToByteArray = function(hexString) {
+    hexStringToByteArray: function(hexString) {
         const stringLength = hexString.length;
         if (stringLength % 2 == 1) {
             // it must be an even number of hex digits, it is an error otherwise
@@ -787,7 +785,7 @@
             bytes.push(parseInt(hexString.substring(index, index + 2), 16));
         }
         return new Uint8Array(bytes);
-    }
+    },
 
     /**
      * Convert a string into its binary equivalent. This takes each byte of the string
@@ -795,10 +793,10 @@
      * @param {String} inputString A string to convert to binary.
      * @returns {Uint8Array} The binary representation of the input string.
      */
-    commonUtilities.stringToByteArray = function(inputString) {
+    stringToByteArray: function(inputString) {
         const utf8Encode = new TextEncoder();
         return utf8Encode.encode(inputString);
-    }
+    },
 
     /**
      * Convert a binary byte array into its string equivalent. This takes each element (byte)
@@ -806,10 +804,10 @@
      * @param {Uint8Array} inputArray An array to convert to a string.
      * @returns {String} The string representation of the input array.
      */
-    commonUtilities.byteArrayToString = function(inputArray) {
+    byteArrayToString: function(inputArray) {
         const utf8Decode = new TextDecoder();
         return utf8Decode.decode(inputArray);
-    }
+    },
 
     /**
      * Convert an array of bytes into it hexadecimal string equivalent. For example,
@@ -817,7 +815,7 @@
      * @param {ArrayBuffer} byteArray An array of bytes, preferably unsigned 8-bit integers (Uint8Array).
      * @returns {String} A string of hex digits.
      */
-    commonUtilities.byteArrayToHexString = function(byteArray) {
+    byteArrayToHexString: function(byteArray) {
         if ( ! (ArrayBuffer.isView(byteArray) || Array.isArray(byteArray))) {
             return "";
         }
@@ -834,7 +832,7 @@
             hexDigits[p ++] = nibble > 9 ? nibble + alpha : nibble + digit;
         }
         return String.fromCharCode.apply(null, hexDigits);
-    }
+    },
 
     /**
      * Round a number to the requested number of decimal places.
@@ -842,10 +840,10 @@
      * @param {integer} decimalPlaces the number of decimal places.
      * @returns {number} Rounded value.
      */
-    commonUtilities.roundTo = function (value, decimalPlaces) {
+    roundTo: function (value, decimalPlaces) {
         const orderOfMagnitude = Math.pow(10, decimalPlaces);
         return Math.round(value * orderOfMagnitude) / orderOfMagnitude;
-    };
+    },
 
     /* ----------------------------------------------------------------------------------
      * Cookie handling functions
@@ -857,8 +855,8 @@
      * @param {string} key Indicate which cookie to get.
      * @return {string|null} Contents of cookie stored with key.
      */
-    commonUtilities.cookieGet = function (key) {
-        if ( ! commonUtilities.isBrowserEnvironment()) {
+    cookieGet: function (key) {
+        if ( ! this.isBrowserEnvironment()) {
             return null;
         }
         if (key && document.cookie) {
@@ -866,7 +864,7 @@
         } else {
             return null;
         }
-    };
+    },
 
     /**
      * Set a cookie indexed by the specified key.
@@ -881,8 +879,8 @@
      * @return {Boolean|String} true if set, false if error. Returns string if not running in
      *   a browser environment, such as Node.
      */
-     commonUtilities.cookieSet = function (key, value, expiration, path, domain, isSecure) {
-        if ( ! commonUtilities.isBrowserEnvironment()) {
+     cookieSet: function (key, value, expiration, path, domain, isSecure) {
+        if ( ! this.isBrowserEnvironment()) {
             return null;
         }
 
@@ -895,7 +893,7 @@
             return false;
         }
         if (value === null || typeof value === "undefined") {
-            return commonUtilities.cookieRemove(key, path, domain);
+            return this.cookieRemove(key, path, domain);
         }
         expires = "";
         neverExpires = "expires=Fri, 31 Dec 9999 23:59:59 GMT";
@@ -936,7 +934,7 @@
         }
         document.cookie = encodeURIComponent(key) + "=" + cookieData;
         return true;
-    };
+    },
 
     /**
      * Remove a cookie indexed by the specified key.
@@ -946,14 +944,14 @@
      * @param {string} domain Cookie domain.
      * @return {boolean} true if removed, false if doesn't exist.
      */
-    commonUtilities.cookieRemove = function (key, path, domain) {
-        if (commonUtilities.cookieExists(key)) {
+    cookieRemove: function (key, path, domain) {
+        if (this.cookieExists(key)) {
             document.cookie = encodeURIComponent(key) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (domain ? "; domain=" + domain : "") + (path ? "; path=" + path : "");
             return true;
         } else {
             return false;
         }
-    };
+    },
 
     /**
      * Determine if the cookie exists.
@@ -961,8 +959,8 @@
      * @param {string} key Key to test if exists.
      * @return {boolean} true if exists, false if doesn't exist.
      */
-    commonUtilities.cookieExists = function (key) {
-        if ( ! commonUtilities.isBrowserEnvironment()) {
+    cookieExists: function (key) {
+        if ( ! this.isBrowserEnvironment()) {
             return false;
         }
         if (key && document.cookie) {
@@ -970,15 +968,15 @@
         } else {
             return false;
         }
-    };
+    },
 
     /**
      * Return an array of all cookie keys.
      *
      * @return {Array} Array of all stored cookie keys.
      */
-    commonUtilities.cookieGetKeys = function () {
-        if ( ! commonUtilities.isBrowserEnvironment()) {
+    cookieGetKeys: function () {
+        if ( ! this.isBrowserEnvironment()) {
             return [];
         }
         var allKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/),
@@ -989,7 +987,7 @@
             allKeys[index] = decodeURIComponent(allKeys[index]);
         }
         return allKeys;
-    };
+    },
 
     /* ----------------------------------------------------------------------------------
      * Local storage helper functions
@@ -999,28 +997,28 @@
      * Determine if we have sessionStorage available.
      * @returns {boolean}
      */
-    commonUtilities.haveSessionStorage = function () {
+    haveSessionStorage: function () {
         return this.browserStorageAvailable("sessionStorage", true);
-    };
+    },
 
     /**
      * Determine if we have localStorage available.
      * @returns {boolean}
      */
-    commonUtilities.haveLocalStorage = function () {
+    haveLocalStorage: function () {
         return this.browserStorageAvailable("localStorage", true);
-    };
+    },
 
     /**
      * Look up an item's value in a local or session storage and return it. If it is
      * stored as JSON then we parse it and return an object.
      *
      * @param {string} key the key to look up and return its respective value from the storage object indicated. The expectation
-     * is you previously saved it with commonUtilities.storageSave(key, value);
+     * is you previously saved it with storageSave(key, value);
      * @param {Object} storageObject use either localStorage, sessionStorage, or null will default to 'localStorage'
      * @returns {string|*}
      */
-    commonUtilities.storageGet = function (key, storageObject) {
+    storageGet: function (key, storageObject) {
         if ( ! this.isBrowserEnvironment()) {
             return null;
         }
@@ -1040,7 +1038,7 @@
             itemValueParsed = null;
         }
         return itemValueParsed;
-    };
+    },
 
     /**
      * Save an item in local storage. If the value is null, it will attempt to remove the item if it was
@@ -1050,7 +1048,7 @@
      * re-hydrate the object. Other types are converted to string so loadObjectWithKey will return a string.
      * @return {boolean} true if saved or removed. false for an error.
      */
-    commonUtilities.saveObjectWithKey = function (key, object) {
+    saveObjectWithKey: function (key, object) {
         var storageObject,
             itemValueRaw,
             saved = false;
@@ -1074,14 +1072,14 @@
             }
         }
         return saved;
-    };
+    },
 
     /**
      * Return object from local storage that was saved with saveObjectWithKey.
      * @param {string} key The key property name to look up.
      * @returns {any} object that was saved with saveObjectWithKey().
      */
-    commonUtilities.loadObjectWithKey = function (key) {
+    loadObjectWithKey: function (key) {
         var maybeJsonData,
             storageObject,
             object = null;
@@ -1102,13 +1100,13 @@
             }
         }
         return object;
-    };
+    },
 
     /**
      * Remove the given key from local storage.
      * @param {string} key Storage key to remove.
      */
-    commonUtilities.removeObjectWithKey = function (key) {
+    removeObjectWithKey: function (key) {
         var removed = false;
 
         if (this.browserStorageAvailable("localStorage", false) && key != null) {
@@ -1120,13 +1118,13 @@
             }
         }
         return removed;
-    };
+    },
 
     /* ----------------------------------------------------------------------------------
      * Very basic social network sharing utilities
      * ----------------------------------------------------------------------------------*/
 
-    commonUtilities.shareOnFacebook = function (summary, url) {
+    shareOnFacebook: function (summary, url) {
         let shareMessage = encodeURIComponent(url);
         if (summary && summary != "") {
             shareMessage += "&quote=" + encodeURIComponent(summary);
@@ -1136,9 +1134,9 @@
             "_share",
             "toolbar=no,status=0,width=626,height=436"
         );
-    };
+    },
 
-    commonUtilities.shareOnTwitter = function (message, url, related, hashTags) {
+    shareOnTwitter: function (message, url, related, hashTags) {
         let shareMessage = "text=" + encodeURIComponent(message);
         if (url && url != "") {
             shareMessage += "&url=" + encodeURIComponent(url);
@@ -1154,7 +1152,7 @@
             "_share",
             "toolbar=no,status=0,width=626,height=436"
         );
-    };
+    },
 
     /**
      * Share a user message with Bluesky.
@@ -1162,7 +1160,7 @@
      * @param {string} url Optional URL to link to.
      * @param {string} hashTags Optional hash tags to include in the share message. This should be a string "#tag1 #tag2".
      */
-    commonUtilities.shareOnBsky = function (message, url, hashTags) {
+    shareOnBsky: function (message, url, hashTags) {
         let shareMessage = "text=" + encodeURIComponent(message);
         if (url && url != "" && ! message.includes(url.toLowerCase())) {
             shareMessage += " " + encodeURIComponent(url);
@@ -1175,9 +1173,9 @@
             "_share",
             "toolbar=no,status=0,width=626,height=436"
         );
-    };
+    },
 
-    commonUtilities.shareByEmail = function (title, message, url) {
+    shareByEmail: function (title, message, url) {
         let shareMessage;
         if (url && url != "") {
             shareMessage = message + "\n\n" + url;
@@ -1189,9 +1187,9 @@
             "_share",
             "popup=1,toolbar=no,status=0,noopener=1,noreferrer=1,width=626,height=436"
         );
-    };
+    },
 
-    commonUtilities.shareBySMS = function (message, url) {
+    shareBySMS: function (message, url) {
         let shareMessage;
         if (url && url != "") {
             shareMessage = message + ": " + url;
@@ -1203,7 +1201,7 @@
             "_share",
             "popup=1,toolbar=no,status=0,noopener=1,noreferrer=1,width=626,height=436"
         );
-    };
+    },
 
     /**
      * A very basic function performance tester. Will track the time it takes to run the
@@ -1216,7 +1214,7 @@
      * @return {object} test results object including test number, test function id, duration,
      *         duration units, and total iterations.
      */
-    commonUtilities.performanceTest = function (testFunction, testId, totalIterations) {
+    performanceTest: function (testFunction, testId, totalIterations) {
         if ( ! this.isBrowserEnvironment()) {
             return null;
         }
@@ -1226,14 +1224,14 @@
         let results;
 
         if (window.performance) {
-            _testNumber ++;
+            this._testNumber ++;
             start = window.performance.now();
             for (i = 0; i < totalIterations; i ++) {
                 testFunction();
             }
             duration = window.performance.now() - start;
             results = {
-                testNumber: _testNumber,
+                testNumber: this._testNumber,
                 testFunction: testId,
                 duration: duration,
                 durationUnits: "ms",
@@ -1243,7 +1241,7 @@
             results = null;
         }
         return results;
-    };
+    },
 
     /**
      * Convert a date into a MySQL compatible date string (YYYY-MM-DD).
@@ -1253,7 +1251,7 @@
      * @param {null|string|Date} date one of null, a string, or a Date object
      * @returns {string}
      */
-    commonUtilities.MySQLDate = function (date) {
+    MySQLDate: function (date) {
         var mysqlDateString;
         if (date == undefined || date == null) {
             date = new Date();
@@ -1262,18 +1260,18 @@
         }
         mysqlDateString = date.toISOString().slice(0, 10);
         return mysqlDateString;
-    };
+    },
 
     /**
      * Return the date it was years from today.
      * @param {integer} years Number of years before today.
      * @returns {Date}
      */
-    commonUtilities.subtractYearsFromNow = function (years) {
+    subtractYearsFromNow: function (years) {
         var date = new Date();
         date.setFullYear(date.getFullYear() - years);
         return date;
-    };
+    },
 
     /**
      * Inserts a new script element into the DOM on the indicated tag.
@@ -1284,7 +1282,7 @@
      * @param {string} scriptType optional script type. Defaults to "JavaScript"
      * @returns {Boolean} true if inserted, false if error.
      */
-    commonUtilities.insertScriptElement = function (id, src, tagName, scriptType) {
+    insertScriptElement: function (id, src, tagName, scriptType) {
         if ( ! document || document.getElementById(id)) {
             // no DOM or script already exists.
             return false;
@@ -1306,7 +1304,7 @@
         scriptElement.async = true;
         firstJSTag.appendChild(scriptElement);
         return true;
-    };
+    },
 
     /**
      * Parse a string of tags into individual tags array, making sure each tag is properly formatted.
@@ -1316,7 +1314,7 @@
      * @param {string} delimiter how the tags are separated, default is ;.
      * @returns {Array} array of individual tag strings, or empty array if nothing to parse or an error occurred.
      */
-    commonUtilities.tagParse = function (tags, delimiter) {
+    tagParse: function (tags, delimiter) {
         let tagList;
         let i;
 
@@ -1335,7 +1333,7 @@
             }
         }
         return tagList;
-    };
+    },
 
     /**
      * Strip HTML tags from a string. Credit to http://locutus.io/php/strings/strip_tags/
@@ -1343,7 +1341,7 @@
      * @param {string} allowed list of tags to accept.
      * @returns {string} the stripped result.
      */
-    commonUtilities.stripTags = function (input, allowed) {
+    stripTags: function (input, allowed) {
         if (this.isNull(input)) {
             return "";
         } else if (typeof input !== "string") {
@@ -1358,7 +1356,7 @@
         return input.replace(commentsAndPhpTags, "").replace(tags, function ($0, $1) {
             return allowed.indexOf("<" + $1.toLowerCase() + ">") > -1 ? $0 : ""
         });
-    };
+    },
 
     /**
      * Determine if a string looks like a valid email address. This is a simple sanity test,
@@ -1367,9 +1365,9 @@
      * @param {string} email String to expect an email address
      * @returns {boolean} true if we think it is a valid email address.
      */
-    commonUtilities.isValidEmail = function(email) {
+    isValidEmail: function(email) {
         return /\S+@\S+\.\S+/.test(email);
-    };
+    },
 
     /**
      * Validate an array of fields, such as user form inputs, by using a matching array of
@@ -1414,7 +1412,7 @@
      *   code: integer An error code, can be used to look up an error in a string table.
      *   message: string the error message.
      */
-    commonUtilities.validateFields = function (keyValueArrayOfFields, keyValueArrayOfDefinitions) {
+    validateFields: function (keyValueArrayOfFields, keyValueArrayOfDefinitions) {
         var result = [],
             field,
             fieldDefinition,
@@ -1522,7 +1520,7 @@
             }
         }
         return result;
-    };
+    },
 
     /**
      * Parse a domain or a URL to return the domain with the server dropped.
@@ -1533,7 +1531,7 @@
      * @param {String} proposedHost A proposed URL or domain name to parse.
      * @returns {String} The proposed host domain with the server removed.
      */
-    commonUtilities.domainDropServer = function(proposedHost) {
+    domainDropServer: function(proposedHost) {
         var targetHost = proposedHost ? proposedHost.toString() : "";
         var pos = targetHost.indexOf("://"); // remove the protocol
         if (pos > 0) {
@@ -1557,7 +1555,7 @@
         }
         targetHost = domainParts.join(".")
         return targetHost;
-    }
+    },
 
     /**
      * Encrypt a string of data using the AES CBC algorithm. This is an asynchronous function
@@ -1569,11 +1567,11 @@
      * @param {string} iv Initialization vector is a 16 byte string.
      * @return {Promise} A Promise that will resolve with a Base-64 encoded encrypted data.
      */
-    commonUtilities.encryptString = async function(data, key, iv) {
+    encryptString: async function(data, key, iv) {
         const context = this;
         return new Promise(function(resolve, reject) {
             const encryptMethod = "AES-CBC";
-            window.crypto.subtle.importKey(
+            crypto.subtle.importKey(
                 "raw",
                 context.stringToByteArray(key),
                 {
@@ -1583,7 +1581,7 @@
                 ["encrypt", "decrypt"]
             ).then(function(cryptoKey) {
                 const encoder = new TextEncoder();
-                window.crypto.subtle.encrypt(
+                crypto.subtle.encrypt(
                     {
                         name: encryptMethod,
                         iv: iv,
@@ -1602,7 +1600,7 @@
                 reject(exception);
             });
         });
-    }
+    },
 
     /**
      * Decrypt a string that was encrypted with `encryptString()` and the matching key and iv.
@@ -1611,11 +1609,11 @@
      * @param {string} iv Initialization vector is a 16 byte string.
      * @return {string} Original data.
      */
-    commonUtilities.decryptString = async function(encryptedData, key, iv) {
+    decryptString: async function(encryptedData, key, iv) {
         const context = this;
         return new Promise(function(resolve, reject) {
             const encryptMethod = "AES-CBC";
-            window.crypto.subtle.importKey(
+            crypto.subtle.importKey(
                 "raw",
                 context.stringToByteArray(key),
                 {
@@ -1624,7 +1622,7 @@
                 true,
                 ["encrypt", "decrypt"]
             ).then(function(cryptoKey) {
-                window.crypto.subtle.decrypt(
+                crypto.subtle.decrypt(
                     {
                         name: encryptMethod,
                         iv: iv,
@@ -1645,14 +1643,14 @@
                 reject(exception);
             });
         });
-    }
+    },
 
     /**
      * Compute MD5 checksum for the given string.
-     * @param s {string}
+     * @param {string} s String to hash.
      * @returns {string} MD5 checksum.
      */
-    commonUtilities.md5 = function (s) {
+    md5: function (s) {
         function L(k,d) {
             return(k<<d)|(k>>>(32-d))
         }
@@ -1707,12 +1705,12 @@
         }
         var C;var P,h,E,v,g,Y,X,W,V;var S=7,Q=12,N=17,M=22;var A=5,z=9,y=14,w=20;var o=4,m=11,l=16,j=23;var U=6,T=10,R=15,O=21;
         s=J(s);C=e(s);Y=1732584193;X=4023233417;W=2562383102;V=271733878;
-        for(P=0;P<C.length;P+=16){
+        for (P=0;P<C.length;P+=16){
             h=Y;E=X;v=W;g=V;Y=u(Y,X,W,V,C[P+0],S,3614090360);V=u(V,Y,X,W,C[P+1],Q,3905402710);W=u(W,V,Y,X,C[P+2],N,606105819);X=u(X,W,V,Y,C[P+3],M,3250441966);Y=u(Y,X,W,V,C[P+4],S,4118548399);V=u(V,Y,X,W,C[P+5],Q,1200080426);W=u(W,V,Y,X,C[P+6],N,2821735955);X=u(X,W,V,Y,C[P+7],M,4249261313);Y=u(Y,X,W,V,C[P+8],S,1770035416);V=u(V,Y,X,W,C[P+9],Q,2336552879);W=u(W,V,Y,X,C[P+10],N,4294925233);X=u(X,W,V,Y,C[P+11],M,2304563134);Y=u(Y,X,W,V,C[P+12],S,1804603682);V=u(V,Y,X,W,C[P+13],Q,4254626195);W=u(W,V,Y,X,C[P+14],N,2792965006);X=u(X,W,V,Y,C[P+15],M,1236535329);Y=f(Y,X,W,V,C[P+1],A,4129170786);V=f(V,Y,X,W,C[P+6],z,3225465664);W=f(W,V,Y,X,C[P+11],y,643717713);X=f(X,W,V,Y,C[P+0],w,3921069994);Y=f(Y,X,W,V,C[P+5],A,3593408605);V=f(V,Y,X,W,C[P+10],z,38016083);W=f(W,V,Y,X,C[P+15],y,3634488961);X=f(X,W,V,Y,C[P+4],w,3889429448);Y=f(Y,X,W,V,C[P+9],A,568446438);V=f(V,Y,X,W,C[P+14],z,3275163606);W=f(W,V,Y,X,C[P+3],y,4107603335);X=f(X,W,V,Y,C[P+8],w,1163531501);Y=f(Y,X,W,V,C[P+13],A,2850285829);V=f(V,Y,X,W,C[P+2],z,4243563512);W=f(W,V,Y,X,C[P+7],y,1735328473);X=f(X,W,V,Y,C[P+12],w,2368359562);Y=D(Y,X,W,V,C[P+5],o,4294588738);V=D(V,Y,X,W,C[P+8],m,2272392833);W=D(W,V,Y,X,C[P+11],l,1839030562);X=D(X,W,V,Y,C[P+14],j,4259657740);Y=D(Y,X,W,V,C[P+1],o,2763975236);V=D(V,Y,X,W,C[P+4],m,1272893353);W=D(W,V,Y,X,C[P+7],l,4139469664);X=D(X,W,V,Y,C[P+10],j,3200236656);Y=D(Y,X,W,V,C[P+13],o,681279174);V=D(V,Y,X,W,C[P+0],m,3936430074);W=D(W,V,Y,X,C[P+3],l,3572445317);X=D(X,W,V,Y,C[P+6],j,76029189);Y=D(Y,X,W,V,C[P+9],o,3654602809);V=D(V,Y,X,W,C[P+12],m,3873151461);W=D(W,V,Y,X,C[P+15],l,530742520);X=D(X,W,V,Y,C[P+2],j,3299628645);Y=t(Y,X,W,V,C[P+0],U,4096336452);V=t(V,Y,X,W,C[P+7],T,1126891415);W=t(W,V,Y,X,C[P+14],R,2878612391);X=t(X,W,V,Y,C[P+5],O,4237533241);Y=t(Y,X,W,V,C[P+12],U,1700485571);V=t(V,Y,X,W,C[P+3],T,2399980690);W=t(W,V,Y,X,C[P+10],R,4293915773);X=t(X,W,V,Y,C[P+1],O,2240044497);Y=t(Y,X,W,V,C[P+8],U,1873313359);V=t(V,Y,X,W,C[P+15],T,4264355552);W=t(W,V,Y,X,C[P+6],R,2734768916);X=t(X,W,V,Y,C[P+13],O,1309151649);Y=t(Y,X,W,V,C[P+4],U,4149444226);V=t(V,Y,X,W,C[P+11],T,3174756917);W=t(W,V,Y,X,C[P+2],R,718787259);X=t(X,W,V,Y,C[P+9],O,3951481745);Y=K(Y,h);X=K(X,E);W=K(W,v);V=K(V,g);
         }
         var i=B(Y)+B(X)+B(W)+B(V);
         return i.toLowerCase();
-    };
+    },
 
     /**
      * Given a user email, generate the Gravatar URL for the image.
@@ -1720,25 +1718,8 @@
      * @param {integer} size THe size of the avatar image to return, width and height are equal.
      * @returns {string} - A URL.
      */
-    commonUtilities.getGravatarURL = function (email, size) {
+    getGravatarURL: function (email, size) {
         var size = size || 80;
-        return "https://www.gravatar.com/avatar/" + commonUtilities.md5(email) + ".jpg?s=" + size;
-    };
-
-    /* ----------------------------------------------------------------------------------
-     * Setup for AMD, node, or standalone reference the commonUtilities object.
-     * ----------------------------------------------------------------------------------*/
-
-    if (typeof define === "function" && define.amd) {
-        define(function () { return commonUtilities; });
-    } else if (typeof exports === "object") {
-        module.exports = commonUtilities;
-    } else {
-        var existingUtilityFunctions = global.commonUtilities;
-        commonUtilities.existingUtilityFunctions = function () {
-            global.commonUtilities = existingUtilityFunctions;
-            return this;
-        };
-        global.commonUtilities = commonUtilities;
+        return "https://www.gravatar.com/avatar/" + this.md5(email) + ".jpg?s=" + size;
     }
-})(this);
+}
