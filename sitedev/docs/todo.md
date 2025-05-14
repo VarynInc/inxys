@@ -30,6 +30,13 @@ zamb33ZEE4269&&
     - create new
     - edit/update
     - markdown editor like Medium
+- 🟦 Conference
+    - List all, member of, public
+    - list membership
+    - add/remove member
+    - create new
+    - edit/update
+    - comment
 
 - ✅ Log in, verify correct account match (cr), set login cookie
 - ✅ Log in, add show password
