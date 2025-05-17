@@ -301,6 +301,17 @@ function getPostOrRequestVar ($varName, $defaultValue = NULL) {
 }
 
 /**
+ * Return a variable we expect to be an integer that was posted from a form, or in the REQUEST object (GET or COOKIES), or a default if not found.
+ * This way POST is the primary concern but if not found will fallback to the other methods.
+ * @param string|array $varName variable to read from request. If array, iterates array of strings until the first entry returns a result.
+ * @param mixed $defaultValue A value to return if the parameter is not provided in the request.
+ * @return mixed The value of the parameter or $defaultValue.
+ */
+function getPostOrRequestInt ($varName, $defaultValue = 0) {
+    return intval(getPostOrRequestVar($varName, $defaultValue));
+}
+
+/**
  * Return a variable that was posted from a form, or a default if not found.
  * @param string|array $varName variable to read from POST. If array, iterates array of strings until the first entry returns a result.
  * @param mixed $defaultValue A value to return if the parameter is not provided in the POST.
@@ -325,6 +336,16 @@ function getPostVar ($varName, $defaultValue = NULL) {
         }
     }
     return $value;
+}
+
+/**
+ * Return a variable that we expect to be an integer that was posted from a form, or a default if not found.
+ * @param string|array $varName variable to read from POST. If array, iterates array of strings until the first entry returns a result.
+ * @param mixed $defaultValue A value to return if the parameter is not provided in the POST.
+ * @return mixed The value of the parameter or $defaultValue.
+ */
+function getPostInt ($varName, $defaultValue = 0) {
+    return intval(getPostVar($varName, $defaultValue));
 }
 
 /**

@@ -12,6 +12,14 @@ Any tasks that are specified fully and determined to be worked on should go to [
 
 zamb33ZEE4269&&
 
+- must make a demo, tight, game highlights
+- collaborate with influences
+- use community, streamers, festivals
+- social media (unless you are an influencer) doesn't work
+- [howtomarketagame.com](https://howtomarketagame.com/)
+- https://www.youtube.com/watch?v=M5XfWnyBPvc (24:00)
+
+
 - 🟦 Log in, if not confirmed offer resend link
 - 🟦 Log in, if BLOCKED or other error do not show resend confirm
 - 🟦 Log in, rememberme sets cookie. if rememberme is not checked then the cookie only lasts for the session until closed
@@ -31,7 +39,8 @@ zamb33ZEE4269&&
     - edit/update
     - markdown editor like Medium
 - 🟦 Conference
-    - List all, member of, public
+    - loggedin: List all, member of ConferenceList ConferenceList(IN _site_id int, in _logged_in_user_id int, in _tags varchar(50), in _start_date datetime, in _end_date datetime, in _start_item int, in _num_items int, in _include_public_non_member int, in _language_code char(2), OUT _success boolean, OUT _status_msg varchar(255))
+    - not logged in: list all public (SiteConferenceList)SiteConferenceList(IN _site_id int, in _logged_in_user_id int, in _tags varchar(50), in _start_date datetime, in _end_date datetime, in _start_item int, in _num_items int, in _public_only tinyint, in _has_member_id int, in _language_code char(2), OUT _success boolean, OUT _status_msg varchar(255))
     - list membership
     - add/remove member
     - create new

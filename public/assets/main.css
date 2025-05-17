@@ -119,6 +119,11 @@ li.nav-item.navbar-item:hover {
     text-decoration: underline;
 }
 
+
+.clickable {
+    cursor: pointer;
+}
+
 .banner-light {
     color: #1d1d1d;
     background-color: #dcdcdc;
@@ -210,8 +215,14 @@ pre {
     color: #5e5e5e;
     font-size: 0.9em;
 }
+
 .popup-form-address-input {
     display: none;
+}
+
+.conf-thumbnail {
+    height: 250px;
+    max-height: 250px;
 }
 
 @media (max-width: 768px) {
