@@ -10,16 +10,16 @@ Any tasks that are specified fully and determined to be worked on should go to [
 🐛 - bug report
 🔴 - high priority
 
+### Test accounts
+
+- 10589 inXys-admin
+- 10597 Jim
+- 10598 jf
+- 10599 Murray 987pipesmoke123
+
 zamb33ZEE4269&&
 
-- must make a demo, tight, game highlights
-- collaborate with influences
-- use community, streamers, festivals
-- social media (unless you are an influencer) doesn't work
-- [howtomarketagame.com](https://howtomarketagame.com/)
-- https://www.youtube.com/watch?v=M5XfWnyBPvc (24:00)
-
-
+- 🟦 Create user: on successful confirmation then create 1 public conference for this user
 - 🟦 Log in, if not confirmed offer resend link
 - 🟦 Log in, if BLOCKED or other error do not show resend confirm
 - 🟦 Log in, rememberme sets cookie. if rememberme is not checked then the cookie only lasts for the session until closed

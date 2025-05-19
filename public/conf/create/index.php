@@ -1,6 +1,5 @@
-<?php
-/**
- * Create a new conference.
+<?php /** Create a new conference.
+ * Creating conferences should only be done by site administrators (or higher.)
  */
 include_once('../../../services/inxys_common.php');
 $pageId = 'conferences';

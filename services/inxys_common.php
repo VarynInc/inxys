@@ -56,6 +56,10 @@ function createResendConfirmEmailLink($userId, $userName, $email, $confirmationT
     return '<a href="/profile/?action=resendconfirm' . $params . '">' . $prompt . '</a>';
 }
 
+/**
+ * Return the user info object for the current logged in user if there is one.
+ * @return Object A user info object or null if no user is currently logged in.
+ */
 function restoreLoggedInUser() {
     global $enginesis;
     return $enginesis->getLoggedInUserInfo();
@@ -156,10 +160,48 @@ function checkEmailUnique($email) {
     return $isUnique;
 }
 
+/**
+ * Return the user's name in a common site-wide standard format "Real name (user-name, user-number)"
+ * @param Object A user info object obtained on a successful log in. Can be null to try to identify the current logged in user if there is one.
+ * @return String The user's full name.
+ */
 function formattedUserName($userInfo) {
-    if ($userInfo) {
+    if (is_null($userInfo)) {
+        $userInfo = restoreLoggedInUser();
+    }
+    if ( ! is_null($userInfo)) {
         return $userInfo->real_name . ' (' . $userInfo->user_name . ', ' . $userInfo->user_id . ')';
     } else {
         return 'Anonymous (anon, 0)';
     }
+}
+
+/**
+ * When a new user is created and registration is confirmed, finish setting up the
+ * account. This includes creating the user's free public conference.
+ * @param Object The user info object. If null we attempt to look it up if there is a logged in user.
+ * @return String An error code indicating the outcome.
+ */
+function completeUserActivation($userInfo) {
+    global $enginesis;
+    $errorCode = EnginesisErrors::NO_ERROR;
+    if (is_null($userInfo)) {
+        $userInfo = restoreLoggedInUser();
+    }
+    if ( ! is_null($userInfo)) {
+        $visibleId = '';
+        $conferenceCategoryId = 4;
+        $title = '';
+        $description = '';
+        $tags = '';
+        $icon = '';
+        $thumbnail = '';
+        $coverImage = '';
+        $isPrivate = 0;
+        $groupId = 0;
+        $serverResponse = $enginesis->conferenceCreate($visibleId, $conferenceCategoryId, $title, $description, $tags, $icon, $thumbnail, $coverImage, $isPrivate, $groupId);
+    } else {
+        $errorCode = EnginesisErrors::NOT_LOGGED_IN;
+    }
+    return $errorCode;
 }

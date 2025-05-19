@@ -3377,6 +3377,49 @@ class Enginesis {
     }
 
     /**
+     * Create a new conference.
+     */
+    public function conferenceCreate($visibleId, $conferenceCategoryId, $title, $description, $tags, $icon, $thumbnail, $coverImage, $isPrivate, $groupId) {
+        $service = 'ConferenceCreate';
+        $parameters = [
+            'visible_id' => $visibleId,
+            'conference_category_id' => $conferenceCategoryId,
+            'title' => $title,
+            'description' => $description,
+            'tags' => $tags,
+            'icon' => $icon,
+            'thumbnail' => $thumbnail,
+            'cover_image' => $coverImage,
+            'is_private' => $isPrivate,
+            'group_id' => $groupId
+        ];
+        $enginesisResponse = $this->callServerAPI($service, $parameters);
+        return $this->setLastErrorFromResponse($enginesisResponse);
+    }
+
+    /**
+     * Update the attributes of an existing conference.
+     */
+    public function conferenceUpdate($conferenceId, $visibleId, $conferenceCategoryId, $title, $description, $tags, $icon, $thumbnail, $coverImage, $isPrivate, $groupId) {
+        $service = 'ConferenceUpdate';
+        $parameters = [
+            'conference_id' => $conferenceId,
+            'visible_id' => $visibleId,
+            'conference_category_id' => $conferenceCategoryId,
+            'title' => $title,
+            'description' => $description,
+            'tags' => $tags,
+            'icon' => $icon,
+            'thumbnail' => $thumbnail,
+            'cover_image' => $coverImage,
+            'is_private' => $isPrivate,
+            'group_id' => $groupId
+        ];
+        $enginesisResponse = $this->callServerAPI($service, $parameters);
+        return $this->setLastErrorFromResponse($enginesisResponse);
+    }
+
+    /**
      * Return a list of the user's saved scratchpads. There must be a logged in user
      * for this query to return results.
      */

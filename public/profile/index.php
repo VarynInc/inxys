@@ -41,6 +41,7 @@ if ($action == 'regconfirm') {
         $refreshTokenExpires = $userInfo->expires;
         $userId = $userInfo->user_id;
         $enginesis->userLoginRefresh();
+        $errorCode = completeUserActivation($userInfo);
     } else {
         // regconfirm failed for some reason so ask the user to do something about it.
         $userUserId = getPostOrRequestVar('u', '');
