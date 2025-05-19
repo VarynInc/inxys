@@ -142,6 +142,16 @@ function makeErrorResponse($errorCode, $errorMessage, $parameters) {
     return $contents;
 }
 
+/**
+ * Determine if the response looks like a valid Enginesis response.
+ *
+ * @param EnginesisResponse $enginesisResponse An EnginesisResponse object.
+ * @return boolean Indicates if the EnginesisResponse is considered a valid object.
+ */
+function isValidEnginesisResponse($enginesisResponse) {
+    return is_object($enginesisResponse) && isset($enginesisResponse->results) && isset($enginesisResponse->results->status);
+}
+
 // =================================================================
 // HTTP and client/server helper functions
 // =================================================================
@@ -1412,11 +1422,14 @@ function castBoolToInt ($value) {
 /**
  * Return a string representation of a boolean value. If the value is not a true boolean then it will be
  * implicitly cast to boolean.
- * @param $value
+ *
+ * @param mixed $value Any value to test, it will be coerced to a boolean.
+ * @param string $trueValue The value to return if $value is considered true. Default is 'true'.
+ * @param string $falseValue The value to return if $value is considered false. Default is 'false'.
  * @return string
  */
-function castBoolToString($value) {
-    return $value ? 'true' : 'false';
+function castBoolToString($value, $trueValue = 'true', $falseValue = 'false') {
+    return $value ? $trueValue : $falseValue;
 }
 
 /**
