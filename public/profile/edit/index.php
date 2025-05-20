@@ -1,11 +1,15 @@
-<?php
+<?php /** Edit/update a users profile.
+ * actions:
+ * edit: enable the edit user profile forms and template.
+ * update: change profile data for the current logged in user.
+ */
 include_once('../../../services/inxys_common.php');
 $pageId = 'profile';
 $pageSubId = 'edit';
 $pageTitle = 'Edit Profile';
 $hackerVerification = '';
-include(VIEWS_ROOT . 'page-header.php');
 redirectIfNotLoggedIn('/');
+include(VIEWS_ROOT . 'page-header.php');
 ?>
 <body>
 <?php include(VIEWS_ROOT . 'top-nav.php');?>

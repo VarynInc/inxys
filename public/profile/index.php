@@ -1,20 +1,20 @@
-<?php /** /profile/
-* If a user is logged in we show the details about that user
-* and the profile functions such as edit, change password, etc. This page can also show the public details about
-* another user. Finally, if no user is logged in, this page handles all the prompts and details for login, SSO,
-* forgot password.
+<?php /** /profile/ is the user's profile page.
+* If a user is logged in we show the details about that user and the profile functions
+* such as edit, change password, etc. This page can also show the public details about
+* another user. Finally, if no user is logged in, this page handles all the prompts
+* and details for login, SSO, forgot password.
 *
 * Valid actions are:
 *   login: log in a user with name/password from a login form.
-*   logout: log out a user who is currently logged in, clearing all cookies and local data.
-*   update: change profile data for the current logged in user.
-*   resetpassword: The current logged in user requested a Password Reset, initiate the forgot password flow.
+*   signout: log out a user who is currently logged in, clearing all cookies and local data.
+*   resetpass: The current logged in user requested a Password Reset, initiate the forgot password flow.
 *   resendconfirm: A user needs the registration confirmation form resent (lost it or it expired.)
 *   regconfirm: Handle a redirect from regconfirm.php so we can display the error message or complete the log in.
 *   view: show the public profile of a specified user.
 */
 include_once('../../services/inxys_common.php');
 require_once('../../services/strings.php');
+require_once('../../services/profile.php');
 $debug = getPostOrRequestVar('debug', 0) == 1;
 $pageId = 'profile';
 $pageTitle = $stringTable->lookup(inxysUIStrings::PROFILE_PAGE_TITLE);
@@ -26,46 +26,15 @@ $redirectedStatusMessage = '';
 $registrationErrorCode = '';
 
 if ($action == 'regconfirm') {
-    // A redirect from regconfirm.php so we can complete registration and display any error message
-    $registrationErrorCode = getPostOrRequestVar('code', '');
-    if ($registrationErrorCode == 'NO_ERROR' || $registrationErrorCode == 'SUCCESS' || $registrationErrorCode == '') {
-        $registrationErrorCode = 'SUCCESS';
-        $redirectedStatusMessage = $stringTable->lookup(EnginesisUIStrings::WELCOME_MESSAGE, null);
-        // @todo: Verify the cookie/token matches this user
-        // @todo: There should be a safeguard if a hacker comes with action+code but is really not the user we think he is spoofing
-        $userInfo = $enginesis->getLoggedInUserInfo();
-        $isValidSession = verifySessionIsValid($userId, $authToken);
-        $isLoggedIn = true;
-        $authToken = $userInfo->authtok;
-        $refreshToken = $userInfo->refresh_token;
-        $refreshTokenExpires = $userInfo->expires;
-        $userId = $userInfo->user_id;
-        $enginesis->userLoginRefresh();
-        $errorCode = completeUserActivation($userInfo);
-    } else {
-        // regconfirm failed for some reason so ask the user to do something about it.
-        $userUserId = getPostOrRequestVar('u', '');
-        $userName = getPostOrRequestVar('n', '');
-        $userEmail = getPostOrRequestVar('e', '');
-        $confirmationToken = getPostOrRequestVar('t', '');
-        $linkToResendToken = createResendConfirmEmailLink($userUserId, $userName, $userEmail, $confirmationToken);
-        $redirectedStatusMessage = errorToLocalString($registrationErrorCode);
-    }
+    // A redirect from regconfirm.php so we can complete registration and display any error message.
+    completeUserRegistration($registrationErrorCode, $redirectedStatusMessage);
 } elseif ($action == 'resendconfirm') {
     // called from login when the user has not confirmed their email with https://inxys-l.net/profile/?action=resendconfirm&n=jim&d=1745976307
-    // u=user-id, n=user-name, e=email, t=token, d=timestamp
-    // if u || n || e, then look up account info and determine if not confirmed. if not confirmed, resend the email.
-    $userUserId = getPostOrRequestVar('u', '');
-    $userName = getPostOrRequestVar('n', '');
-    $userEmail = getPostOrRequestVar('e', '');
-    $confirmationToken = getPostOrRequestVar('t', '');
-    $results = $enginesis->registeredUserResetSecondaryPassword($userUserId, $userName, $userEmail, $confirmationToken);
-    if (empty($results)) {
-        // most likely the parameters are incorrect and the user lookup failed.
-        $errorResponse = $enginesis->getLastError();
-        $registrationErrorCode = $errorResponse['message'];
-        $redirectedStatusMessage = $stringTable->lookup(EnginesisUIStrings::REG_CONFIRM_ERROR, null); // . ' ' . $errorResponse['extended_info'];
-    }
+    resendConfirmationNotification($registrationErrorCode, $redirectedStatusMessage);
+} elseif ($action == 'resetpass') {
+    resetPassword($registrationErrorCode, $redirectedStatusMessage);
+} elseif ($action == 'view') {
+    viewUserProfile($registrationErrorCode, $redirectedStatusMessage);
 } elseif ($action == 'signout') {
     $enginesis->userLogout();
     header("location: /");
