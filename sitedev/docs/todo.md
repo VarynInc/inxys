@@ -19,7 +19,7 @@ Any tasks that are specified fully and determined to be worked on should go to [
 
 zamb33ZEE4269&&
 
-- 🟦 Create user: on successful confirmation then create 1 public conference for this user
+- 🟦 Create user: on successful confirmation then create 1 public conference for this user (profile/index.php)
 - 🟦 Log in, if not confirmed offer resend link
 - 🟦 Log in, if BLOCKED or other error do not show resend confirm
 - 🟦 Log in, rememberme sets cookie. if rememberme is not checked then the cookie only lasts for the session until closed

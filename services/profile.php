@@ -1,9 +1,12 @@
-<?php /* profile support functions
- *
+<?php /** profile page support functions
+ * Support functions for page /profile/index.php and sub-pages.
+ * @author jf 05/12/2025
  */
 
  /**
   * A redirect from regconfirm.php so we can complete registration and display any error message.
+  * @param string $registrationErrorCode Return an error code or success indicating the result of the registration confirmation.
+  * @param string $redirectedStatusMessage Return a user-facing message indicating the result of the registration confirmation.
   */
 function completeUserRegistration( & $registrationErrorCode, & $redirectedStatusMessage) {
     $registrationErrorCode = getPostOrRequestVar('code', '');
@@ -36,6 +39,8 @@ function completeUserRegistration( & $registrationErrorCode, & $redirectedStatus
  * called from login when the user has not confirmed their email with https://inxys-l.net/profile/?action=resendconfirm&n=jim&d=1745976307
  * u=user-id, n=user-name, e=email, t=token, d=timestamp
  * if u || n || e, then look up account info and determine if not confirmed. if not confirmed, resend the email.
+ * @param string $registrationErrorCode Return an error code or success indicating the result of the look up.
+ * @param string $redirectedStatusMessage Return a user-facing message indicating the result of the look up.
  */
 function resendConfirmationNotification( & $registrationErrorCode, & $redirectedStatusMessage) {
     $userUserId = getPostOrRequestVar('u', '');
@@ -51,11 +56,21 @@ function resendConfirmationNotification( & $registrationErrorCode, & $redirected
     }
 }
 
+/**
+ * User requested a password reset, this function completes the process.
+ * @param string $errorCode Return an error code or success indicating the result of the look up.
+ * @param string $statusMessage Return a user-facing message indicating the result of the look up.
+ */
 function resetPassword( & $errorCode, & $statusMessage) {
     $errorCode = '';
     $statusMessage = '';
 }
 
+/**
+ * User requested to view the profile of another user.
+ * @param string $errorCode Return an error code or success indicating the result of the look up.
+ * @param string $statusMessage Return a user-facing message indicating the result of the look up.
+ */
 function viewUserProfile( & $errorCode, & $statusMessage) {
     $userUserId = getPostOrRequestInt(['u', 'user', 'id'], 0);
     // look up user, return public attributes
