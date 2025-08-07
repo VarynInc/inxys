@@ -107,10 +107,10 @@ $smaller$
     ![img alt text](img-link-url-src "img title")
     ![img alt text](img-link-url-src "img title"){#id .class attribute=value}
     ![img alt text][img-id]
-    [img-id]: https://inxys.net/assets/inxys-logo-32.png "Img title"
+    [img-id]: https://inxys.net/images/32.png "Img title"
 </pre>
             <div class="md-example">
-                <p>This is an example image <img src="https://inxys.net/assets/inxys-logo-32.png" title="Img title" alt="img alt text"> link.</p>
+                <p>This is an example image <img src="https://inxys.net/images/32.png" title="Img title" alt="img alt text"> link.</p>
             </div>
             <h2>Lists</h2>
             <p>

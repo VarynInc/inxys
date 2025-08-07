@@ -36,7 +36,7 @@ if ( ! $isLoggedIn) {
         <div class="col-12 col-md-10 col-lg-8 banner-light rounded-3">
             <div class="row justify-content-center">
                 <div class="col-12 hero-banner">
-                    <h1><img src="/assets/inxys-logo-96.png" class="hero-logo"> The Information Exchange</h1>
+                    <h1><img src="/images/96.png" class="hero-logo"> The Information Exchange</h1>
                 </div>
                 <div class="col-10 col-lg-8">
                     <blockquote><i>

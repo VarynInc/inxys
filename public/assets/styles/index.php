@@ -95,10 +95,10 @@ include(VIEWS_ROOT . 'page-header.php');
     <div class="md-example">
         <h3 id="images">Images</h3>
         <p>Images are similar to links only begin with !.</p>
-        <p>This is an example: ![The image caption](https://inxys.net/assets/logo.png)</p>
+        <p>This is an example: <code>![The image caption](https://inxys.net/images/inxys-logo-96.png)</code> <img src="https://inxys.net/images/inxys-logo-96.png"></p>
         <p>Use modifiers to indicate image justification and size.</p>
-        <p>This is an example image left justified 50x50: !l50x50[The image caption](https://inxys.net/assets/logo.png)</p>
-        <p>This is an example image right justified 50x100: !r50x100[The image caption](https://inxys.net/assets/logo.png)</p>
+        <p>This is an example image left justified 50x50: <code>!l50x50[The image caption](https://inxys.net/images/inxys-logo-96.png)</code></p>
+        <p>This is an example image right justified 50x100: <code>!r50x100[The image caption](https://inxys.net/images/inxys-logo-96.png)</code></p>
     </div>
     <div class="md-example">
         <h3 id="misc">Other formatting options</h3>
