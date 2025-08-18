@@ -1,11 +1,17 @@
 <?php
-    $pageId = isset($pageId) ? $pageId : 'inXys';
-    if ( ! isset($pageTitle)) {
-        $pageTitle = $pageId . ' | The Information Exchange';
-    }
-    if ( ! isset($pageDescription)) {
-        $pageDescription = 'The Information Exchange is a discussion forum to exchange ideas';
-    }
+$pageId = isset($pageId) ? $pageId : 'inXys';
+if ( ! isset($pageTitle)) {
+    $pageTitle = $pageId . ' | The Information Exchange';
+}
+if ( ! isset($pageDescription)) {
+    $pageDescription = 'The Information Exchange is a discussion forum to exchange ideas';
+}
+if (! empty($pageId) && $pageId != 'home') {
+    $stage = serverStage();
+    $pageURL = "https://inxys$stage.net/$pageId/";
+} else {
+    $pageURL = null;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,6 +22,9 @@
     <meta name="description" content="<?php echo($pageDescription);?> ">
     <meta name="author" content="">
     <meta name="keywords" content="inxys, The Information Exchange" />
+    <?php if ($pageURL) {
+        echo('<link rel="canonical" href="'. $pageURL .'" />' . "\n");
+    } ?>
     <link rel="icon" href="/favicon.ico">
     <link rel="shortcut icon" href="/images/196.png">
     <link rel="icon" type="image/png" href="/images/512.png" sizes="512x512">

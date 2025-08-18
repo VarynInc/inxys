@@ -1,8 +1,8 @@
 <?php
 include_once('../../services/inxys_common.php');
 $pageId = 'terms';
-$pageTitle = 'Terms of use | Inxys.net';
-$pageDescription = 'Terms of use for Inxys.net';
+$pageTitle = 'Terms of use for Inxys.net';
+$pageDescription = 'Terms of use for The Information Exchange Inxys.net';
 include(VIEWS_ROOT . 'page-header.php');
 ?>
 <body>
