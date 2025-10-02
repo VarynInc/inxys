@@ -24,15 +24,13 @@ function handleSignUpAttempt() {
     global $stringTable;
 
     $action = getPostVar('action', '');
-    $hackerToken = getPostVar('all-clear', '');
-    $hackerToken = getPostVar('all-clear', '');
     $isSignUpAttempt = false;
     $isLoggedIn = false;
     $errorMessage = '';
     $errorParameter = '';
     $userInfo = [];
 
-    if ($action == 'signup' && validateInputFormHackerToken($hackerToken)) {
+    if ($action == 'signup' && verifyFormHacks(['emailaddress', 'all-clear'])) {
         $isSignUpAttempt = true;
         if ($errorMessage == '') {
             // user name must be valid and unique

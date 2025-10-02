@@ -22,6 +22,7 @@ $rememberMeChecked = $rememberMe == 'on' ? 'checked' : '';
             <input type="email" id="signup-email" name="signup-email" tabindex="17" maxlength="20" class="login-form-input required" autocomplete="email" required value="<?php echo($email);?>"/>
             <span id="email-unique" class="username-is-not-unique"></span>
             <div class="signup-form-error" id="email-error"></div>
+            <input type="text" name="emailaddress" class="popup-form-address-input" />
         </div>
         <div class="form-group">
             <label for="signup-password">Password:</label><br>
