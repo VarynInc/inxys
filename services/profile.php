@@ -9,6 +9,8 @@
   * @param string $redirectedStatusMessage Return a user-facing message indicating the result of the registration confirmation.
   */
 function completeUserRegistration( & $registrationErrorCode, & $redirectedStatusMessage) {
+    global $stringTable;
+    global $enginesis;
     $registrationErrorCode = getPostOrRequestVar('code', '');
     if ($registrationErrorCode == 'NO_ERROR' || $registrationErrorCode == 'SUCCESS' || $registrationErrorCode == '') {
         $registrationErrorCode = 'SUCCESS';
@@ -16,9 +18,10 @@ function completeUserRegistration( & $registrationErrorCode, & $redirectedStatus
         // @todo: Verify the cookie/token matches this user
         // @todo: There should be a safeguard if a hacker comes with action+code but is really not the user we think he is spoofing
         $userInfo = $enginesis->getLoggedInUserInfo();
-        $isValidSession = verifySessionIsValid($userId, $authToken);
+        $authToken = $enginesis->getAuthToken();
+        $isValidSession = verifySessionIsValid($userInfo->user_id, $authToken);
+        // if ($isValidSession)
         $isLoggedIn = true;
-        $authToken = $userInfo->authtok;
         $refreshToken = $userInfo->refresh_token;
         $refreshTokenExpires = $userInfo->expires;
         $userId = $userInfo->user_id;
@@ -43,6 +46,8 @@ function completeUserRegistration( & $registrationErrorCode, & $redirectedStatus
  * @param string $redirectedStatusMessage Return a user-facing message indicating the result of the look up.
  */
 function resendConfirmationNotification( & $registrationErrorCode, & $redirectedStatusMessage) {
+    global $stringTable;
+    global $enginesis;
     $userUserId = getPostOrRequestVar('u', '');
     $userName = getPostOrRequestVar('n', '');
     $userEmail = getPostOrRequestVar('e', '');

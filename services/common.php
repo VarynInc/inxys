@@ -430,12 +430,59 @@ function setHTTPHeader() {
 function getHTTPOrigin() {
     if (array_key_exists('HTTP_ORIGIN', $_SERVER)) {
         $origin = $_SERVER['HTTP_ORIGIN'];
+        $urlParts = parse_url($origin);
+        if ( ! empty($urlParts['host'])) {
+            $origin = $urlParts['host'];
+        }
     } elseif (array_key_exists('HTTP_REFERER', $_SERVER)) {
         $origin = $_SERVER['HTTP_REFERER'];
+        $urlParts = parse_url($origin);
+        if ( ! empty($urlParts['host'])) {
+            $origin = $urlParts['host'];
+        }
     } else {
-        $origin = $_SERVER['REMOTE_ADDR'];
+        $origin = getHTTPClient();
     }
     return $origin;
+}
+
+/**
+ * Return the referring client information. You can request just the referrer or a complete report
+ * that includes origin and remote address separated with `|`.
+ * @param boolean Set to true to return referrer, origin, and IP address of client. Set to false to only return the HTTP referer.
+ * @return string The referring client information.
+ */
+function getHTTPReferrer($completeReport = true) {
+    $referrer = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
+    if ($completeReport) {
+        $referrer .= ' | ' . getHTTPOrigin() . ' | ' . getHTTPClient();
+    }
+    return $referrer;
+}
+
+/**
+ * Determine the IP address of the client making the request. We look at
+ * several possible request header attributes and choose the first one
+ * we come across.
+ * @return string|null Client IP address as it appears in the request header, of null if none found.
+ */
+function getHTTPClient() {
+    $headerAttributes = [
+        'HTTP_CF_CONNECTING_IP',
+        'HTTP_X_SUCURI_CLIENTIP',
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'REMOTE_ADDR'
+    ];
+    foreach ($headerAttributes as $attribute) {
+        if ( ! empty($_SERVER[$attribute])) {
+            return $_SERVER[$attribute];
+        }
+    }
+    return null;
 }
 
 /**
@@ -1075,7 +1122,7 @@ function randomString ($length, $maxCodePoint = 32, $reseed = false) {
  */
 function makeInputFormHackerToken () {
     global $enginesis;
-    $expirationTime = 30; // 30 minutes. TODO: Is this a reasonable amount of time?
+    $expirationTime = 30; // 30 minutes. @todo: Is this a reasonable amount of time?
     $hackerToken = md5($enginesis->getServerName()) . '' . floor(time() / ($expirationTime * 60));
     return $hackerToken;
 }
@@ -1109,21 +1156,22 @@ function verifyFormHacks($inputFormNames) {
     $thisFieldMustBeEmpty = isset($_POST[$inputFormNames[0]]) ? $_POST[$inputFormNames[0]] : 'hacker';
     $hackerToken = isset($_POST[$inputFormNames[1]]) ? $_POST[$inputFormNames[1]] : '0';
     $isVerified = $thisFieldMustBeEmpty === '' && validateInputFormHackerToken($hackerToken);
-    debugLog("verifyFormHacks token=$hackerToken (try " . makeInputFormHackerToken() . ") honeypot='$thisFieldMustBeEmpty' result " . ($isVerified ? 'OK' : 'HACK!'));
+    if ( ! $isVerified) {
+        debugError("verifyFormHacks check failed from " . getHTTPClient() . " token=$hackerToken (try " . makeInputFormHackerToken() . ") honeypot='$thisFieldMustBeEmpty'");
+    }
     return $isVerified;
 }
 
 /**
  * Helper function to determine if the current session is valid. What we are looking for:
- *   1. User id and token exist
- *   2. user id matches token
- *   3. not expired
+ *   1. user id matches token
+ *   2. token not expired
  * @param $userId
- * @param $token
- * @return bool
+ * @param $authToken
+ * @return boolean True if the session is valid.
  */
-function verifySessionIsValid($userId, $token) {
-    // TODO: We need to write the code for this!
+function verifySessionIsValid($userId, $authToken) {
+    // @todo: We need to write the code for this!
     return true;
 }
 
@@ -1229,14 +1277,15 @@ function isEmpty ($value) {
 }
 
 /**
- * Determine if a string begins with a specific string.
- * @param $haystack
- * @param $needle string|array
- * @return bool
+ * Determine if a string begins with a specific string. This does exact match so it is case sensitive.
+ *
+ * @param string The string to search against.
+ * @param string|array The string to search for in $haystack.
+ * @return boolean true if $haystack starts with $needle.
  */
 function startsWith($haystack, $needle) {
     if (is_array($needle)) {
-        for ($i = 0; $i < count($needle); $i ++) {
+        for ($i = 0; $i < count($needle); $i += 1) {
             if (startsWith($haystack, $needle[$i])) {
                 return true;
             }
@@ -1248,14 +1297,15 @@ function startsWith($haystack, $needle) {
 }
 
 /**
- * Deterine if a string ends with a specific string.
- * @param $haystack
- * @param $needle string|array
- * @return bool
+ * Determine if a string ends with a specific string.
+ *
+ * @param string String to consider.
+ * @param string|array What to match in $haystack.
+ * @return boolean true if $haystack ends with $needle.
  */
 function endsWith($haystack, $needle) {
     if (is_array($needle)) {
-        for ($i = 0; $i < count($needle); $i ++) {
+        for ($i = 0; $i < count($needle); $i += 1) {
             if (endsWith($haystack, $needle[$i])) {
                 return true;
             }
@@ -1268,8 +1318,8 @@ function endsWith($haystack, $needle) {
 
 /**
  * Transform a string into a safe to show inside HTML string. Unsafe HTML chars are converted to their escape equivalents.
- * @param $string a string to transform.
- * @return string the transformed string.
+ * @param string A string to transform.
+ * @return string The transformed string.
  */
 function safeForHTML ($string) {
     $htmlEscapeMap = [
@@ -1316,7 +1366,7 @@ function str_contains_char ($string, $selectChars, $start = 0, $length = 0) {
             }
         }
     } elseif (is_array($selectChars)) {
-        // TODO: End is not considered
+        // @todo: End is not considered
         for ($i = 0; $i < count($selectChars); $i ++) {
             if (strpos($string, $selectChars[$i], $start) !== false) {
                 return true;
@@ -2059,9 +2109,32 @@ function contentIdUnpack($content_id, & $site_id, & $content_type_id, & $object_
     return true;
 }
 
+/**
+ * Log a message to the logging utility.
+ * @param string Message to log.
+ */
 function debugLog($message) {
     global $enginesisLogger;
     $enginesisLogger->log($message, LogMessageLevel::Info, 'System');
+}
+
+/**
+ * Log an informational message to the logging utility.
+ * @param string Message to log.
+ */
+function debugInfo($message) {
+    global $enginesisLogger;
+    $enginesisLogger->log($message, LogMessageLevel::Info, 'System');
+}
+
+
+/**
+ * Log an error message to the logging utility.
+ * @param string Message to log.
+ */
+function debugError($message) {
+    global $enginesisLogger;
+    $enginesisLogger->log($message, LogMessageLevel::Error, 'System');
 }
 
 /**
