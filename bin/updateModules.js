@@ -24,7 +24,7 @@ const configuration = {
             destination: "./public/js/enginesis.js"
         },
         {
-            source: "commonUtilities/js/commonUtilities.js",
+            source: "commonUtilities/js/commonUtilities.mjs",
             destination: "./public/js/commonUtilities.js"
         }
     ]

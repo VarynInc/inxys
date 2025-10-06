@@ -14,7 +14,7 @@
  */
 
 export default {
-    version: "1.7.2",
+    version: "1.7.5",
     _base64KeyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
     _testNumber: 0,
 
@@ -273,6 +273,20 @@ export default {
             }
         }
         return -1;
+    },
+
+    /**
+     * Count the occurrences of each unique value in an array values. It is expected
+     * the array contains only scalar values (Numbers, Strings.)
+     * @param {Array} array An array of scalar values.
+     * @returns {Object} An object where each property is a unique value from the array, and its value is
+     * the count of the number of times that value appears in the array.
+     */
+    arrayCount: function(array) {
+        return array.reduce(function(accumulator, value) {
+            accumulator[value] = (accumulator[value] || 0) + 1;
+            return accumulator;
+        }, {});
     },
 
     /**
@@ -1244,22 +1258,58 @@ export default {
     },
 
     /**
+     * Compare two semantic versions to determine if they are equal, or one is greater
+     * than the other. This treats each version component as an integer, so that
+     * leading 0's are not considered. 1.02.03 is the same version as 1.2.3.
+     * @param {String} version1 A version string, 1.2.3 is expected.
+     * @param {String} version2 A version string, same format as the first parameter.
+     * @returns {integer} Result of the compare, 0 they are equal, 1 if first is less than second, -1 if first is greater than second.
+     */
+    simpleVersionCompare: function(version1, version2) {
+        const v1parts = version1.split(".");
+        const v2parts = version2.split(".");
+        let first;
+        let second;
+        let result = 0;
+        if (v1parts.length > v2parts.length) {
+            first = v2parts;
+            second = v1parts;
+        } else {
+            first = v1parts;
+            second = v2parts;
+        }
+        for (let i = 0; i < first.length; i += 1) {
+            const v1 = parseInt(first[i]);
+            const v2 = parseInt(second[i]);
+            if (v1 < v2) {
+                result = 1;
+                break;
+            } else if (v1 > v2) {
+                result = -1;
+                break;
+            }
+        }
+        return result;
+    },
+
+    /**
      * Convert a date into a MySQL compatible date string (YYYY-MM-DD).
      * If the date provided is a string we will attempt to convert it to a date object using the available
      * Date() constructor. If no date is provided we will use the current date. If none of these conditions
      * then we expect the date provided to be a valid Date object.
      * @param {null|string|Date} date one of null, a string, or a Date object
-     * @returns {string}
+     * @returns {string} In the form YYYY-MM-DD
      */
     MySQLDate: function (date) {
-        var mysqlDateString;
+        let dateToConvert;
         if (date == undefined || date == null) {
-            date = new Date();
+            dateToConvert = new Date();
         } else if (! (date instanceof Date)) {
-            date = new Date(date);
+            dateToConvert = new Date(date);
+        } else {
+            dateToConvert = date;
         }
-        mysqlDateString = date.toISOString().slice(0, 10);
-        return mysqlDateString;
+        return dateToConvert.toISOString().slice(0, 10);
     },
 
     /**
