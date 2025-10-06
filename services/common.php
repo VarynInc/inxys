@@ -694,9 +694,10 @@ function verifyHashPassword ($password, $hashStoredInDatabase) {
  * @param string is the URL to contact without any query string (use $get_params)
  * @param array GET parameters are key => value arrays
  * @param array POST parameters as a key => value array.
+ * @param array Array of additional HTTP headers to set.
  * @return string|null the web page content as a string. Returns null if the request failed.
  */
-function getURLContents ($url, $get_params = null, $post_params = null) {
+function getURLContents ($url, $get_params = null, $post_params = null, $headers = null) {
     $post_string = '';
     if ($get_params != null) {
         $query_string = '';
@@ -724,6 +725,9 @@ function getURLContents ($url, $get_params = null, $post_params = null) {
         if ($post_string != '') {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string);
+        }
+        if ($headers && count($headers) > 0) {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
         if (startsWith(strtolower($url), 'https://')) {
             $sslCertificate = SERVER_PRIVATE_PATH . 'cacert.pem';
@@ -1533,6 +1537,9 @@ function cleanUserName ($userName) {
  * @return bool true if acceptable otherwise false.
  */
 function isValidPassword ($password) {
+    if (empty($password)) {
+        return false;
+    }
     $minPasswordLength = 8;
     $maxPasswordLength = 32;
     $len = strlen(trim($password));
@@ -1581,6 +1588,9 @@ function checkEmailAddress ($email) {
  * @return string The $input string with any extended characters converted to their common ascii equivalent.
  */
 function cleanString ($input) {
+    if (empty($input)) {
+        return '';
+    }
     $search = [
         '/[\x60\x82\x91\x92\xb4\xb8]/i',             // single quotes
         '/[\x84\x93\x94]/i',                         // double quotes
@@ -1614,6 +1624,9 @@ function fullyCleanString($source) {
  * @return string Proposed file name with undesired characters removed.
  */
 function cleanFileName ($fileName) {
+    if (empty($fileName)) {
+        return '';
+    }
     return str_replace(['\\', '/', ':', '*', '?', '"', '<', '>', '|', '`', '\''], '', $fileName);
 }
 
@@ -2049,6 +2062,24 @@ function appendParamIfNotEmpty( & $params, $key, $value) {
  */
 function showBooleanChecked($flag) {
     return $flag ? 'checked' : '';
+}
+
+/**
+ * Render a PHP key/value associative array into JavaScript code
+ * that produces a similar object.
+ * @param object The associated k/v array.
+ * @param string The name of the javascript variable to use. if not provided will default to "parameters".
+ */
+function arrayToJavaScriptObject ($parameters, $varName) {
+    if (empty($varName)) {
+        $varName = 'parameters';
+    }
+    $javaScriptCode = "const $varName = {\n";
+    foreach ($parameters as $property => $value) {
+        $javaScriptCode .= "        $property: \"$value\",\n";
+    }
+    $javaScriptCode .= "    };\n";
+    echo($javaScriptCode);
 }
 
 /**
