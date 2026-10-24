@@ -10,6 +10,7 @@ import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 import shell from "shelljs";
+import { execSync } from "node:child_process";
 import args from "yargs";
 import { hideBin } from "yargs/helpers";
 
@@ -27,6 +28,8 @@ const configurationDefault = {
     site: "inxys",
     targetstage: "-q",
     isDryRun: false,
+    buildFileName: "build-info.json",
+    buildFolder: "./public",
     destinationHost: "",
     destinationUser: "",
     destinationPassword: "",
@@ -284,16 +287,22 @@ function immediateLog(message, error = true) {
 
 /**
  * Update the build info and save it in a JSON file.
+ * @param {string} buildFolder Destination folder to save file.
+ * @param {string} buildFileName File name to use.
  */
-function updateBuildInfoFile() {
-    const buildFileName = 'build-info.json';
-    const buildFolder = './public';
+function updateBuildInfoFile(buildFolder, buildFileName) {
     const buildFile = path.join(buildFolder, buildFileName);
+    let gitHeadHash = "";
+    try {
+        gitHeadHash = execSync("git rev-parse HEAD", { encoding: "utf-8" });
+    } catch (error) {
+        console.error(chalk.red("Could not read git hash", error.message));
+    }
     const buildInfo = {
         packageName: shell.env['npm_package_name'],
         version: shell.env['npm_package_version'],
         publish_date: (new Date()).toISOString(),
-        user: shell.env['USER']
+        commit: gitHeadHash
     };
     shell.echo(JSON.stringify(buildInfo)).to(buildFile);
 }
@@ -326,7 +335,7 @@ function deploy(configuration) {
         rsyncFlags += dryRunFlag;
         logMessage += " -- This is a DRY RUN - no files will be copied."
     } else {
-        updateBuildInfoFile();
+        updateBuildInfoFile(configuration.buildFolder, configuration.buildFileName);
     }
     if (configuration.sshKeyFile) {
         sshCommand += " -i " + configuration.sshKeyFile;
@@ -345,7 +354,7 @@ function deploy(configuration) {
         .shell(sshCommand)
         .flags(rsyncFlags)
         .delete()
-        .set("exclude-from", excludeFiles)
+        .set("filter", `merge ${excludeFiles}`)
         .source(sourcePath)
         .destination(destinationPath);
 

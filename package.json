@@ -1,6 +1,6 @@
 {
   "name": "inxys",
-  "version": "3.1.15",
+  "version": "3.1.16",
   "description": "inXys: The Information Exchange",
   "main": "js/index.js",
   "type": "module",
@@ -42,26 +42,21 @@
   "devDependencies": {
     "async": "^3.2.6",
     "axios": "^1.20.0",
-    "chalk": "^5.6.2",
+    "chalk": "^6.0.1",
     "cheerio": "^1.2.0",
-    "eslint": "^10.5.0",
-    "fs-extra": "^11.3.5",
+    "eslint": "^10.13.0",
+    "fs-extra": "^11.4.1",
     "glob": "^13.0.6",
-    "imagemin": "^9.0.1",
-    "imagemin-gifsicle": "^7.0.0",
-    "imagemin-jpegtran": "^8.0.0",
-    "imagemin-pngquant": "^10.0.0",
-    "imagemin-webp": "^8.0.0",
-    "jest": "^30.4.2",
-    "jest-environment-jsdom": "^30.4.1",
+    "jest": "^30.5.2",
+    "jest-environment-jsdom": "^30.5.2",
     "jest-fixed-jsdom": "^0.0.11",
     "node-fetch": "^3.3.2",
     "os": "^0.1.2",
     "path": "^0.12.7",
-    "pretty-bytes": "^7.1.0",
+    "pretty-bytes": "^7.2.0",
     "rsync": "^0.6.1",
     "shelljs": "^0.10.0",
-    "terser": "^5.48.0",
-    "yargs": "^18.0.0"
+    "terser": "^5.51.2",
+    "yargs": "^18.2.0"
   }
 }

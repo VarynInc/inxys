@@ -1,25 +1,25 @@
-.DS_Store
-Thumbs.db
-thumbs.db
-.editorconfig
-.git
-.idea
-.svn
-.gitignore
-*.zip
-*.log
-eslint.config.js
-jest.config.cjs
-package.json
-package-lock.json
-README.md
-.vscode/
-bin/
-data/
-node_modules/
-private/.enginesis_auth.json
-sitedev/
-test/
-coverage/
-dist/
-distrib/
+- .DS_Store
+- Thumbs.db
+- thumbs.db
+- .editorconfig
+- .git
+- .idea
+- .svn
+- .gitignore
+- *.zip
+- *.log
+- eslint.config.js
+- jest.config.cjs
+- package.json
+- package-lock.json
+- README.md
+- .vscode/
+- bin/
+- data/
+- node_modules/
+- private/.enginesis_auth.json
+- sitedev/
+- test/
+- coverage/
+- dist/
+- distrib/
